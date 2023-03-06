@@ -29,6 +29,7 @@ const (
 	user1Username = "user1"
 	user2Username = "user2"
 	password      = "Pa$$word"
+	testTeamID    = "team-id"
 )
 
 const (
@@ -77,6 +78,9 @@ func (*FakePermissionPluginAPI) HasPermissionTo(userID string, permission *mmMod
 }
 
 func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
+	if permission.Id == model.PermissionManageTeam.Id {
+		return false
+	}
 	if userID == userNoTeamMember {
 		return false
 	}
@@ -87,7 +91,7 @@ func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string
 }
 
 func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool {
-	return channelID == "valid-channel-id"
+	return channelID == "valid-channel-id" || channelID == "valid-channel-id-2"
 }
 
 func getTestConfig() (*config.Configuration, error) {
@@ -455,6 +459,16 @@ func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *mod
 	board, resp := th.Client.CreateBoard(newBoard)
 	th.CheckOK(resp)
 	return board
+}
+
+func (th *TestHelper) CreateBoards(teamID string, boardType model.BoardType, count int) []*model.Board {
+	boards := make([]*model.Board, 0, count)
+
+	for i := 0; i < count; i++ {
+		board := th.CreateBoard(teamID, boardType)
+		boards = append(boards, board)
+	}
+	return boards
 }
 
 func (th *TestHelper) CreateCategory(category model.Category) *model.Category {

@@ -5,6 +5,8 @@ package notifysubscriptions
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -73,6 +75,16 @@ func (b *Backend) Name() string {
 }
 
 func (b *Backend) getBlockUpdateFreq(blockType model.BlockType) time.Duration {
+	// check for env variable override
+	sFreq := os.Getenv("MM_BOARDS_NOTIFY_FREQ_SECONDS")
+	if sFreq != "" && sFreq != "0" {
+		if freq, err := strconv.ParseInt(sFreq, 10, 64); err != nil {
+			b.logger.Error("Environment variable MM_BOARDS_NOTIFY_FREQ_SECONDS invalid (ignoring)", mlog.Err(err))
+		} else {
+			return time.Second * time.Duration(freq)
+		}
+	}
+
 	switch blockType {
 	case model.TypeCard:
 		return time.Second * time.Duration(b.notifyFreqCardSeconds)

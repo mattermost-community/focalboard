@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -309,14 +310,26 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 
 	for i := range copiedBlocks {
 		block := copiedBlocks[i]
+		fileName := ""
+		isOk := false
 
-		fileName, ok := block.Fields["fileId"]
-		if !ok || fileName == "" {
-			continue // doesn't have a file attachment
+		switch block.Type {
+		case model.TypeImage:
+			fileName, isOk = block.Fields["fileId"].(string)
+			if !isOk || fileName == "" {
+				continue
+			}
+		case model.TypeAttachment:
+			fileName, isOk = block.Fields["attachmentId"].(string)
+			if !isOk || fileName == "" {
+				continue
+			}
+		default:
+			continue
 		}
 
 		// create unique filename in case we are copying cards within the same board.
-		ext := filepath.Ext(fileName.(string))
+		ext := filepath.Ext(fileName)
 		destFilename := utils.NewID(utils.IDTypeNone) + ext
 
 		if destBoardID == "" || block.BoardID != destBoardID {
@@ -328,7 +341,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 			destTeamID = destBoard.TeamID
 		}
 
-		sourceFilePath := filepath.Join(sourceBoard.TeamID, sourceBoard.ID, fileName.(string))
+		sourceFilePath := filepath.Join(sourceBoard.TeamID, sourceBoard.ID, fileName)
 		destinationFilePath := filepath.Join(destTeamID, block.BoardID, destFilename)
 
 		a.logger.Debug(
@@ -345,7 +358,24 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 				mlog.Err(err),
 			)
 		}
-		block.Fields["fileId"] = destFilename
+		if block.Type == model.TypeAttachment {
+			block.Fields["attachmentId"] = destFilename
+			parts := strings.Split(fileName, ".")
+			fileInfoID := parts[0][1:]
+			fileInfo, err := a.store.GetFileInfo(fileInfoID)
+			if err != nil {
+				return fmt.Errorf("CopyCardFiles: cannot retrieve original fileinfo: %w", err)
+			}
+			newParts := strings.Split(destFilename, ".")
+			newFileID := newParts[0][1:]
+			fileInfo.Id = newFileID
+			err = a.store.SaveFileInfo(fileInfo)
+			if err != nil {
+				return fmt.Errorf("CopyCardFiles: cannot create fileinfo: %w", err)
+			}
+		} else {
+			block.Fields["fileId"] = destFilename
+		}
 	}
 
 	return nil

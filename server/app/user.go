@@ -10,7 +10,20 @@ func (a *App) GetTeamUsers(teamID string, asGuestID string) ([]*model.User, erro
 }
 
 func (a *App) SearchTeamUsers(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots, a.config.ShowEmailAddress, a.config.ShowFullName)
+	users, err := a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots, a.config.ShowEmailAddress, a.config.ShowFullName)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, u := range users {
+		if a.permissions.HasPermissionToTeam(u.ID, teamID, model.PermissionManageTeam) {
+			users[i].Permissions = append(users[i].Permissions, model.PermissionManageTeam.Id)
+		}
+		if a.permissions.HasPermissionTo(u.ID, model.PermissionManageSystem) {
+			users[i].Permissions = append(users[i].Permissions, model.PermissionManageSystem.Id)
+		}
+	}
+	return users, nil
 }
 
 func (a *App) UpdateUserConfig(userID string, patch model.UserPreferencesPatch) ([]mmModel.Preference, error) {
@@ -50,7 +63,18 @@ func (a *App) CanSeeUser(seerUser string, seenUser string) (bool, error) {
 }
 
 func (a *App) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
-	return a.store.SearchUserChannels(teamID, userID, query)
+	channels, err := a.store.SearchUserChannels(teamID, userID, query)
+	if err != nil {
+		return nil, err
+	}
+
+	var writeableChannels []*mmModel.Channel
+	for _, channel := range channels {
+		if a.permissions.HasPermissionToChannel(userID, channel.Id, model.PermissionCreatePost) {
+			writeableChannels = append(writeableChannels, channel)
+		}
+	}
+	return writeableChannels, nil
 }
 
 func (a *App) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {

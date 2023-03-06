@@ -454,7 +454,7 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block *model.Block) {
-	pa.logger.Debug("BroadcastingBlockChange",
+	pa.logger.Trace("BroadcastingBlockChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", block.BoardID),
 		mlog.String("blockID", block.ID),
