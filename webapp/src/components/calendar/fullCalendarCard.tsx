@@ -4,8 +4,6 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {EventApi} from '@fullcalendar/react'
-
 import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 import mutator from '../../mutator'
 
@@ -25,7 +23,6 @@ import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
 type Props = {
     card: Card
     board: Board
-    event: EventApi
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleBadges: boolean
     readonly: boolean
@@ -33,7 +30,7 @@ type Props = {
 }
 
 const FullCalendarCard = (props: Props): JSX.Element|null => {
-    const {card, board, event, visiblePropertyTemplates, visibleBadges} = props
+    const {card, board, visiblePropertyTemplates, visibleBadges} = props
     const isCardEmpty = useIsCardEmpty(card)
     const intl = useIntl()
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
@@ -71,7 +68,7 @@ const FullCalendarCard = (props: Props): JSX.Element|null => {
     return (<>
         <div
             className='EventContent'
-            onClick={() => props.showCard(event.id)}
+            onClick={() => props.showCard(card.id)}
         >
             {!props.readonly &&
             <MenuWrapper
@@ -90,11 +87,11 @@ const FullCalendarCard = (props: Props): JSX.Element|null => {
                 />
             </MenuWrapper>}
             <div className='octo-icontitle'>
-                { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
+                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                 <div
                     className='fc-event-title'
                     key='__title'
-                >{event.title || intl.formatMessage({id: 'CalendarCard.untitled', defaultMessage: 'Untitled'})}</div>
+                >{card.title || intl.formatMessage({id: 'CalendarCard.untitled', defaultMessage: 'Untitled'})}</div>
             </div>
             {visiblePropertyTemplates.map((template) => (
                 <Tooltip

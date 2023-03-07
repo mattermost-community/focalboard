@@ -126,7 +126,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             <FullCalendarCard
                 card={card}
                 board={board}
-                event={event}
                 visiblePropertyTemplates={visiblePropertyTemplates}
                 visibleBadges={visibleBadges}
                 key={card.id}
