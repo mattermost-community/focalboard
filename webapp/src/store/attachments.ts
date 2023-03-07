@@ -79,21 +79,15 @@ const attachmentSlice = createSlice({
 export const {updateAttachments, updateUploadPrecent} = attachmentSlice.actions
 export const {reducer} = attachmentSlice
 
-export function getCardAttachments(cardId: string): (state: RootState) => AttachmentBlock[] {
-    return (state: RootState): AttachmentBlock[] => {
-        return (state.attachments?.attachmentsByCard && state.attachments.attachmentsByCard[cardId]) || []
-    }
-}
+export const getCardAttachments: (state: RootState, cardId: string) => AttachmentBlock[] = createSelector(
+    (state: RootState, cardId: string) => state.attachments.attachmentsByCard[cardId],
+    (attachments) => {
+        return attachments || []
+    },
+)
 
 export function getUploadPercent(blockId: string): (state: RootState) => number {
     return (state: RootState): number => {
         return (state.attachments.attachments[blockId].uploadingPercent)
     }
 }
-
-export const getCardAttachments1: (state: RootState, cardId: string) => AttachmentBlock[] = createSelector(
-    (state: RootState, cardId: string) => state.attachments.attachmentsByCard[cardId],
-    (attachments) => {
-        return attachments || []
-    },
-)

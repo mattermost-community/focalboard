@@ -80,13 +80,7 @@ const commentsSlice = createSlice({
 export const {updateComments} = commentsSlice.actions
 export const {reducer} = commentsSlice
 
-export function getCardComments(cardId: string): (state: RootState) => CommentBlock[] {
-    return (state: RootState): CommentBlock[] => {
-        return (state.comments?.commentsByCard && state.comments.commentsByCard[cardId]) || []
-    }
-}
-
-export const getCardComments1: (state: RootState, cardId: string) => CommentBlock[] = createSelector(
+export const getCardComments: (state: RootState, cardId: string) => CommentBlock[] = createSelector(
     (state: RootState, cardId: string) => state.comments?.commentsByCard[cardId],
     (comments) => {
         console.log(comments)

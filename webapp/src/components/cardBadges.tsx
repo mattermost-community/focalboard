@@ -4,6 +4,7 @@ import React, {useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Card} from '../blocks/card'
+import {RootState} from '../store'
 import {useAppSelector} from '../store/hooks'
 import {getCardContents} from '../store/contents'
 import {getCardComments} from '../store/comments'
@@ -76,8 +77,8 @@ const calculateBadges = (contents: ContentsType, comments: CommentBlock[]): Badg
 
 const CardBadges = (props: Props) => {
     const {card, className} = props
-    const contents = useAppSelector(getCardContents(card.id))
-    const comments = useAppSelector(getCardComments(card.id))
+    const contents = useAppSelector((state: RootState) => getCardContents(state, card.id))
+    const comments = useAppSelector((state: RootState) => getCardComments(state, card.id))
     const badges = useMemo(() => calculateBadges(contents, comments), [contents, comments])
     if (!hasBadges(badges)) {
         return null

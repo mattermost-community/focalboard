@@ -8,6 +8,7 @@ import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
+import {RootState} from '../../store'
 import {getCardContents} from '../../store/contents'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -40,7 +41,7 @@ const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const {card, board} = props
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
-    const contents = useAppSelector(getCardContents(card.id))
+    const contents = useAppSelector((state: RootState) => getCardContents(state, card.id))
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []

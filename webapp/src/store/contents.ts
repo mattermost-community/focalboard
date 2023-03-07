@@ -92,40 +92,40 @@ export const getContents = createSelector(
     (contents) => Object.values(contents),
 )
 
-export function getCardContents(cardId: string): (state: RootState) => Array<ContentBlock|ContentBlock[]> {
-    return createSelector(
-        (state: RootState) => (state.contents?.contentsByCard && state.contents.contentsByCard[cardId]) || [],
-        (state: RootState) => getCards(state)[cardId]?.fields?.contentOrder || getTemplates(state)[cardId]?.fields?.contentOrder,
-        (contents, contentOrder): Array<ContentBlock|ContentBlock[]> => {
-            const result: Array<ContentBlock|ContentBlock[]> = []
-            if (!contents) {
-                return []
-            }
-            if (contentOrder) {
-                for (const contentId of contentOrder) {
-                    if (typeof contentId === 'string') {
-                        const content = contents.find((c) => c.id === contentId)
-                        if (content) {
-                            result.push(content)
-                        }
-                    } else if (typeof contentId === 'object' && contentId) {
-                        const subResult: ContentBlock[] = []
-                        for (const subContentId of contentId) {
-                            if (typeof subContentId === 'string') {
-                                const subContent = contents.find((c) => c.id === subContentId)
-                                if (subContent) {
-                                    subResult.push(subContent)
-                                }
+export const getCardContents: (state: RootState, cardId: string) => Array<ContentBlock|ContentBlock[]> = createSelector(
+    (state: RootState, cardId: string) => (state.contents.contentsByCard[cardId]),
+    (state: RootState, cardId: string) => getCards(state)[cardId]?.fields?.contentOrder,
+    (state: RootState, cardId: string) => getTemplates(state)[cardId]?.fields?.contentOrder,
+    (contents, cardContentOrder, templateContentOrder): Array<ContentBlock|ContentBlock[]> => {
+        const contentOrder = cardContentOrder || templateContentOrder
+        const result: Array<ContentBlock|ContentBlock[]> = []
+        if (!contents) {
+            return []
+        }
+        if (contentOrder) {
+            for (const contentId of contentOrder) {
+                if (typeof contentId === 'string') {
+                    const content = contents.find((c) => c.id === contentId)
+                    if (content) {
+                        result.push(content)
+                    }
+                } else if (typeof contentId === 'object' && contentId) {
+                    const subResult: ContentBlock[] = []
+                    for (const subContentId of contentId) {
+                        if (typeof subContentId === 'string') {
+                            const subContent = contents.find((c) => c.id === subContentId)
+                            if (subContent) {
+                                subResult.push(subContent)
                             }
                         }
-                        result.push(subResult)
                     }
+                    result.push(subResult)
                 }
             }
-            return result
-        },
-    )
-}
+        }
+        return result
+    },
+)
 
 export function getLastCardContent(cardId: string): (state: RootState) => ContentBlock|undefined {
     return (state: RootState): ContentBlock|undefined => {

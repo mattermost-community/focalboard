@@ -28,8 +28,6 @@ type Props = {
 const TableRows = (props: Props): JSX.Element => {
     const {board, cards, activeView} = props
 
-    console.log(cards);
-
     const onClickRow = useCallback((e: React.MouseEvent<HTMLDivElement>, card: Card) => {
         props.onCardClicked(e, card)
     }, [props.onCardClicked])
@@ -41,7 +39,6 @@ const TableRows = (props: Props): JSX.Element => {
     const Item = ({index, style}: ListChildComponentProps) => {
         
         const card = cards[index]
-        console.log(card)
         if (isItemLoaded(index)) {
             return (
                 <div

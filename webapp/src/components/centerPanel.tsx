@@ -396,6 +396,14 @@ const CenterPanel = (props: Props) => {
         return {visible: vg, hidden: hg}
     }, [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty, boardUsers])
 
+    const onDialogClose = useCallback(() => {
+        showCard(undefined)
+    }, [])
+
+    const dialogShowCard = useCallback((cardId?: string | undefined) => {
+        showCard(cardId)
+    }, [showCard])
+
     return (
         <div
             className='BoardComponent'
@@ -410,8 +418,8 @@ const CenterPanel = (props: Props) => {
                         cards={cards}
                         key={props.shownCardId}
                         cardId={props.shownCardId}
-                        onClose={() => showCard(undefined)}
-                        showCard={(cardId) => showCard(cardId)}
+                        onClose={onDialogClose}
+                        showCard={dialogShowCard}
                         readonly={props.readonly}
                     />
                 </RootPortal>}

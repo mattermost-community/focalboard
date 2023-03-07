@@ -9,10 +9,10 @@ import {Card} from '../blocks/card'
 import octoClient from '../octoClient'
 import mutator from '../mutator'
 import {getCard} from '../store/cards'
-import {getCardComments, getCardComments1} from '../store/comments'
+import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {getCardAttachments, getCardAttachments1, updateAttachments, updateUploadPrecent} from '../store/attachments'
+import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -27,6 +27,7 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {getClientConfig} from '../store/clientConfig'
 
 import {IUser} from '../user'
+import {RootState} from '../store'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
 import {Block, createBlock} from '../blocks/block'
@@ -39,7 +40,6 @@ import Dialog from './dialog'
 
 import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
-import {RootState} from '../store'
 
 type Props = {
     board: Board
@@ -54,10 +54,10 @@ type Props = {
 
 const CardDialog = (props: Props): JSX.Element => {
     const {board, activeView, cards, views} = props
-    const card = useAppSelector(getCard(props.cardId))
-    const contents = useAppSelector(getCardContents(props.cardId))
-    const comments = useAppSelector((state: RootState) => getCardComments1(state, props.cardId))
-    const attachments = useAppSelector((state: RootState) => getCardAttachments1(state, props.cardId))
+    const card = useAppSelector((state: RootState) => getCard(state, props.cardId))
+    const contents = useAppSelector((state: RootState) => getCardContents(state, props.cardId))
+    const comments = useAppSelector((state: RootState) => getCardComments(state, props.cardId))
+    const attachments = useAppSelector((state: RootState) => getCardAttachments(state, props.cardId))
     const clientConfig = useAppSelector(getClientConfig)
     const intl = useIntl()
     const dispatch = useAppDispatch()
