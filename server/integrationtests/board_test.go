@@ -1610,6 +1610,15 @@ func TestUpdateMember(t *testing.T) {
 		board, err := th.Server.App().CreateBoard(newBoard, th.GetUser1().ID, true)
 		require.NoError(t, err)
 
+		newUser2Member := &model.BoardMember{
+			UserID:      th.GetUser2().ID,
+			BoardID:     board.ID,
+			Schemeadmin: true,
+		}
+		user2Member, err := th.Server.App().AddMemberToBoard(newUser2Member)
+		require.NoError(t, err)
+		require.NotNil(t, user2Member)
+
 		memberUpdate := &model.BoardMember{
 			UserID:       th.GetUser1().ID,
 			BoardID:      board.ID,
