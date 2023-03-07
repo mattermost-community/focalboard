@@ -73,7 +73,7 @@ const CreateBoardFromTemplate = (props: Props) => {
 
         let boardsAndBlocks = undefined
 
-        if (selectedBoardTemplateId === EMPTY_BOARD) {
+        if (templateIdRef.current === EMPTY_BOARD) {
             boardsAndBlocks = await mutator.addEmptyBoard(teamId, intl)
         } else {
             boardsAndBlocks = await mutator.duplicateBoard(templateIdRef.current as string, ACTION_DESCRIPTION, asTemplate, undefined, undefined, teamId)

@@ -9,6 +9,7 @@ var (
 	PermissionManageTeam            = mmModel.PermissionManageTeam
 	PermissionManageSystem          = mmModel.PermissionManageSystem
 	PermissionReadChannel           = mmModel.PermissionReadChannel
+	PermissionCreatePost            = mmModel.PermissionCreatePost
 	PermissionViewMembers           = mmModel.PermissionViewMembers
 	PermissionCreatePublicChannel   = mmModel.PermissionCreatePublicChannel
 	PermissionCreatePrivateChannel  = mmModel.PermissionCreatePrivateChannel

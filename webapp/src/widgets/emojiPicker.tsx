@@ -7,6 +7,8 @@ import {Picker, BaseEmoji} from 'emoji-mart'
 
 import './emojiPicker.scss'
 
+import emojiSpirit from '../../static/emoji_spirit.png'
+
 type Props = {
     onSelect: (emoji: string) => void
 }
@@ -18,6 +20,7 @@ const EmojiPicker: FC<Props> = (props: Props): JSX.Element => (
     >
         <Picker
             onSelect={(emoji: BaseEmoji) => props.onSelect(emoji.native)}
+            backgroundImageFn={() => emojiSpirit}
         />
     </div>
 )
