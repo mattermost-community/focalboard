@@ -9,10 +9,10 @@ import {Card} from '../blocks/card'
 import octoClient from '../octoClient'
 import mutator from '../mutator'
 import {getCard} from '../store/cards'
-import {getCardComments} from '../store/comments'
+import {getCardComments, getCardComments1} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
+import {getCardAttachments, getCardAttachments1, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -39,6 +39,7 @@ import Dialog from './dialog'
 
 import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
+import {RootState} from '../store'
 
 type Props = {
     board: Board
@@ -55,8 +56,8 @@ const CardDialog = (props: Props): JSX.Element => {
     const {board, activeView, cards, views} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
-    const comments = useAppSelector(getCardComments(props.cardId))
-    const attachments = useAppSelector(getCardAttachments(props.cardId))
+    const comments = useAppSelector((state: RootState) => getCardComments1(state, props.cardId))
+    const attachments = useAppSelector((state: RootState) => getCardAttachments1(state, props.cardId))
     const clientConfig = useAppSelector(getClientConfig)
     const intl = useIntl()
     const dispatch = useAppDispatch()

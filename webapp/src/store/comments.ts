@@ -86,6 +86,14 @@ export function getCardComments(cardId: string): (state: RootState) => CommentBl
     }
 }
 
+export const getCardComments1: (state: RootState, cardId: string) => CommentBlock[] = createSelector(
+    (state: RootState, cardId: string) => state.comments?.commentsByCard[cardId],
+    (comments) => {
+        console.log(comments)
+        return comments || []
+    },
+)
+
 export function getLastCardComment(cardId: string): (state: RootState) => CommentBlock|undefined {
     return (state: RootState): CommentBlock|undefined => {
         const comments = state.comments?.commentsByCard && state.comments.commentsByCard[cardId]
