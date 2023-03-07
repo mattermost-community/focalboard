@@ -469,7 +469,7 @@ func TestPatchBoard(t *testing.T) {
 		const userID = "user_id_2"
 		const teamID = "team_id_1"
 
-		channelID := "myChannel"
+		const channelID = "myChannel"
 		clearChannel := ""
 		patchType := model.BoardTypeOpen
 		patch := &model.BoardPatch{
@@ -498,7 +498,6 @@ func TestPatchBoard(t *testing.T) {
 		_, err := th.App.PatchBoard(patch, boardID, userID)
 		require.Error(t, err)
 	})
-
 }
 
 func TestGetBoardCount(t *testing.T) {
