@@ -10,6 +10,26 @@
     @media (max-height: 768px) {
         justify-content: flex-start;
         height: auto;
+        padding-top: 40px;
+    }
+
+    .WelcomePage__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+
+        @media (max-height: 800px) {
+            flex-direction: column-reverse;
+            margin-top: 16px;
+        }
+    }
+
+    .WelcomePage__buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
     }
 
     > div {
@@ -34,7 +54,6 @@
     }
 
     .skip {
-        margin-top: 12px;
         color: rgba(var(--link-color-rgb), 1);
         cursor: pointer;
 
