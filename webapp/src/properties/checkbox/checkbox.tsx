@@ -3,10 +3,10 @@
 
 import React from 'react'
 
-import mutator from '../../mutator'
-import Switch from '../../widgets/switch'
+import mutator from 'src/mutator'
+import Switch from 'src/widgets/switch'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 const Checkbox = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue} = props

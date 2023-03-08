@@ -3,9 +3,9 @@
 
 import {createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
-import {Subscription} from '../wsclient'
-import {ErrorId} from '../errors'
+import {default as client} from 'src/octoClient'
+import {Subscription} from 'src/wsclient'
+import {ErrorId} from 'src/errors'
 
 import {RootState} from './index'
 

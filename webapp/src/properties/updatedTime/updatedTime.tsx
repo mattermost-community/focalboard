@@ -5,14 +5,14 @@ import React from 'react'
 
 import {useIntl} from 'react-intl'
 
-import {Block} from '../../blocks/block'
-import {Utils} from '../../utils'
-import {useAppSelector} from '../../store/hooks'
-import {getLastCardContent} from '../../store/contents'
-import {getLastCardComment} from '../../store/comments'
+import {Block} from 'src/blocks/block'
+import {Utils} from 'src/utils'
+import {useAppSelector} from 'src/store/hooks'
+import {getLastCardContent} from 'src/store/contents'
+import {getLastCardComment} from 'src/store/comments'
 import './updatedTime.scss'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 const UpdatedTime = (props: PropertyProps): JSX.Element => {
     const intl = useIntl()

@@ -11,9 +11,9 @@ import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
-import {wrapDNDIntl} from '../../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableGroupHeaderRowElement from './tableGroupHeaderRow'

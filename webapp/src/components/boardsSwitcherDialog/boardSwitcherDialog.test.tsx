@@ -13,10 +13,10 @@ import {createMemoryHistory, History} from 'history'
 
 import {Router} from 'react-router-dom'
 
-import {Team} from '../../store/teams'
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {Team} from 'src/store/teams'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
 import BoardSwitcherDialog from './boardSwitcherDialog'
 

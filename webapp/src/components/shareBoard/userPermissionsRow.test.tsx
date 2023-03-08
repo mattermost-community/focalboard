@@ -8,11 +8,11 @@ import thunk from 'redux-thunk'
 import React from 'react'
 import {MemoryRouter} from 'react-router'
 
-import {BoardMember} from '../../blocks/board'
+import {BoardMember} from 'src/blocks/board'
 
-import {IUser} from '../../user'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {IUser} from 'src/user'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
 import UserPermissionsRow from './userPermissionsRow'
 
@@ -20,7 +20,7 @@ jest.useFakeTimers()
 
 const boardId = '1'
 
-jest.mock('../../utils')
+jest.mock('src/utils')
 
 const board = TestBlockFactory.createBoard()
 board.id = boardId

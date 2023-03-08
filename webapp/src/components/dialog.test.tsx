@@ -8,11 +8,11 @@ import React from 'react'
 
 import userEvent from '@testing-library/user-event'
 
-import {wrapDNDIntl} from '../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
-import Menu from '../widgets/menu'
+import Menu from 'src/widgets/menu'
 
-import OptionsIcon from '../widgets/icons/options'
+import OptionsIcon from 'src/widgets/icons/options'
 
 import Dialog from './dialog'
 

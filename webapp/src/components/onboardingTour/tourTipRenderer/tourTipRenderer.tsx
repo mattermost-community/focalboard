@@ -4,15 +4,15 @@ import React from 'react'
 
 import {Placement} from 'tippy.js'
 
-import {useAppSelector} from '../../../store/hooks'
-import {getCurrentBoard} from '../../../store/boards'
-import {getCurrentCard} from '../../../store/cards'
-import {OnboardingBoardTitle, OnboardingCardTitle} from '../../cardDetail/cardDetail'
-import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../../store/users'
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
-import {TutorialTourTipPunchout} from '../../tutorial_tour_tip/tutorial_tour_tip_backdrop'
-import {ClientConfig} from '../../../config/clientConfig'
-import {getClientConfig} from '../../../store/clientConfig'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentBoard} from 'src/store/boards'
+import {getCurrentCard} from 'src/store/cards'
+import {OnboardingBoardTitle, OnboardingCardTitle} from 'src/components/cardDetail/cardDetail'
+import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from 'src/store/users'
+import TourTip from 'src/components/tutorial_tour_tip/tutorial_tour_tip'
+import {TutorialTourTipPunchout} from 'src/components/tutorial_tour_tip/tutorial_tour_tip_backdrop'
+import {ClientConfig} from 'src/config/clientConfig'
+import {getClientConfig} from 'src/store/clientConfig'
 
 type Props = {
     requireCard: boolean

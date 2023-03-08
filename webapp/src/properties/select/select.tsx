@@ -4,14 +4,14 @@
 import React, {useState, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
-import {IPropertyOption} from '../../blocks/board'
+import {IPropertyOption} from 'src/blocks/board'
 
-import Label from '../../widgets/label'
-import {Utils, IDType} from '../../utils'
-import mutator from '../../mutator'
-import ValueSelector from '../../widgets/valueSelector'
+import Label from 'src/widgets/label'
+import {Utils, IDType} from 'src/utils'
+import mutator from 'src/mutator'
+import ValueSelector from 'src/widgets/valueSelector'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 const SelectProperty = (props: PropertyProps) => {
     const {propertyValue, propertyTemplate, board, card} = props

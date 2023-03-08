@@ -3,16 +3,16 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {FilterClause, FilterCondition, createFilterClause} from '../../blocks/filterClause'
-import {createFilterGroup, isAFilterGroupInstance} from '../../blocks/filterGroup'
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import mutator from '../../mutator'
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
-import propsRegistry from '../../properties'
+import {FilterClause, FilterCondition, createFilterClause} from 'src/blocks/filterClause'
+import {createFilterGroup, isAFilterGroupInstance} from 'src/blocks/filterGroup'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import mutator from 'src/mutator'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
+import propsRegistry from 'src/properties'
 
-import Modal from '../modal'
+import Modal from 'src/components/modal'
 
 import FilterEntry from './filterEntry'
 

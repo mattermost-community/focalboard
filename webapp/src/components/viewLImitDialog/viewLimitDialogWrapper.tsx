@@ -5,9 +5,9 @@ import React, {useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
-import CheckIcon from '../../widgets/icons/check'
+import CheckIcon from 'src/widgets/icons/check'
 
-import NotificationBox from '../../widgets/notificationBox/notificationBox'
+import NotificationBox from 'src/widgets/notificationBox/notificationBox'
 
 import {PublicProps, ViewLimitModal} from './viewLimitDialog'
 

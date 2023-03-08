@@ -1,11 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction, createAsyncThunk, createSelector} from '@reduxjs/toolkit'
+import {
+    createSlice,
+    PayloadAction,
+    createAsyncThunk,
+    createSelector
+} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
-import {Board, BoardMember} from '../blocks/board'
-import {IUser} from '../user'
+import {default as client} from 'src/octoClient'
+import {Board, BoardMember} from 'src/blocks/board'
+import {IUser} from 'src/user'
 
 import {
     initialLoad,

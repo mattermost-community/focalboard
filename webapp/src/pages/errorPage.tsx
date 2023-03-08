@@ -4,12 +4,12 @@ import React, {useCallback} from 'react'
 import {useHistory, useLocation} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import ErrorIllustration from '../svg/error-illustration'
+import ErrorIllustration from 'src/svg/error-illustration'
 
-import Button from '../widgets/buttons/button'
+import Button from 'src/widgets/buttons/button'
 import './errorPage.scss'
 
-import {errorDefFromId, ErrorId} from '../errors'
+import {errorDefFromId, ErrorId} from 'src/errors'
 
 const ErrorPage = () => {
     const history = useHistory()

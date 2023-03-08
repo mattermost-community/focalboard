@@ -12,16 +12,16 @@ import configureStore from 'redux-mock-store'
 
 import {mocked} from 'jest-mock'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from 'src/telemetry/telemetryClient'
 
-import client from '../../octoClient'
+import client from 'src/octoClient'
 
 import GlobalHeaderSettingsMenu from './globalHeaderSettingsMenu'
 
-jest.mock('../../telemetry/telemetryClient')
-jest.mock('../../octoClient')
+jest.mock('src/telemetry/telemetryClient')
+jest.mock('src/octoClient')
 const mockedTelemetry = mocked(TelemetryClient, true)
 const mockedOctoClient = mocked(client, true)
 

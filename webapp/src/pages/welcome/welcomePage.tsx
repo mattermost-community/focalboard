@@ -5,22 +5,27 @@ import {FormattedMessage} from 'react-intl'
 
 import {useLocation, useHistory} from 'react-router-dom'
 
-import BoardWelcomePNG from '../../../static/boards-welcome.png'
-import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
+import BoardWelcomePNG from 'static/boards-welcome.png'
+import BoardWelcomeSmallPNG from 'static/boards-welcome-small.png'
 
-import Button from '../../widgets/buttons/button'
-import CompassIcon from '../../widgets/icons/compassIcon'
+import Button from 'src/widgets/buttons/button'
+import CompassIcon from 'src/widgets/icons/compassIcon'
 
 import './welcomePage.scss'
-import mutator from '../../mutator'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {IUser, UserConfigPatch} from '../../user'
-import {fetchMe, getMe, getMyConfig, patchProps} from '../../store/users'
-import {getCurrentTeam, Team} from '../../store/teams'
-import octoClient from '../../octoClient'
-import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import {UserSettingKey} from '../../userSettings'
+import mutator from 'src/mutator'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {IUser, UserConfigPatch} from 'src/user'
+import {
+    fetchMe,
+    getMe,
+    getMyConfig,
+    patchProps
+} from 'src/store/users'
+import {getCurrentTeam, Team} from 'src/store/teams'
+import octoClient from 'src/octoClient'
+import {FINISHED, TOUR_ORDER} from 'src/components/onboardingTour'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
+import {UserSettingKey} from 'src/userSettings'
 
 const WelcomePage = () => {
     const history = useHistory()

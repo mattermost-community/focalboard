@@ -7,10 +7,10 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import '@testing-library/jest-dom'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {Permission} from '../../constants'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {Permission} from 'src/constants'
 
-import {wrapIntl, mockStateStore} from '../../testUtils'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
 
 import BoardPermissionGate from './boardPermissionGate'
 

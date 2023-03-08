@@ -4,13 +4,13 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
 
 import './add_description.scss'
-import addDescription from '../../../../static/addDescription.png'
+import addDescription from 'static/addDescription.png'
 
-import {CardTourSteps, TOUR_CARD} from '../index'
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
+import {CardTourSteps, TOUR_CARD} from 'src/components/onboardingTour/index'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
 
 const AddDescriptionTourStep = (): JSX.Element | null => {
     const title = (

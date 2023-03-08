@@ -8,10 +8,10 @@ import CreatableSelect from 'react-select/creatable'
 
 import {CSSObject} from '@emotion/serialize'
 
-import {IPropertyOption} from '../blocks/board'
-import {Constants} from '../constants'
+import {IPropertyOption} from 'src/blocks/board'
+import {Constants} from 'src/constants'
 
-import {getSelectBaseStyle} from '../theme'
+import {getSelectBaseStyle} from 'src/theme'
 
 import Menu from './menu'
 import MenuWrapper from './menuWrapper'

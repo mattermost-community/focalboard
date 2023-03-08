@@ -20,7 +20,7 @@ type Props = {
     milliseconds: number
 }
 
-export const FlashMessages = React.memo((props: Props) => {
+const FlashMessages = (props: Props) => {
     const [message, setMessage] = useState<FlashMessage|null>(null)
     const [fadeOut, setFadeOut] = useState(false)
     const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>|null>(null)
@@ -72,4 +72,6 @@ export const FlashMessages = React.memo((props: Props) => {
             {message.content}
         </div>
     )
-})
+}
+
+export default React.memo(FlashMessages)

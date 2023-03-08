@@ -4,7 +4,7 @@ import React, {ReactElement} from 'react'
 import {FormattedMessage} from 'react-intl'
 import {EntryComponentProps} from '@draft-js-plugins/mention/lib/MentionSuggestions/Entry/Entry'
 
-import GuestBadge from '../../../widgets/guestBadge'
+import GuestBadge from 'src/widgets/guestBadge'
 
 import './entryComponent.scss'
 

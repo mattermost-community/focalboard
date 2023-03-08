@@ -7,14 +7,14 @@ import userEvent from '@testing-library/user-event'
 import {createIntl} from 'react-intl'
 import {mocked} from 'jest-mock'
 
-import {wrapDNDIntl} from '../../testUtils'
-import Mutator from '../../mutator'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {IPropertyOption} from '../../blocks/board'
+import {wrapDNDIntl} from 'src/testUtils'
+import Mutator from 'src/mutator'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {IPropertyOption} from 'src/blocks/board'
 
 import KanbanHiddenColumnItem from './kanbanHiddenColumnItem'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(Mutator, true)
 
 describe('src/components/kanban/kanbanHiddenColumnItem', () => {

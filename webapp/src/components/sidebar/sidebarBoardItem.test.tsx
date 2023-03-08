@@ -12,9 +12,9 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import configureStore from 'redux-mock-store'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {wrapIntl, wrapRBDNDDroppable} from '../../testUtils'
+import {wrapIntl, wrapRBDNDDroppable} from 'src/testUtils'
 
 import SidebarBoardItem from './sidebarBoardItem'
 

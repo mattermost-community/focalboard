@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 
-import {Card} from '../../blocks/card'
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {Card} from 'src/blocks/card'
+import {Board} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
 
 import './table.scss'
 

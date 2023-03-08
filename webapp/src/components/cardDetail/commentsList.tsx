@@ -3,20 +3,20 @@
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {CommentBlock, createCommentBlock} from '../../blocks/commentBlock'
-import mutator from '../../mutator'
-import {useAppSelector} from '../../store/hooks'
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
+import {CommentBlock, createCommentBlock} from 'src/blocks/commentBlock'
+import mutator from 'src/mutator'
+import {useAppSelector} from 'src/store/hooks'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
 
-import {MarkdownEditor} from '../markdownEditor'
+import {MarkdownEditor} from 'src/components/markdownEditor'
 
-import {IUser} from '../../user'
-import {getMe} from '../../store/users'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
-import {Permission} from '../../constants'
+import {IUser} from 'src/user'
+import {getMe} from 'src/store/users'
+import {useHasCurrentBoardPermissions} from 'src/hooks/permissions'
+import {Permission} from 'src/constants'
 
-import AddCommentTourStep from '../onboardingTour/addComments/addComments'
+import AddCommentTourStep from 'src/components/onboardingTour/addComments/addComments'
 
 import Comment from './comment'
 

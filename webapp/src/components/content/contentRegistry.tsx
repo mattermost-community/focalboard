@@ -3,9 +3,9 @@
 /* eslint-disable react/require-optimization */
 import {IntlShape} from 'react-intl'
 
-import {BlockTypes} from '../../blocks/block'
-import {ContentBlock} from '../../blocks/contentBlock'
-import {Utils} from '../../utils'
+import {BlockTypes} from 'src/blocks/block'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import {Utils} from 'src/utils'
 
 export type ContentHandler = {
     type: BlockTypes

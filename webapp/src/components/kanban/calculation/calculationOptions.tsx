@@ -2,12 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {
-    CalculationOptions,
-    CommonCalculationOptionProps,
-    optionsByType,
-} from '../../calculations/options'
-import {IPropertyTemplate, PropertyTypeEnum} from '../../../blocks/board'
+import {CalculationOptions, CommonCalculationOptionProps, optionsByType} from 'src/components/calculations/options'
+import {IPropertyTemplate, PropertyTypeEnum} from 'src/blocks/board'
 
 import './calculationOption.scss'
 import {Option, OptionProps} from './kanbanOption'

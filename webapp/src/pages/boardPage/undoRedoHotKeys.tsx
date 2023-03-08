@@ -3,9 +3,9 @@
 import {useHotkeys} from 'react-hotkeys-hook'
 import {useIntl} from 'react-intl'
 
-import {sendFlashMessage} from '../../components/flashMessages'
-import mutator from '../../mutator'
-import {Utils} from '../../utils'
+import {sendFlashMessage} from 'src/components/flashMessages'
+import mutator from 'src/mutator'
+import {Utils} from 'src/utils'
 
 const UndoRedoHotKeys = (): null => {
     const intl = useIntl()

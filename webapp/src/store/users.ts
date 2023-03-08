@@ -1,16 +1,21 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
+import {
+    createSlice,
+    createAsyncThunk,
+    PayloadAction,
+    createSelector
+} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
-import {IUser, parseUserProps, UserPreference} from '../user'
+import {default as client} from 'src/octoClient'
+import {IUser, parseUserProps, UserPreference} from 'src/user'
 
-import {Subscription} from '../wsclient'
+import {Subscription} from 'src/wsclient'
 
 // TODO: change this whene the initial load is complete
 // import {initialLoad} from './initialLoad'
-import {UserSettings} from '../userSettings'
+import {UserSettings} from 'src/userSettings'
 
 import {initialLoad} from './initialLoad'
 

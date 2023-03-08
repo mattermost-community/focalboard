@@ -18,23 +18,23 @@ import {mocked} from 'jest-mock'
 
 import thunk from 'redux-thunk'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import octoClient from '../../octoClient'
+import octoClient from 'src/octoClient'
 
-import {IUser} from '../../user'
+import {IUser} from 'src/user'
 
 import WelcomePage from './welcomePage'
 
 const w = (window as any)
 const oldBaseURL = w.baseURL
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 const mockedOctoClient = mocked(octoClient, true)
 
 beforeEach(() => {

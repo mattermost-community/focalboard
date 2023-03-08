@@ -4,13 +4,13 @@ import React, {useCallback, useMemo} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {IPropertyTemplate, Board} from '../../blocks/board'
-import {createBoardView, BoardView, ISortOption} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import {Constants} from '../../constants'
-import mutator from '../../mutator'
-import {Utils} from '../../utils'
-import propsRegistry from '../../properties'
+import {IPropertyTemplate, Board} from 'src/blocks/board'
+import {createBoardView, BoardView, ISortOption} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import {Constants} from 'src/constants'
+import mutator from 'src/mutator'
+import {Utils} from 'src/utils'
+import propsRegistry from 'src/properties'
 
 import './table.scss'
 

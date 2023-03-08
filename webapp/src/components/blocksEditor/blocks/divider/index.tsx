@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
 
-import {BlockInputProps, ContentType} from '../types'
+import {BlockInputProps, ContentType} from 'src/components/blocksEditor/blocks/types'
 
 import './divider.scss'
 

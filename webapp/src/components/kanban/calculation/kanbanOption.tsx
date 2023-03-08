@@ -2,10 +2,10 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 
-import {Option as SelectOption, typesByOptions} from '../../calculations/options'
-import {IPropertyTemplate} from '../../../blocks/board'
-import ChevronRight from '../../../widgets/icons/chevronRight'
-import {Constants} from '../../../constants'
+import {Option as SelectOption, typesByOptions} from 'src/components/calculations/options'
+import {IPropertyTemplate} from 'src/blocks/board'
+import ChevronRight from 'src/widgets/icons/chevronRight'
+import {Constants} from 'src/constants'
 
 type OptionProps = SelectOption & {
     cardProperties: IPropertyTemplate[]

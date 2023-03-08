@@ -3,40 +3,32 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import ViewMenu from '../../components/viewMenu'
-import mutator from '../../mutator'
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import Button from '../../widgets/buttons/button'
-import IconButton from '../../widgets/buttons/iconButton'
-import DropdownIcon from '../../widgets/icons/dropdown'
-import MenuWrapper from '../../widgets/menuWrapper'
-import Editable from '../../widgets/editable'
+import ViewMenu from 'src/components/viewMenu'
+import mutator from 'src/mutator'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import Button from 'src/widgets/buttons/button'
+import IconButton from 'src/widgets/buttons/iconButton'
+import DropdownIcon from 'src/widgets/icons/dropdown'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Editable from 'src/widgets/editable'
 
-import ModalWrapper from '../modalWrapper'
+import ModalWrapper from 'src/components/modalWrapper'
 
-import {useAppSelector} from '../../store/hooks'
-import {Permission} from '../../constants'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
-import {
-    getOnboardingTourCategory,
-    getOnboardingTourStarted,
-    getOnboardingTourStep,
-} from '../../store/users'
-import {
-    BoardTourSteps,
-    TOUR_BOARD,
-    TourCategoriesMapToSteps,
-} from '../onboardingTour'
-import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
-import AddViewTourStep from '../onboardingTour/addView/add_view'
-import {getCurrentCard} from '../../store/cards'
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import {useAppSelector} from 'src/store/hooks'
+import {Permission} from 'src/constants'
+import {useHasCurrentBoardPermissions} from 'src/hooks/permissions'
+import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from 'src/store/users'
+import {BoardTourSteps, TOUR_BOARD, TourCategoriesMapToSteps} from 'src/components/onboardingTour'
+import {OnboardingBoardTitle} from 'src/components/cardDetail/cardDetail'
+import AddViewTourStep from 'src/components/onboardingTour/addView/add_view'
+import {getCurrentCard} from 'src/store/cards'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
-import {getLimits} from '../../store/limits'
-import {LimitUnlimited} from '../../boardCloudLimits'
-import ViewLimitModalWrapper from '../viewLImitDialog/viewLimitDialogWrapper'
+import {getLimits} from 'src/store/limits'
+import {LimitUnlimited} from 'src/boardCloudLimits'
+import ViewLimitModalWrapper from 'src/components/viewLImitDialog/viewLimitDialogWrapper'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'

@@ -1,7 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {fireEvent, render, screen, waitFor} from '@testing-library/react'
+import {
+    fireEvent,
+    render,
+    screen,
+    waitFor
+} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
@@ -9,16 +14,16 @@ import {MemoryRouter} from 'react-router-dom'
 import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
-import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
-import {Utils} from '../../utils'
-import {mutator} from '../../mutator'
+import {IPropertyOption, IPropertyTemplate} from 'src/blocks/board'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockDOM, mockStateStore, wrapDNDIntl} from 'src/testUtils'
+import {Utils} from 'src/utils'
+import {mutator} from 'src/mutator'
 
 import Kanban from './kanban'
 
 global.fetch = jest.fn()
-jest.mock('../../utils')
+jest.mock('src/utils')
 const mockedUtils = mocked(Utils, true)
 const mockedchangePropertyOptionValue = jest.spyOn(mutator, 'changePropertyOptionValue')
 const mockedChangeViewCardOrder = jest.spyOn(mutator, 'changeViewCardOrder')

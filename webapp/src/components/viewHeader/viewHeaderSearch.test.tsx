@@ -7,7 +7,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mockStateStore, wrapIntl} from '../../testUtils'
+import {mockStateStore, wrapIntl} from 'src/testUtils'
 
 import ViewHeaderSearch from './viewHeaderSearch'
 

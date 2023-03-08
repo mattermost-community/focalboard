@@ -6,7 +6,7 @@ import React from 'react'
 import './topBar.scss'
 import {FormattedMessage} from 'react-intl'
 
-import {Constants} from '../constants'
+import {Constants} from 'src/constants'
 
 const TopBar = (): JSX.Element => {
     const feedbackUrl = 'https://www.focalboard.com/fwlink/feedback-boards.html?v=' + Constants.versionString

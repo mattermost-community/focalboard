@@ -1,6 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
@@ -10,39 +16,41 @@ import {Draggable, Droppable} from 'react-beautiful-dnd'
 
 import {HandRightIcon} from '@mattermost/compass-icons/components'
 
-import {Board} from '../../blocks/board'
-import mutator from '../../mutator'
-import IconButton from '../../widgets/buttons/iconButton'
-import DeleteIcon from '../../widgets/icons/delete'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
+import {Board} from 'src/blocks/board'
+import mutator from 'src/mutator'
+import IconButton from 'src/widgets/buttons/iconButton'
+import DeleteIcon from 'src/widgets/icons/delete'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import OptionsIcon from 'src/widgets/icons/options'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
 
 import './sidebarCategory.scss'
-import {Category, CategoryBoardMetadata, CategoryBoards} from '../../store/sidebar'
-import ChevronDown from '../../widgets/icons/chevronDown'
-import ChevronRight from '../../widgets/icons/chevronRight'
-import CreateNewFolder from '../../widgets/icons/newFolder'
-import CreateCategory from '../createCategory/createCategory'
-import {useAppSelector} from '../../store/hooks'
+import {Category, CategoryBoardMetadata, CategoryBoards} from 'src/store/sidebar'
+import ChevronDown from 'src/widgets/icons/chevronDown'
+import ChevronRight from 'src/widgets/icons/chevronRight'
+import CreateNewFolder from 'src/widgets/icons/newFolder'
+import CreateCategory from 'src/components/createCategory/createCategory'
+import {useAppSelector} from 'src/store/hooks'
+import {getOnboardingTourCategory, getOnboardingTourStep} from 'src/store/users'
+
+import {getCurrentCard} from 'src/store/cards'
+import {Utils} from 'src/utils'
+
 import {
-    getOnboardingTourCategory,
-    getOnboardingTourStep,
-} from '../../store/users'
+    TOUR_SIDEBAR,
+    SidebarTourSteps,
+    TOUR_BOARD,
+    FINISHED
+} from 'src/components/onboardingTour/index'
+import telemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
 
-import {getCurrentCard} from '../../store/cards'
-import {Utils} from '../../utils'
+import {getCurrentTeam} from 'src/store/teams'
 
-import {TOUR_SIDEBAR, SidebarTourSteps, TOUR_BOARD, FINISHED} from '../../components/onboardingTour/index'
-import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from 'src/components/confirmationDialogBox'
 
-import {getCurrentTeam} from '../../store/teams'
-
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
-
-import SidebarCategoriesTourStep from '../../components/onboardingTour/sidebarCategories/sidebarCategories'
-import ManageCategoriesTourStep from '../../components/onboardingTour/manageCategories/manageCategories'
+import SidebarCategoriesTourStep from 'src/components/onboardingTour/sidebarCategories/sidebarCategories'
+import ManageCategoriesTourStep from 'src/components/onboardingTour/manageCategories/manageCategories'
 
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'

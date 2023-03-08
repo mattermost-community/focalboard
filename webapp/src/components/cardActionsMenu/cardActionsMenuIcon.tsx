@@ -3,8 +3,8 @@
 
 import React from 'react'
 
-import OptionsIcon from '../../widgets/icons/options'
-import IconButton from '../../widgets/buttons/iconButton'
+import OptionsIcon from 'src/widgets/icons/options'
+import IconButton from 'src/widgets/buttons/iconButton'
 
 import './cardActionsMenuIcon.scss'
 

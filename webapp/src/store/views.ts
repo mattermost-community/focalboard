@@ -4,8 +4,8 @@
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 import isEqual from 'lodash/isEqual'
 
-import {BoardView, createBoardView} from '../blocks/boardView'
-import {Utils} from '../utils'
+import {BoardView, createBoardView} from 'src/blocks/boardView'
+import {Utils} from 'src/utils'
 
 import {initialReadOnlyLoad, loadBoardData} from './initialLoad'
 import {getCurrentBoard} from './boards'

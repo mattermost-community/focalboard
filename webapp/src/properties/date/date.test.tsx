@@ -9,15 +9,15 @@ import {mocked} from 'jest-mock'
 
 import '@testing-library/jest-dom'
 
-import {wrapIntl} from '../../testUtils'
-import {IPropertyTemplate, createBoard} from '../../blocks/board'
-import {createCard} from '../../blocks/card'
-import mutator from '../../mutator'
+import {wrapIntl} from 'src/testUtils'
+import {IPropertyTemplate, createBoard} from 'src/blocks/board'
+import {createCard} from 'src/blocks/card'
+import mutator from 'src/mutator'
 
 import DateProperty from './property'
 import DateProp from './date'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 // create Dates for specific days for this year.

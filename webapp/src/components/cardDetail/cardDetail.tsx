@@ -1,38 +1,45 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useRef, useState, Fragment, useMemo} from 'react'
+import React, {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+    Fragment,
+    useMemo
+} from 'react'
 import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 
-import {BlockIcons} from '../../blockIcons'
-import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
-import {Board} from '../../blocks/board'
-import {CommentBlock} from '../../blocks/commentBlock'
-import {AttachmentBlock} from '../../blocks/attachmentBlock'
-import {ContentBlock} from '../../blocks/contentBlock'
-import {Block, ContentBlockTypes, createBlock} from '../../blocks/block'
-import mutator from '../../mutator'
-import octoClient from '../../octoClient'
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
-import {Focusable} from '../../widgets/editable'
-import EditableArea from '../../widgets/editableArea'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {BlockIcons} from 'src/blockIcons'
+import {Card} from 'src/blocks/card'
+import {BoardView} from 'src/blocks/boardView'
+import {Board} from 'src/blocks/board'
+import {CommentBlock} from 'src/blocks/commentBlock'
+import {AttachmentBlock} from 'src/blocks/attachmentBlock'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import {Block, ContentBlockTypes, createBlock} from 'src/blocks/block'
+import mutator from 'src/mutator'
+import octoClient from 'src/octoClient'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
+import {Focusable} from 'src/widgets/editable'
+import EditableArea from 'src/widgets/editableArea'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
 
-import BlockIconSelector from '../blockIconSelector'
+import BlockIconSelector from 'src/components/blockIconSelector'
 
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {updateCards, setCurrent as setCurrentCard} from '../../store/cards'
-import {updateContents} from '../../store/contents'
-import {Permission} from '../../constants'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
-import BlocksEditor from '../blocksEditor/blocksEditor'
-import {BlockData} from '../blocksEditor/blocks/types'
-import {ClientConfig} from '../../config/clientConfig'
-import {getClientConfig} from '../../store/clientConfig'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {updateCards, setCurrent as setCurrentCard} from 'src/store/cards'
+import {updateContents} from 'src/store/contents'
+import {Permission} from 'src/constants'
+import {useHasCurrentBoardPermissions} from 'src/hooks/permissions'
+import BlocksEditor from 'src/components/blocksEditor/blocksEditor'
+import {BlockData} from 'src/components/blocksEditor/blocks/types'
+import {ClientConfig} from 'src/config/clientConfig'
+import {getClientConfig} from 'src/store/clientConfig'
 
-import CardSkeleton from '../../svg/card-skeleton'
+import CardSkeleton from 'src/svg/card-skeleton'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'

@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import {IntlShape} from 'react-intl'
 
-import {Options} from '../../components/calculations/options'
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {Options} from 'src/components/calculations/options'
+import {PropertyType, PropertyTypeEnum} from 'src/properties/types'
 
 import NumberProp from './number'
 

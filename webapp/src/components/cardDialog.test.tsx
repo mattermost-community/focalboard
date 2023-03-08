@@ -9,18 +9,18 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {mocked} from 'jest-mock'
 
-import mutator from '../mutator'
-import {IUser} from '../user'
-import {Utils} from '../utils'
-import octoClient from '../octoClient'
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
+import mutator from 'src/mutator'
+import {IUser} from 'src/user'
+import {Utils} from 'src/utils'
+import octoClient from 'src/octoClient'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockDOM, mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
 import CardDialog from './cardDialog'
 
-jest.mock('../mutator')
-jest.mock('../octoClient')
-jest.mock('../utils')
+jest.mock('src/mutator')
+jest.mock('src/octoClient')
+jest.mock('src/utils')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 
 const mockedUtils = mocked(Utils, true)

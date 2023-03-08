@@ -5,20 +5,20 @@ import userEvent from '@testing-library/user-event'
 import React, {ReactElement, ReactNode} from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {wrapIntl, mockStateStore} from '../../testUtils'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 
 //for contentRegistry
-import '../content/textElement'
-import '../content/imageElement'
-import '../content/dividerElement'
-import '../content/checkboxElement'
+import 'src/components/content/textElement'
+import 'src/components/content/imageElement'
+import 'src/components/content/dividerElement'
+import 'src/components/content/checkboxElement'
 import {CardDetailProvider} from './cardDetailContext'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 
 const board = TestBlockFactory.createBoard()
 const card = TestBlockFactory.createCard(board)

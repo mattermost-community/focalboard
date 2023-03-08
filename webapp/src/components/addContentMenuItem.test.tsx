@@ -10,11 +10,11 @@ import {mocked} from 'jest-mock'
 
 import userEvent from '@testing-library/user-event'
 
-import mutator from '../mutator'
+import mutator from 'src/mutator'
 
-import {TestBlockFactory} from '../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {wrapIntl} from '../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import AddContentMenuItem from './addContentMenuItem'
 
@@ -34,7 +34,7 @@ const wrap = (child: ReactNode): ReactElement => (
     )
 )
 
-jest.mock('../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 describe('components/addContentMenuItem', () => {

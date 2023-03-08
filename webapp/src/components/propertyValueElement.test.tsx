@@ -6,10 +6,10 @@ import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {wrapDNDIntl} from '../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 import 'isomorphic-fetch'
-import {IPropertyTemplate, IPropertyOption} from '../blocks/board'
-import {TestBlockFactory} from '../test/testBlockFactory'
+import {IPropertyTemplate, IPropertyOption} from 'src/blocks/board'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import PropertyValueElement from './propertyValueElement'
 

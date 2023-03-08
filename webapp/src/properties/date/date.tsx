@@ -8,20 +8,20 @@ import DayPicker from 'react-day-picker/DayPicker'
 
 import moment from 'moment'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import Editable from '../../widgets/editable'
-import SwitchOption from '../../widgets/menu/switchOption'
-import Button from '../../widgets/buttons/button'
+import Editable from 'src/widgets/editable'
+import SwitchOption from 'src/widgets/menu/switchOption'
+import Button from 'src/widgets/buttons/button'
 
-import Modal from '../../components/modal'
-import ModalWrapper from '../../components/modalWrapper'
-import {Utils} from '../../utils'
+import Modal from 'src/components/modal'
+import ModalWrapper from 'src/components/modalWrapper'
+import {Utils} from 'src/utils'
 
 import 'react-day-picker/lib/style.css'
 import './date.scss'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 export type DateProperty = {
     from?: number

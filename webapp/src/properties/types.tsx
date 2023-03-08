@@ -3,10 +3,10 @@
 import React from 'react'
 import {IntlShape} from 'react-intl'
 
-import {Card} from '../blocks/card'
-import {Board, IPropertyTemplate, PropertyTypeEnum as BoardPropertyTypeEnum} from '../blocks/board'
-import {Options} from '../components/calculations/options'
-import {Utils} from '../utils'
+import {Card} from 'src/blocks/card'
+import {Board, IPropertyTemplate, PropertyTypeEnum as BoardPropertyTypeEnum} from 'src/blocks/board'
+import {Options} from 'src/components/calculations/options'
+import {Utils} from 'src/utils'
 
 const hashSignToken = '___hash_sign___'
 function encodeText(text: string): string {

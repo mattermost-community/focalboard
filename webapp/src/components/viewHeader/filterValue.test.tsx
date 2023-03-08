@@ -10,19 +10,19 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {FilterClause} from '../../blocks/filterClause'
-import {IPropertyTemplate} from '../../blocks/board'
+import {FilterClause} from 'src/blocks/filterClause'
+import {IPropertyTemplate} from 'src/blocks/board'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {wrapIntl, mockStateStore} from '../../testUtils'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
 
-import mutator from '../../mutator'
-import propsRegistry from '../../properties'
+import mutator from 'src/mutator'
+import propsRegistry from 'src/properties'
 
 import FilterValue from './filterValue'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()

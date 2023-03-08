@@ -3,8 +3,8 @@
 
 import React from 'react'
 
-import {PropertyProps} from '../types'
-import BaseTextEditor from '../baseTextEditor'
+import {PropertyProps} from 'src/properties/types'
+import BaseTextEditor from 'src/properties/baseTextEditor'
 
 const Text = (props: PropertyProps): JSX.Element => {
     return (

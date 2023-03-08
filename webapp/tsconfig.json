@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
         "jsx": "react",
-        "target": "es2019",
-        "module": "commonjs",
+        "target": "esnext",
+        "module": "es2020",
         "esModuleInterop": true,
         "noImplicitAny": true,
+        "skipLibCheck": true,
         "strict": true,
         "strictNullChecks": true,
         "forceConsistentCasingInFileNames": true,
@@ -12,17 +13,17 @@
         "allowJs": true,
         "resolveJsonModule": true,
         "incremental": false,
-        "baseUrl": "src",
+        "baseUrl": ".",
         "outDir": "./dist",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "typeRoots": [ "./src/types", "./node_modules/@types"],
     },
     "include": [
-        "."
+        "./src/**/*",
     ],
     "exclude": [
         ".git",
-        "**/node_modules/*",
+        "!node_modules/@types",
         "dist",
-        "pack"
     ]
 }

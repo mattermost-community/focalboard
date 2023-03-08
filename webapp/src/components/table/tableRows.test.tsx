@@ -9,9 +9,9 @@ import '@testing-library/jest-dom'
 
 import 'isomorphic-fetch'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
-import {wrapDNDIntl} from '../../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {FetchMock} from 'src/test/fetchMock'
+import {wrapDNDIntl} from 'src/testUtils'
 
 import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableRows from './tableRows'

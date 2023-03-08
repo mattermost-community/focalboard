@@ -8,9 +8,9 @@ import {CSSObject} from '@emotion/serialize'
 
 import {useIntl, IntlShape} from 'react-intl'
 
-import {getSelectBaseStyle} from '../../theme'
-import ChevronUp from '../../widgets/icons/chevronUp'
-import {IPropertyTemplate} from '../../blocks/board'
+import {getSelectBaseStyle} from 'src/theme'
+import ChevronUp from 'src/widgets/icons/chevronUp'
+import {IPropertyTemplate} from 'src/blocks/board'
 
 export type Option = {
     label: string

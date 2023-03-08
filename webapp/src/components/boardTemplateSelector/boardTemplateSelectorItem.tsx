@@ -3,17 +3,17 @@
 import React, {useCallback, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {Board} from '../../blocks/board'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import IconButton from '../../widgets/buttons/iconButton'
-import DeleteIcon from '../../widgets/icons/delete'
-import EditIcon from '../../widgets/icons/edit'
-import DeleteBoardDialog from '../sidebar/deleteBoardDialog'
+import {Board} from 'src/blocks/board'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import IconButton from 'src/widgets/buttons/iconButton'
+import DeleteIcon from 'src/widgets/icons/delete'
+import EditIcon from 'src/widgets/icons/edit'
+import DeleteBoardDialog from 'src/components/sidebar/deleteBoardDialog'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
 import './boardTemplateSelectorItem.scss'
-import {Constants, Permission} from '../../constants'
+import {Constants, Permission} from 'src/constants'
 
 type Props = {
     isActive: boolean

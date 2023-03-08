@@ -5,10 +5,10 @@ import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 
-import {MemberRole} from '../blocks/board'
+import {MemberRole} from 'src/blocks/board'
 
-import {wrapDNDIntl} from '../testUtils'
-import {IUser} from '../user'
+import {wrapDNDIntl} from 'src/testUtils'
+import {IUser} from 'src/user'
 
 import ConfirmAddUserForNotifications from './confirmAddUserForNotifications'
 

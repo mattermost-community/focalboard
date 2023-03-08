@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {BoardsCloudLimits} from '../boardsCloudLimits'
+import {BoardsCloudLimits} from 'src/boardsCloudLimits'
 
 import {initialLoad} from './initialLoad'
 

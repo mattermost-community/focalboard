@@ -5,22 +5,20 @@ import React, {useState, KeyboardEvent} from 'react'
 
 import {useIntl} from 'react-intl'
 
-import {IUser} from '../../user'
-import {Category} from '../../store/sidebar'
-import {getCurrentTeam} from '../../store/teams'
-import mutator from '../../mutator'
-import {useAppSelector} from '../../store/hooks'
-import {
-    getMe,
-} from '../../store/users'
+import {IUser} from 'src/user'
+import {Category} from 'src/store/sidebar'
+import {getCurrentTeam} from 'src/store/teams'
+import mutator from 'src/mutator'
+import {useAppSelector} from 'src/store/hooks'
+import {getMe} from 'src/store/users'
 
-import {Utils} from '../../utils'
+import {Utils} from 'src/utils'
 
-import Dialog from '../dialog'
-import Button from '../../widgets/buttons/button'
+import Dialog from 'src/components/dialog'
+import Button from 'src/widgets/buttons/button'
 
 import './createCategory.scss'
-import CloseCircle from '../../widgets/icons/closeCircle'
+import CloseCircle from 'src/widgets/icons/closeCircle'
 
 type Props = {
     boardCategoryId?: string

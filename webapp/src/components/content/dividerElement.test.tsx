@@ -4,7 +4,7 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import DividerElement from './dividerElement'
 

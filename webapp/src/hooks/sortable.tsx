@@ -1,10 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useRef} from 'react'
-import {useDrag, useDrop, DragElementWrapper, DragSourceOptions, DragPreviewOptions} from 'react-dnd'
+import {
+    useDrag,
+    useDrop,
+    DragElementWrapper,
+    DragSourceOptions,
+    DragPreviewOptions
+} from 'react-dnd'
 
-import {IContentBlockWithCords} from '../blocks/contentBlock'
-import {Block} from '../blocks/block'
+import {IContentBlockWithCords} from 'src/blocks/contentBlock'
+import {Block} from 'src/blocks/block'
 interface ISortableWithGripItem {
     block: Block | Block[]
     cords: {x: number, y?: number, z?: number}

@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 import ConfirmPerson from './confirmPerson'
 

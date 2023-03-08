@@ -3,11 +3,11 @@
 
 import React from 'react'
 
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoardId} from '../../store/boards'
-import {getCurrentTeam} from '../../store/teams'
-import {Permission} from '../../constants'
-import {useHasPermissions} from '../../hooks/permissions'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentBoardId} from 'src/store/boards'
+import {getCurrentTeam} from 'src/store/teams'
+import {Permission} from 'src/constants'
+import {useHasPermissions} from 'src/hooks/permissions'
 
 type Props = {
     boardId?: string
@@ -17,7 +17,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const BoardPermissionGate = React.memo((props: Props): React.ReactElement|null => {
+const BoardPermissionGate = (props: Props): React.ReactElement|null => {
     const currentTeam = useAppSelector(getCurrentTeam)
     const currentBoardId = useAppSelector(getCurrentBoardId)
 
@@ -34,6 +34,6 @@ const BoardPermissionGate = React.memo((props: Props): React.ReactElement|null =
         return (<>{props.children}</>)
     }
     return null
-})
+}
 
-export default BoardPermissionGate
+export default React.memo(BoardPermissionGate)

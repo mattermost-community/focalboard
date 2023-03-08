@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useRef, useEffect} from 'react'
 
-import {BlockInputProps, ContentType} from '../types'
-import {Utils} from '../../../../utils'
+import {BlockInputProps, ContentType} from 'src/components/blocksEditor/blocks/types'
+import {Utils} from 'src/utils'
 
 import './text.scss'
 

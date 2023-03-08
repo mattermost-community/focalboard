@@ -14,15 +14,15 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {Board} from '../../blocks/board'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {Board} from 'src/blocks/board'
 
-import client from '../../octoClient'
+import client from 'src/octoClient'
 
 import ViewLimitModalWrapper from './viewLimitDialogWrapper'
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 const mockedOctoClient = mocked(client, true)
 
 describe('components/viewLimitDialog/ViewL]imitDialog', () => {

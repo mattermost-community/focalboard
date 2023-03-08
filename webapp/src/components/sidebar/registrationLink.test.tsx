@@ -8,7 +8,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import RegistrationLink from './registrationLink'
 

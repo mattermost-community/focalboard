@@ -3,8 +3,8 @@
 import {render} from '@testing-library/react'
 import React from 'react'
 
-import {wrapDNDIntl} from '../testUtils'
-import {Constants} from '../constants'
+import {wrapDNDIntl} from 'src/testUtils'
+import {Constants} from 'src/constants'
 
 import TopBar from './topBar'
 

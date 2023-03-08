@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import Switch from '../switch'
+import Switch from 'src/widgets/switch'
 
 import {MenuOptionProps} from './menuItem'
 

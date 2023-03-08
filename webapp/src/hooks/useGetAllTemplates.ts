@@ -3,15 +3,15 @@
 
 import {useEffect, useMemo} from 'react'
 
-import {Board} from '../blocks/board'
+import {Board} from 'src/blocks/board'
 
-import octoClient from '../octoClient'
+import octoClient from 'src/octoClient'
 
-import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {fetchGlobalTemplates, getGlobalTemplates} from '../store/globalTemplates'
-import {getTemplates} from '../store/boards'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {fetchGlobalTemplates, getGlobalTemplates} from 'src/store/globalTemplates'
+import {getTemplates} from 'src/store/boards'
 
-import {Constants} from '../constants'
+import {Constants} from 'src/constants'
 
 export const useGetAllTemplates = () => {
     const dispatch = useAppDispatch()

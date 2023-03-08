@@ -2,10 +2,10 @@
 // See LICENSE.txt for license information.
 import {IntlShape} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
-import {Card} from '../../blocks/card'
-import {Utils} from '../../utils'
-import {PropertyType, PropertyTypeEnum, FilterValueType} from '../types'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
+import {Utils} from 'src/utils'
+import {PropertyType, PropertyTypeEnum, FilterValueType} from 'src/properties/types'
 
 import Select from './select'
 

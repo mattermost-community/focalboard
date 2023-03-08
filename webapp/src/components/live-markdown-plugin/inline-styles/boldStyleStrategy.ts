@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {InlineStrategy} from '../pluginStrategy'
-import findRangesWithRegex from '../utils/findRangesWithRegex'
+import {InlineStrategy} from 'src/components/live-markdown-plugin/pluginStrategy'
+import findRangesWithRegex from 'src/components/live-markdown-plugin/utils/findRangesWithRegex'
 
 // Bold can be delimited by: **, __, ***, and ___
 const createBoldStyleStrategy = (): InlineStrategy => {

@@ -5,17 +5,17 @@ import React from 'react'
 
 import {useIntl} from 'react-intl'
 
-import CardIcon from '../../widgets/icons/card'
-import Menu from '../../widgets/menu'
+import CardIcon from 'src/widgets/icons/card'
+import Menu from 'src/widgets/menu'
 
-import MenuWrapper from '../../widgets/menuWrapper'
-import OptionsIcon from '../../widgets/icons/options'
-import IconButton from '../../widgets/buttons/iconButton'
-import CheckIcon from '../../widgets/icons/check'
-import mutator from '../../mutator'
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentView} from '../../store/views'
-import {getCurrentBoardId} from '../../store/boards'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import OptionsIcon from 'src/widgets/icons/options'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CheckIcon from 'src/widgets/icons/check'
+import mutator from 'src/mutator'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentView} from 'src/store/views'
+import {getCurrentBoardId} from 'src/store/boards'
 
 type Props = {
     addCard: () => void

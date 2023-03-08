@@ -5,34 +5,42 @@ import createEmojiPlugin from '@draft-js-plugins/emoji'
 import '@draft-js-plugins/emoji/lib/plugin.css'
 import createMentionPlugin from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
-import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
+import {
+    ContentState,
+    DraftHandleValue,
+    EditorState,
+    getDefaultKeyBinding
+} from 'draft-js'
 import React, {
-    ReactElement, useCallback, useEffect,
-    useMemo, useRef,
-    useState,
+    ReactElement,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
 } from 'react'
 
 import {debounce} from 'lodash'
 
-import {useAppSelector} from '../../store/hooks'
-import {IUser} from '../../user'
-import {getBoardUsersList, getMe} from '../../store/users'
-import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
-import {useHasPermissions} from '../../hooks/permissions'
-import {Permission} from '../../constants'
-import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
-import mutator from '../../mutator'
-import ConfirmAddUserForNotifications from '../confirmAddUserForNotifications'
-import RootPortal from '../rootPortal'
+import {useAppSelector} from 'src/store/hooks'
+import {IUser} from 'src/user'
+import {getBoardUsersList, getMe} from 'src/store/users'
+import createLiveMarkdownPlugin from 'src/components/live-markdown-plugin/liveMarkdownPlugin'
+import {useHasPermissions} from 'src/hooks/permissions'
+import {Permission} from 'src/constants'
+import {BoardMember, BoardTypeOpen, MemberRole} from 'src/blocks/board'
+import mutator from 'src/mutator'
+import ConfirmAddUserForNotifications from 'src/components/confirmAddUserForNotifications'
+import RootPortal from 'src/components/rootPortal'
 
 import './markdownEditorInput.scss'
 
-import {getCurrentBoard} from '../../store/boards'
-import octoClient from '../../octoClient'
+import {getCurrentBoard} from 'src/store/boards'
+import octoClient from 'src/octoClient'
 
-import {Utils} from '../../utils'
-import {ClientConfig} from '../../config/clientConfig'
-import {getClientConfig} from '../../store/clientConfig'
+import {Utils} from 'src/utils'
+import {ClientConfig} from 'src/config/clientConfig'
+import {getClientConfig} from 'src/store/clientConfig'
 
 import Entry from './entryComponent/entryComponent'
 

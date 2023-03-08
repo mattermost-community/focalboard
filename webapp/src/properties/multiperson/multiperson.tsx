@@ -3,8 +3,8 @@
 
 import React from 'react'
 
-import {PropertyProps} from '../types'
-import ConfirmPerson from '../person/confirmPerson'
+import {PropertyProps} from 'src/properties/types'
+import ConfirmPerson from 'src/properties/person/confirmPerson'
 
 const MultiPerson = (props: PropertyProps): JSX.Element => {
     return (

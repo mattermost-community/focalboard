@@ -3,9 +3,9 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import Menu from '../widgets/menu'
-import propsRegistry from '../properties'
-import {PropertyType} from '../properties/types'
+import Menu from 'src/widgets/menu'
+import propsRegistry from 'src/properties'
+import {PropertyType} from 'src/properties/types'
 import './propertyMenu.scss'
 
 type Props = {

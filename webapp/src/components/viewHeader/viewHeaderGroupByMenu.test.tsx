@@ -10,16 +10,16 @@ import {mocked} from 'jest-mock'
 
 import {MockStoreEnhanced} from 'redux-mock-store'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import {wrapIntl, mockStateStore} from '../../testUtils'
-import {IPropertyOption} from '../../blocks/board'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
+import {IPropertyOption} from 'src/blocks/board'
 
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()

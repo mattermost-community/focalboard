@@ -2,7 +2,12 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen, act, fireEvent} from '@testing-library/react'
+import {
+    render,
+    screen,
+    act,
+    fireEvent
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
@@ -11,15 +16,15 @@ import {createIntl} from 'react-intl'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {wrapIntl} from '../../testUtils'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import mutator from '../../mutator'
-import propsRegistry from '../../properties'
-import {PropertyType} from '../../properties/types'
+import {wrapIntl} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import mutator from 'src/mutator'
+import propsRegistry from 'src/properties'
+import {PropertyType} from 'src/properties/types'
 
 import CardDetailProperties from './cardDetailProperties'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 describe('components/cardDetail/CardDetailProperties', () => {

@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useRef, useEffect, useState} from 'react'
 
-import {BlockInputProps, ContentType} from '../types'
-import octoClient from '../../../../octoClient'
+import {BlockInputProps, ContentType} from 'src/components/blocksEditor/blocks/types'
+import octoClient from 'src/octoClient'
 
 import './attachment.scss'
 

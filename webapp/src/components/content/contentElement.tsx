@@ -3,10 +3,10 @@
 
 import {useCallback} from 'react'
 
-import {ContentBlock} from '../../blocks/contentBlock'
-import {Utils} from '../../utils'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import {Utils} from 'src/utils'
 
-import {useCardDetailContext} from '../cardDetail/cardDetailContext'
+import {useCardDetailContext} from 'src/components/cardDetail/cardDetailContext'
 
 import {contentRegistry} from './contentRegistry'
 

@@ -9,7 +9,7 @@ import configureStore from 'redux-mock-store'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {wrapIntl} from '../../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import AddViewTourStep from './add_view'
 

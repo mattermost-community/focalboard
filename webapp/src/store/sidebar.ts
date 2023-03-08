@@ -1,11 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {
+    createAsyncThunk,
+    createSelector,
+    createSlice,
+    PayloadAction
+} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
+import {default as client} from 'src/octoClient'
 
-import {Utils} from '../utils'
+import {Utils} from 'src/utils'
 
 import {RootState} from './index'
 

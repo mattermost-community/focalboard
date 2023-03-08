@@ -4,14 +4,14 @@ import React from 'react'
 import {render} from '@testing-library/react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 import '@testing-library/jest-dom'
-import {wrapIntl, mockStateStore} from '../../testUtils'
-import {IPropertyTemplate} from '../../blocks/board'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
+import {IPropertyTemplate} from 'src/blocks/board'
 
 import CalendarView from './fullCalendar'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 
 describe('components/calendar/toolbar', () => {
     const mockShow = jest.fn()

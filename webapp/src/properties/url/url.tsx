@@ -1,19 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useEffect, useRef, useState, useCallback} from 'react'
+import React, {
+    useEffect,
+    useRef,
+    useState,
+    useCallback
+} from 'react'
 import {useIntl} from 'react-intl'
 
-import Editable, {Focusable} from '../../widgets/editable'
+import Editable, {Focusable} from 'src/widgets/editable'
 
-import {Utils} from '../../utils'
-import mutator from '../../mutator'
-import EditIcon from '../../widgets/icons/edit'
-import IconButton from '../../widgets/buttons/iconButton'
-import DuplicateIcon from '../../widgets/icons/duplicate'
-import {sendFlashMessage} from '../../components/flashMessages'
+import {Utils} from 'src/utils'
+import mutator from 'src/mutator'
+import EditIcon from 'src/widgets/icons/edit'
+import IconButton from 'src/widgets/buttons/iconButton'
+import DuplicateIcon from 'src/widgets/icons/duplicate'
+import {sendFlashMessage} from 'src/components/flashMessages'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 import './url.scss'
 

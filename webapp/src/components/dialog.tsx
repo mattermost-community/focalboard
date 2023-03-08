@@ -4,10 +4,10 @@ import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
-import IconButton from '../widgets/buttons/iconButton'
-import CloseIcon from '../widgets/icons/close'
-import OptionsIcon from '../widgets/icons/options'
-import MenuWrapper from '../widgets/menuWrapper'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CloseIcon from 'src/widgets/icons/close'
+import OptionsIcon from 'src/widgets/icons/options'
+import MenuWrapper from 'src/widgets/menuWrapper'
 import './dialog.scss'
 
 type Props = {

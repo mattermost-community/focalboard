@@ -3,13 +3,13 @@
 import {useEffect} from 'react'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {getBoards, getCurrentBoardId} from '../../store/boards'
-import {setCurrent as setCurrentView, getCurrentBoardViews} from '../../store/views'
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import {UserSettings} from '../../userSettings'
-import {Utils} from '../../utils'
-import {getSidebarCategories} from '../../store/sidebar'
-import {Constants} from '../../constants'
+import {getBoards, getCurrentBoardId} from 'src/store/boards'
+import {setCurrent as setCurrentView, getCurrentBoardViews} from 'src/store/views'
+import {useAppSelector, useAppDispatch} from 'src/store/hooks'
+import {UserSettings} from 'src/userSettings'
+import {Utils} from 'src/utils'
+import {getSidebarCategories} from 'src/store/sidebar'
+import {Constants} from 'src/constants'
 
 const TeamToBoardAndViewRedirect = (): null => {
     const boardId = useAppSelector(getCurrentBoardId)

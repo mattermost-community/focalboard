@@ -1,6 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {render, screen, act, waitFor, within} from '@testing-library/react'
+import {
+    render,
+    screen,
+    act,
+    waitFor,
+    within
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {MockStoreEnhanced} from 'redux-mock-store'
@@ -12,15 +18,15 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {MemoryRouter, Router} from 'react-router-dom'
 
-import Mutator from '../../mutator'
-import {Team} from '../../store/teams'
-import {createBoard, Board} from '../../blocks/board'
-import {IUser} from '../../user'
-import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
+import Mutator from 'src/mutator'
+import {Team} from 'src/store/teams'
+import {createBoard, Board} from 'src/blocks/board'
+import {IUser} from 'src/user'
+import {mockDOM, mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
-import client from '../../octoClient'
+import client from 'src/octoClient'
 
-import TelemetryClient from '../../telemetry/telemetryClient'
+import TelemetryClient from 'src/telemetry/telemetryClient'
 
 import BoardTemplateSelector from './boardTemplateSelector'
 
@@ -34,16 +40,16 @@ jest.mock('react-router-dom', () => {
         }),
     }
 })
-jest.mock('../../octoClient', () => {
+jest.mock('src/octoClient', () => {
     return {
         getAllBlocks: jest.fn(() => Promise.resolve([])),
         patchUserConfig: jest.fn(() => Promise.resolve({})),
     }
 })
-jest.mock('../../mutator')
-jest.mock('../../utils')
+jest.mock('src/mutator')
+jest.mock('src/utils')
 
-jest.mock('../../telemetry/telemetryClient')
+jest.mock('src/telemetry/telemetryClient')
 const mockedTelemetry = mocked(TelemetryClient, true)
 
 describe('components/boardTemplateSelector/boardTemplateSelector', () => {

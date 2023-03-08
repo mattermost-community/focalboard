@@ -1,8 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {createContext, ReactElement, ReactNode, useCallback, useContext, useMemo} from 'react'
+import React, {
+    createContext,
+    ReactElement,
+    ReactNode,
+    useCallback,
+    useContext,
+    useMemo
+} from 'react'
 
-import {Constants} from '../../constants'
+import {Constants} from 'src/constants'
 
 export type ColumnResizeContextType = {
     updateRef: (cardId: string, columnId: string, element: HTMLDivElement | null) => void

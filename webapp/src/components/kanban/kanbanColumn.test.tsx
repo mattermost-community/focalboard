@@ -3,7 +3,7 @@
 import {render} from '@testing-library/react'
 import React from 'react'
 
-import {wrapDNDIntl} from '../../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
 import KanbanColumn from './kanbanColumn'
 describe('src/components/kanban/kanbanColumn', () => {

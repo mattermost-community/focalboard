@@ -10,19 +10,24 @@ import userEvent from '@testing-library/user-event'
 
 import thunk from 'redux-thunk'
 
-import {IUser} from '../user'
-import octoClient from '../octoClient'
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {mockDOM, mockMatchMedia, mockStateStore, wrapDNDIntl} from '../testUtils'
-import {Constants} from '../constants'
-import {Utils} from '../utils'
+import {IUser} from 'src/user'
+import octoClient from 'src/octoClient'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {
+    mockDOM,
+    mockMatchMedia,
+    mockStateStore,
+    wrapDNDIntl
+} from 'src/testUtils'
+import {Constants} from 'src/constants'
+import {Utils} from 'src/utils'
 
 import Workspace from './workspace'
 
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
 jest.useFakeTimers()
-jest.mock('../utils')
-jest.mock('../octoClient')
+jest.mock('src/utils')
+jest.mock('src/octoClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedOctoClient = mocked(octoClient, true)

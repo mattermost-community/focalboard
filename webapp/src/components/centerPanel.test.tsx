@@ -1,19 +1,25 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {fireEvent, render, screen, within, act} from '@testing-library/react'
+import {
+    fireEvent,
+    render,
+    screen,
+    within,
+    act
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {IPropertyTemplate} from '../blocks/board'
-import {Utils} from '../utils'
-import {IUser} from '../user'
-import octoClient from '../octoClient'
-import Mutator from '../mutator'
-import {Constants} from '../constants'
+import {mockDOM, mockStateStore, wrapDNDIntl} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {Utils} from 'src/utils'
+import {IUser} from 'src/user'
+import octoClient from 'src/octoClient'
+import Mutator from 'src/mutator'
+import {Constants} from 'src/constants'
 
 import CenterPanel from './centerPanel'
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
@@ -27,16 +33,16 @@ jest.mock('react-router-dom', () => {
         }),
     }
 })
-jest.mock('../utils')
-jest.mock('../octoClient')
-jest.mock('../mutator')
-jest.mock('../telemetry/telemetryClient')
+jest.mock('src/utils')
+jest.mock('src/octoClient')
+jest.mock('src/mutator')
+jest.mock('src/telemetry/telemetryClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
 const mockedOctoClient = mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
-mockedUtils.generateClassName = jest.requireActual('../utils').Utils.generateClassName
+mockedUtils.generateClassName = jest.requireActual('src/utils').Utils.generateClassName
 describe('components/centerPanel', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'

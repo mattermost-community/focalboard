@@ -3,19 +3,19 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {CsvExporter} from '../../csvExporter'
-import {Archiver} from '../../archiver'
-import {Board} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import IconButton from '../../widgets/buttons/iconButton'
-import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import {Utils} from '../../utils'
+import {CsvExporter} from 'src/csvExporter'
+import {Archiver} from 'src/archiver'
+import {Board} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import IconButton from 'src/widgets/buttons/iconButton'
+import OptionsIcon from 'src/widgets/icons/options'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import {Utils} from 'src/utils'
 
-import ModalWrapper from '../modalWrapper'
-import {sendFlashMessage} from '../flashMessages'
+import ModalWrapper from 'src/components/modalWrapper'
+import {sendFlashMessage} from 'src/components/flashMessages'
 
 type Props = {
     board: Board

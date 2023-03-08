@@ -7,11 +7,11 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
-import {createCard} from '../../blocks/card'
-import {IPropertyTemplate, Board} from '../../blocks/board'
-import {wrapIntl} from '../../testUtils'
+import {createCard} from 'src/blocks/card'
+import {IPropertyTemplate, Board} from 'src/blocks/board'
+import {wrapIntl} from 'src/testUtils'
 
-import {createCommentBlock} from '../../blocks/commentBlock'
+import {createCommentBlock} from 'src/blocks/commentBlock'
 
 import UpdatedTimeProperty from './property'
 import UpdatedTime from './updatedTime'

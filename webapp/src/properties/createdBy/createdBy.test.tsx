@@ -7,11 +7,11 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
-import {IUser} from '../../user'
-import {createCard} from '../../blocks/card'
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {IUser} from 'src/user'
+import {createCard} from 'src/blocks/card'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import CreatedByProperty from './property'
 import CreatedBy from './createdBy'

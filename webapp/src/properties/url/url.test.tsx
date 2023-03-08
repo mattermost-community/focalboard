@@ -9,17 +9,17 @@ import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {wrapIntl} from '../../testUtils'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {Utils} from '../../utils'
-import {sendFlashMessage} from '../../components/flashMessages'
-import mutator from '../../mutator'
+import {wrapIntl} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {Utils} from 'src/utils'
+import {sendFlashMessage} from 'src/components/flashMessages'
+import mutator from 'src/mutator'
 
 import UrlProperty from './property'
 import Url from './url'
 
-jest.mock('../../components/flashMessages')
-jest.mock('../../mutator')
+jest.mock('src/components/flashMessages')
+jest.mock('src/mutator')
 
 const mockedCopy = jest.spyOn(Utils, 'copyTextToClipboard').mockImplementation(() => true)
 const mockedSendFlashMessage = mocked(sendFlashMessage, true)

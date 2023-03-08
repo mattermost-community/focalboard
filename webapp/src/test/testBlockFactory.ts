@@ -1,20 +1,25 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {Board, IPropertyOption, IPropertyTemplate, createBoard} from '../blocks/board'
-import {BoardView, createBoardView} from '../blocks/boardView'
-import {Card, createCard} from '../blocks/card'
-import {CommentBlock, createCommentBlock} from '../blocks/commentBlock'
-import {DividerBlock, createDividerBlock} from '../blocks/dividerBlock'
-import {createFilterClause} from '../blocks/filterClause'
-import {createFilterGroup} from '../blocks/filterGroup'
-import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
-import {TextBlock, createTextBlock} from '../blocks/textBlock'
-import {Category, CategoryBoards} from '../store/sidebar'
-import {Utils} from '../utils'
-import {CheckboxBlock, createCheckboxBlock} from '../blocks/checkboxBlock'
-import {Block} from '../blocks/block'
-import {IUser} from '../user'
+import {
+    Board,
+    IPropertyOption,
+    IPropertyTemplate,
+    createBoard
+} from 'src/blocks/board'
+import {BoardView, createBoardView} from 'src/blocks/boardView'
+import {Card, createCard} from 'src/blocks/card'
+import {CommentBlock, createCommentBlock} from 'src/blocks/commentBlock'
+import {DividerBlock, createDividerBlock} from 'src/blocks/dividerBlock'
+import {createFilterClause} from 'src/blocks/filterClause'
+import {createFilterGroup} from 'src/blocks/filterGroup'
+import {ImageBlock, createImageBlock} from 'src/blocks/imageBlock'
+import {TextBlock, createTextBlock} from 'src/blocks/textBlock'
+import {Category, CategoryBoards} from 'src/store/sidebar'
+import {Utils} from 'src/utils'
+import {CheckboxBlock, createCheckboxBlock} from 'src/blocks/checkboxBlock'
+import {Block} from 'src/blocks/block'
+import {IUser} from 'src/user'
 
 class TestBlockFactory {
     static createBoard(): Board {

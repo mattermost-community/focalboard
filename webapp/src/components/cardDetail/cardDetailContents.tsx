@@ -3,18 +3,18 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {IContentBlockWithCords, ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
-import {Card} from '../../blocks/card'
-import {createTextBlock} from '../../blocks/textBlock'
-import {Block} from '../../blocks/block'
-import mutator from '../../mutator'
-import octoClient from '../../octoClient'
-import {useSortableWithGrip} from '../../hooks/sortable'
+import {IContentBlockWithCords, ContentBlock as ContentBlockType} from 'src/blocks/contentBlock'
+import {Card} from 'src/blocks/card'
+import {createTextBlock} from 'src/blocks/textBlock'
+import {Block} from 'src/blocks/block'
+import mutator from 'src/mutator'
+import octoClient from 'src/octoClient'
+import {useSortableWithGrip} from 'src/hooks/sortable'
 
-import ContentBlock from '../contentBlock'
-import {MarkdownEditor} from '../markdownEditor'
+import ContentBlock from 'src/components/contentBlock'
+import {MarkdownEditor} from 'src/components/markdownEditor'
 
-import AddDescriptionTourStep from '../onboardingTour/addDescription/add_description'
+import AddDescriptionTourStep from 'src/components/onboardingTour/addDescription/add_description'
 
 import {dragAndDropRearrange} from './cardDetailContentsUtility'
 

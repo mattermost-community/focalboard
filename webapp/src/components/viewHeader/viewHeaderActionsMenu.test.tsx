@@ -10,19 +10,19 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {wrapIntl, mockStateStore} from '../../testUtils'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
 
-import {Archiver} from '../../archiver'
+import {Archiver} from 'src/archiver'
 
-import {CsvExporter} from '../../csvExporter'
+import {CsvExporter} from 'src/csvExporter'
 
 import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
 
-jest.mock('../../archiver')
-jest.mock('../../csvExporter')
-jest.mock('../../mutator')
+jest.mock('src/archiver')
+jest.mock('src/csvExporter')
+jest.mock('src/mutator')
 const mockedArchiver = mocked(Archiver, true)
 const mockedCsvExporter = mocked(CsvExporter, true)
 

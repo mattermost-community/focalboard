@@ -9,11 +9,11 @@ import '@testing-library/jest-dom'
 
 import userEvent from '@testing-library/user-event'
 
-import {wrapIntl} from '../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import {FlashMessages, sendFlashMessage} from './flashMessages'
+import FlashMessages, {sendFlashMessage} from './flashMessages'
 
-jest.mock('../mutator')
+jest.mock('src/mutator')
 
 beforeEach(() => {
     jest.useFakeTimers()

@@ -5,8 +5,8 @@ import React, {useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 
-import Button from '../../widgets/buttons/button'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import Button from 'src/widgets/buttons/button'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
 
 import './shareBoardLoginButton.scss'
 

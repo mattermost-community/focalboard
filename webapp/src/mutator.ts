@@ -7,8 +7,24 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
-import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
+import {
+    Board,
+    BoardMember,
+    BoardsAndBlocks,
+    IPropertyOption,
+    IPropertyTemplate,
+    PropertyTypeEnum,
+    createBoard,
+    createPatchesFromBoards,
+    createPatchesFromBoardsAndBlocks,
+    createCardPropertiesPatches
+} from './blocks/board'
+import {
+    BoardView,
+    ISortOption,
+    createBoardView,
+    KanbanCalculationFields
+} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
 import {CommentBlock} from './blocks/commentBlock'

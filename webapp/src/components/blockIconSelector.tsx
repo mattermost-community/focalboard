@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 
-import {BlockIcons} from '../blockIcons'
-import {Card} from '../blocks/card'
-import mutator from '../mutator'
+import {BlockIcons} from 'src/blockIcons'
+import {Card} from 'src/blocks/card'
+import mutator from 'src/mutator'
 
 import IconSelector from './iconSelector'
 

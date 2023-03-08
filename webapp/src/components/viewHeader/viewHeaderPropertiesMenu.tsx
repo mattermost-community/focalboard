@@ -3,13 +3,13 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Constants} from '../../constants'
-import {IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
+import {Constants} from 'src/constants'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import mutator from 'src/mutator'
+import Button from 'src/widgets/buttons/button'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
 
 type Props = {
     properties: readonly IPropertyTemplate[]

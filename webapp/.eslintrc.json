@@ -1,35 +1,49 @@
 {
   "extends": [
-    "plugin:mattermost/react",
+    "plugin:react/recommended",
     "plugin:cypress/recommended",
     "plugin:jquery/deprecated"
   ],
   "plugins": [
     "react",
     "babel",
-    "mattermost",
     "import",
     "cypress",
     "jquery",
-    "no-only-tests"
+    "no-only-tests",
+    "header",
+    "formatjs",
+    "unused-imports",
+    "no-relative-import-paths",
+    "import-newlines"
+
   ],
   "parser": "@typescript-eslint/parser",
-  "env": {
-    "jest": true,
-    "cypress/globals": true
-  },
   "settings": {
     "import/resolver": "webpack",
     "react": {
-        "pragma": "React",
-        "version": "detect"
+      "pragma": "React",
+      "version": "detect"
     }
   },
   "rules": {
+    "header/header": [
+      2,
+      "line",
+      " Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.\n See LICENSE.txt for license information."
+    ],
     "max-lines": "off",
     "no-unused-expressions": 0,
-    "babel/no-unused-expressions": [2, {"allowShortCircuit": true}],
-    "eol-last": ["error", "always"],
+    "babel/no-unused-expressions": [
+      2,
+      {
+        "allowShortCircuit": true
+      }
+    ],
+    "eol-last": [
+      2,
+      "always"
+    ],
     "import/no-unresolved": 2,
     "import/order": [
       2,
@@ -60,39 +74,83 @@
       }
     ],
     "react/no-string-refs": 2,
-    "no-only-tests/no-only-tests": ["error", {"focus": ["only", "skip"]}],
-    "max-nested-callbacks": ["error", {"max": 5}],
-	"no-shadow": "off",
-    "@typescript-eslint/no-shadow": "error"	
+    "no-only-tests/no-only-tests": [
+      2,
+      {
+        "focus": [
+          "only",
+          "skip"
+        ]
+      }
+    ],
+    "max-nested-callbacks": [
+      2,
+      {
+        "max": 5
+      }
+    ],
+    "no-shadow": 0,
+    "@typescript-eslint/no-shadow": 2,
+    "unused-imports/no-unused-imports": 2,
+    "no-relative-import-paths/no-relative-import-paths": [
+      "error",
+      { "allowSameFolder": true, "rootDir": "webapp/" }
+    ],
+ /*    "no-restricted-imports": ["error", {
+      "patterns": ["..*"]
+    }], */
+    "import-newlines/enforce": [
+      2,
+      3
+    ],
+    "object-curly-spacing": [
+      2,
+      "never"
+    ]
   },
   "overrides": [
     {
-      "files": ["**/*.tsx", "**/*.ts"],
+      "files": [
+        "**/*.tsx",
+        "**/*.ts"
+      ],
       "extends": [
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
         "import/no-unresolved": 0, // ts handles this better
-		"camelcase": 0,
-		"semi": "off",
+        "camelcase": 0,
+        "semi": "off",
         "@typescript-eslint/naming-convention": [
           2,
           {
             "selector": "function",
-            "format": ["camelCase", "PascalCase"]
+            "format": [
+              "camelCase",
+              "PascalCase"
+            ]
           },
           {
             "selector": "variable",
-            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+            "format": [
+              "camelCase",
+              "PascalCase",
+              "UPPER_CASE"
+            ]
           },
           {
             "selector": "parameter",
-            "format": ["camelCase", "PascalCase"],
+            "format": [
+              "camelCase",
+              "PascalCase"
+            ],
             "leadingUnderscore": "allow"
           },
           {
             "selector": "typeLike",
-            "format": ["PascalCase"]
+            "format": [
+              "PascalCase"
+            ]
           }
         ],
         "@typescript-eslint/no-non-null-assertion": 0,
@@ -103,13 +161,25 @@
             "args": "after-used"
           }
         ],
-        "@typescript-eslint/member-delimiter-style": [2, {"multiline": {"delimiter": "none"}, "singleline": {"delimiter": "comma"}}],
+        "@typescript-eslint/member-delimiter-style": [
+          2,
+          {
+            "multiline": {
+              "delimiter": "none"
+            },
+            "singleline": {
+              "delimiter": "comma"
+            }
+          }
+        ],
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/no-empty-function": 0,
-        "@typescript-eslint/prefer-interface": 0,
         "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/semi": [2, "never"],
-		"@typescript-eslint/indent": [
+        "@typescript-eslint/semi": [
+          2,
+          "never"
+        ],
+        "@typescript-eslint/indent": [
           2,
           4,
           {
@@ -131,7 +201,10 @@
       }
     },
     {
-      "files": ["tests/**", "**/*.test.*"],
+      "files": [
+        "test/**",
+        "**/*.test.*"
+      ],
       "env": {
         "jest": true
       },
@@ -141,17 +214,6 @@
         "new-cap": 0,
         "prefer-arrow-callback": 0,
         "no-import-assign": 0
-      }
-    },
-    {
-      "files": ["cypress/**"],
-      "rules": {
-        "cypress/no-unnecessary-waiting": 0,
-        "func-names": 0,
-        "import/no-unresolved": 0,
-        "max-nested-callbacks": 0,
-        "no-process-env": 0,
-        "no-unused-expressions": 0
       }
     }
   ]

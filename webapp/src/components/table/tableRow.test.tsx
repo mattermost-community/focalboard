@@ -7,11 +7,11 @@ import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
 import '@testing-library/jest-dom'
-import {wrapDNDIntl} from '../../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
 import 'isomorphic-fetch'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableRow from './tableRow'

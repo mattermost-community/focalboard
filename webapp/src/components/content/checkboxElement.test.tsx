@@ -2,20 +2,25 @@
 // See LICENSE.txt for license information.
 
 import React, {ReactElement, ReactNode} from 'react'
-import {fireEvent, render, screen, waitFor} from '@testing-library/react'
+import {
+    fireEvent,
+    render,
+    screen,
+    waitFor
+} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
-import {wrapIntl} from '../../testUtils'
-import {ContentBlock, createContentBlock} from '../../blocks/contentBlock'
-import {CardDetailContext, CardDetailContextType, CardDetailProvider} from '../cardDetail/cardDetailContext'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import mutator from '../../mutator'
+import {wrapIntl} from 'src/testUtils'
+import {ContentBlock, createContentBlock} from 'src/blocks/contentBlock'
+import {CardDetailContext, CardDetailContextType, CardDetailProvider} from 'src/components/cardDetail/cardDetailContext'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import mutator from 'src/mutator'
 
 import CheckboxElement from './checkboxElement'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()

@@ -2,16 +2,16 @@
 // See LICENSE.txt for license information.
 import React, {useState, useMemo} from 'react'
 
-import {Constants} from '../../../constants'
+import {Constants} from 'src/constants'
 
 import './calculationRow.scss'
-import {Board, IPropertyTemplate} from '../../../blocks/board'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
 
-import mutator from '../../../mutator'
-import Calculation from '../../calculations/calculation'
-import {BoardView} from '../../../blocks/boardView'
-import {Card} from '../../../blocks/card'
-import {Options} from '../../calculations/options'
+import mutator from 'src/mutator'
+import Calculation from 'src/components/calculations/calculation'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import {Options} from 'src/components/calculations/options'
 
 import {TableCalculationOptions} from './tableCalculationOptions'
 

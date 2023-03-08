@@ -4,7 +4,7 @@ import React from 'react'
 
 import {render} from '@testing-library/react'
 
-import {TestBlockFactory} from '../../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import {Option} from './kanbanOption'
 

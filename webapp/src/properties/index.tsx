@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {PropertyTypeEnum} from '../blocks/board'
+import {PropertyTypeEnum} from 'src/blocks/board'
 
 import CreatedTimeProperty from './createdTime/property'
 import CreatedByProperty from './createdBy/property'

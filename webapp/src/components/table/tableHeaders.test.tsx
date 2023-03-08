@@ -6,9 +6,9 @@ import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import 'isomorphic-fetch'
-import {wrapDNDIntl} from '../../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableHeaders from './tableHeaders'

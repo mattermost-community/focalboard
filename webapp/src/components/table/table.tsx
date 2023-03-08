@@ -4,21 +4,26 @@ import React, {useCallback} from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {createBoardView, BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import {Constants, Permission} from '../../constants'
-import mutator from '../../mutator'
-import {Utils} from '../../utils'
-import {useAppDispatch} from '../../store/hooks'
-import {updateView} from '../../store/views'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import {
+    IPropertyOption,
+    IPropertyTemplate,
+    Board,
+    BoardGroup
+} from 'src/blocks/board'
+import {createBoardView, BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import {Constants, Permission} from 'src/constants'
+import mutator from 'src/mutator'
+import {Utils} from 'src/utils'
+import {useAppDispatch} from 'src/store/hooks'
+import {updateView} from 'src/store/views'
+import {useHasCurrentBoardPermissions} from 'src/hooks/permissions'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
 import './table.scss'
 
-import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+import HiddenCardCount from 'src/components/hiddenCardCount/hiddenCardCount'
 
 import TableHeaders from './tableHeaders'
 import TableRows from './tableRows'

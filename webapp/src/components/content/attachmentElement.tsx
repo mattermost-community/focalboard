@@ -3,29 +3,29 @@
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import octoClient from '../../octoClient'
+import octoClient from 'src/octoClient'
 
-import {AttachmentBlock} from '../../blocks/attachmentBlock'
-import {Block, FileInfo} from '../../blocks/block'
-import Files from '../../file'
-import FileIcons from '../../fileIcons'
+import {AttachmentBlock} from 'src/blocks/attachmentBlock'
+import {Block, FileInfo} from 'src/blocks/block'
+import Files from 'src/file'
+import FileIcons from 'src/fileIcons'
 
-import BoardPermissionGate from '../../components/permissions/boardPermissionGate'
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../../components/confirmationDialogBox'
-import {Utils} from '../../utils'
-import {getUploadPercent} from '../../store/attachments'
-import {useAppSelector} from '../../store/hooks'
-import {Permission} from '../../constants'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from 'src/components/confirmationDialogBox'
+import {Utils} from 'src/utils'
+import {getUploadPercent} from 'src/store/attachments'
+import {useAppSelector} from 'src/store/hooks'
+import {Permission} from 'src/constants'
+
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import IconButton from 'src/widgets/buttons/iconButton'
+import Menu from 'src/widgets/menu'
+import Tooltip from 'src/widgets/tooltip'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
 import './attachmentElement.scss'
-import CompassIcon from './../../widgets/icons/compassIcon'
-import MenuWrapper from './../../widgets/menuWrapper'
-import IconButton from './../../widgets/buttons/iconButton'
-import Menu from './../../widgets/menu'
-import Tooltip from './../../widgets/tooltip'
-
 type Props = {
     block: AttachmentBlock
     onDelete?: (block: Block) => void

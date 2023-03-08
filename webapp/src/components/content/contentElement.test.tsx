@@ -6,12 +6,12 @@ import '@testing-library/jest-dom'
 
 import {render} from '@testing-library/react'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import {ContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from 'src/blocks/contentBlock'
 
-import {CardDetailProvider} from '../cardDetail/cardDetailContext'
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {CardDetailProvider} from 'src/components/cardDetail/cardDetailContext'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import ContentElement from './contentElement'
 

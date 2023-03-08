@@ -1,10 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {ContentBlock, ContentState, Modifier, SelectionState} from 'draft-js'
+import {
+    ContentBlock,
+    ContentState,
+    Modifier,
+    SelectionState
+} from 'draft-js'
 
-import {BlockStrategy} from '../pluginStrategy'
+import {BlockStrategy} from 'src/components/live-markdown-plugin/pluginStrategy'
 
-import findRangesWithRegex from '../utils/findRangesWithRegex'
+import findRangesWithRegex from 'src/components/live-markdown-plugin/utils/findRangesWithRegex'
 
 const createCodeBlockStrategy = (): BlockStrategy => {
     const blockType = 'code-block'

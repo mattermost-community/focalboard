@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useRef, useEffect, useCallback} from 'react'
 
-import IconButton from '../widgets/buttons/iconButton'
-import CloseIcon from '../widgets/icons/close'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CloseIcon from 'src/widgets/icons/close'
 import './modal.scss'
 
 type Props = {

@@ -4,14 +4,14 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
 
 import './copy_link.scss'
-import copyLink from '../../../../static/copyLink.gif'
+import copyLink from 'static/copyLink.gif'
 
-import {BoardTourSteps, TOUR_BOARD} from '../index'
-import {OnboardingCardClassName} from '../../kanban/kanbanCard'
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
+import {BoardTourSteps, TOUR_BOARD} from 'src/components/onboardingTour/index'
+import {OnboardingCardClassName} from 'src/components/kanban/kanbanCard'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
 
 const CopyLinkTourStep = (): JSX.Element | null => {
     const title = (

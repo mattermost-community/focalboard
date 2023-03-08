@@ -9,11 +9,11 @@ import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'jest-mock'
 
-import {IUser} from '../../user'
-import {Channel} from '../../store/channels'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
-import client from '../../octoClient'
+import {IUser} from 'src/user'
+import {Channel} from 'src/store/channels'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
+import client from 'src/octoClient'
 
 import ChannelPermissionsRow from './channelPermissionsRow'
 
@@ -21,7 +21,7 @@ jest.useFakeTimers()
 
 const boardId = '1'
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 
 const mockedOctoClient = mocked(client, true)
 

@@ -6,15 +6,15 @@ import {useIntl} from 'react-intl'
 
 import {MultiValue} from 'react-select'
 
-import {Utils} from '../../utils'
-import mutator from '../../mutator'
-import {BoardView} from '../../blocks/boardView'
+import {Utils} from 'src/utils'
+import mutator from 'src/mutator'
+import {BoardView} from 'src/blocks/boardView'
 
-import {FilterClause} from '../../blocks/filterClause'
-import {createFilterGroup} from '../../blocks/filterGroup'
+import {FilterClause} from 'src/blocks/filterClause'
+import {createFilterGroup} from 'src/blocks/filterGroup'
 
-import PersonSelector from '../personSelector'
-import {IUser} from '../../user'
+import PersonSelector from 'src/components/personSelector'
+import {IUser} from 'src/user'
 
 import './multiperson.scss'
 

@@ -9,18 +9,18 @@ import '@testing-library/jest-dom'
 
 import {mocked} from 'jest-mock'
 
-import {TextBlock} from '../../blocks/textBlock'
+import {TextBlock} from 'src/blocks/textBlock'
 
-import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from 'src/testUtils'
 
-import {Utils} from '../../utils'
+import {Utils} from 'src/utils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import TextElement from './textElement'
 
-jest.mock('../../utils')
-jest.mock('../../mutator')
+jest.mock('src/utils')
+jest.mock('src/mutator')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 mockedUtils.createGuid.mockReturnValue('test-id')

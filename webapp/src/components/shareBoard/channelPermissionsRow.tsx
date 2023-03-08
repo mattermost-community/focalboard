@@ -4,26 +4,26 @@
 import React, {useState, useEffect} from 'react'
 import {useIntl, FormattedMessage} from 'react-intl'
 
-import MenuWrapper from '../../widgets/menuWrapper'
-import Menu from '../../widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Menu from 'src/widgets/menu'
 
-import {createBoard} from '../../blocks/board'
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard} from '../../store/boards'
-import {getBoardUsers} from '../../store/users'
-import {Channel} from '../../store/channels'
-import {Utils} from '../../utils'
-import mutator from '../../mutator'
-import octoClient from '../../octoClient'
-import {Permission} from '../../constants'
+import {createBoard} from 'src/blocks/board'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentBoard} from 'src/store/boards'
+import {getBoardUsers} from 'src/store/users'
+import {Channel} from 'src/store/channels'
+import {Utils} from 'src/utils'
+import mutator from 'src/mutator'
+import octoClient from 'src/octoClient'
+import {Permission} from 'src/constants'
 
-import PrivateIcon from '../../widgets/icons/lockOutline'
-import PublicIcon from '../../widgets/icons/globe'
-import DeleteIcon from '../../widgets/icons/delete'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import ConfirmationDialogBox from '../confirmationDialogBox'
+import PrivateIcon from 'src/widgets/icons/lockOutline'
+import PublicIcon from 'src/widgets/icons/globe'
+import DeleteIcon from 'src/widgets/icons/delete'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import ConfirmationDialogBox from 'src/components/confirmationDialogBox'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
 type Props = {
     teammateNameDisplay?: string

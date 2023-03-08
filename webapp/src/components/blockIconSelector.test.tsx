@@ -2,7 +2,12 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {fireEvent, render, screen, act} from '@testing-library/react'
+import {
+    fireEvent,
+    render,
+    screen,
+    act
+} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 
@@ -10,18 +15,18 @@ import '@testing-library/jest-dom'
 
 import {mocked} from 'jest-mock'
 
-import mutator from '../mutator'
+import mutator from 'src/mutator'
 
-import {wrapIntl} from '../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import {TestBlockFactory} from '../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import BlockIconSelector from './blockIconSelector'
 
 const card = TestBlockFactory.createCard()
 const icon = '👍'
 
-jest.mock('../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 describe('components/blockIconSelector', () => {

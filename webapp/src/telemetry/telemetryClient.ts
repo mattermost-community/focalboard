@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IUser} from '../user'
+import {IUser} from 'src/user'
 
 import {TelemetryHandler} from './telemetry'
 

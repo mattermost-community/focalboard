@@ -3,12 +3,12 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Card} from '../../../blocks/card'
-import Button from '../../../widgets/buttons/button'
+import {Card} from 'src/blocks/card'
+import Button from 'src/widgets/buttons/button'
 import './calculation.scss'
-import {IPropertyTemplate} from '../../../blocks/board'
+import {IPropertyTemplate} from 'src/blocks/board'
 
-import Calculations from '../../calculations/calculations'
+import Calculations from 'src/components/calculations/calculations'
 
 import {KanbanCalculationOptions} from './calculationOptions'
 

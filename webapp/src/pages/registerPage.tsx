@@ -4,11 +4,11 @@ import React, {useState} from 'react'
 import {useHistory, Link, Redirect} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {fetchMe, getLoggedIn} from '../store/users'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {fetchMe, getLoggedIn} from 'src/store/users'
 
-import Button from '../widgets/buttons/button'
-import client from '../octoClient'
+import Button from 'src/widgets/buttons/button'
+import client from 'src/octoClient'
 import './registerPage.scss'
 
 const RegisterPage = () => {

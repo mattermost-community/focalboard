@@ -7,9 +7,9 @@ import {fireEvent, render} from '@testing-library/react'
 
 import {act} from 'react-dom/test-utils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from 'src/testUtils'
 
 import CardDetailContents from './cardDetailContents'
 import {CardDetailProvider} from './cardDetailContext'

@@ -3,12 +3,12 @@
 import React, {useState} from 'react'
 import {Link} from 'react-router-dom'
 
-import Button from '../widgets/buttons/button'
-import client from '../octoClient'
+import Button from 'src/widgets/buttons/button'
+import client from 'src/octoClient'
 import './changePasswordPage.scss'
-import {IUser} from '../user'
-import {useAppSelector} from '../store/hooks'
-import {getMe} from '../store/users'
+import {IUser} from 'src/user'
+import {useAppSelector} from 'src/store/hooks'
+import {getMe} from 'src/store/users'
 
 const ChangePasswordPage = () => {
     const [oldPassword, setOldPassword] = useState('')

@@ -1,33 +1,38 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useCallback, useMemo} from 'react'
+import React, {
+    useEffect,
+    useState,
+    useCallback,
+    useMemo
+} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
-import CompassIcon from '../../widgets/icons/compassIcon'
+import CompassIcon from 'src/widgets/icons/compassIcon'
 
-import {Board} from '../../blocks/board'
-import IconButton from '../../widgets/buttons/iconButton'
-import CloseIcon from '../../widgets/icons/close'
-import Button from '../../widgets/buttons/button'
-import octoClient from '../../octoClient'
-import mutator from '../../mutator'
-import {getTemplates, getCurrentBoardId} from '../../store/boards'
-import {getCurrentTeam, Team} from '../../store/teams'
-import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {Board} from 'src/blocks/board'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CloseIcon from 'src/widgets/icons/close'
+import Button from 'src/widgets/buttons/button'
+import octoClient from 'src/octoClient'
+import mutator from 'src/mutator'
+import {getTemplates, getCurrentBoardId} from 'src/store/boards'
+import {getCurrentTeam, Team} from 'src/store/teams'
+import {fetchGlobalTemplates, getGlobalTemplates} from 'src/store/globalTemplates'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
 
 import './boardTemplateSelector.scss'
-import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
-import {IUser, UserConfigPatch} from '../../user'
-import {getMe, patchProps} from '../../store/users'
-import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
+import {OnboardingBoardTitle} from 'src/components/cardDetail/cardDetail'
+import {IUser, UserConfigPatch} from 'src/user'
+import {getMe, patchProps} from 'src/store/users'
+import {BaseTourSteps, TOUR_BASE} from 'src/components/onboardingTour'
 
-import {Utils} from '../../utils'
+import {Utils} from 'src/utils'
 
-import {Constants} from '../../constants'
+import {Constants} from 'src/constants'
 
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'

@@ -1,19 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {fireEvent, render, screen, within} from '@testing-library/react'
+import {
+    fireEvent,
+    render,
+    screen,
+    within
+} from '@testing-library/react'
 import {createIntl} from 'react-intl'
 import userEvent from '@testing-library/user-event'
 import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import Mutator from '../../mutator'
-import {wrapDNDIntl, mockStateStore} from '../../testUtils'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {IPropertyOption} from '../../blocks/board'
+import Mutator from 'src/mutator'
+import {wrapDNDIntl, mockStateStore} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {IPropertyOption} from 'src/blocks/board'
 
 import KanbanColumnHeader from './kanbanColumnHeader'
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(Mutator, true)
 describe('src/components/kanban/kanbanColumnHeader', () => {
     const intl = createIntl({locale: 'en-us'})

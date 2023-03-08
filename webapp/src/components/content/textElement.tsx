@@ -3,11 +3,11 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {ContentBlock} from '../../blocks/contentBlock'
-import {createTextBlock} from '../../blocks/textBlock'
-import mutator from '../../mutator'
-import TextIcon from '../../widgets/icons/text'
-import {MarkdownEditor} from '../markdownEditor'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import {createTextBlock} from 'src/blocks/textBlock'
+import mutator from 'src/mutator'
+import TextIcon from 'src/widgets/icons/text'
+import {MarkdownEditor} from 'src/components/markdownEditor'
 
 import {contentRegistry} from './contentRegistry'
 

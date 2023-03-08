@@ -7,14 +7,14 @@ import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 import {mocked} from 'jest-mock'
 
-import {IPropertyOption, IPropertyTemplate, createBoard} from '../../blocks/board'
-import {createCard} from '../../blocks/card'
-import mutator from '../../mutator'
+import {IPropertyOption, IPropertyTemplate, createBoard} from 'src/blocks/board'
+import {createCard} from 'src/blocks/card'
+import mutator from 'src/mutator'
 
 import MultiSelectProperty from './property'
 import MultiSelect from './multiselect'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 function buildMultiSelectPropertyTemplate(options: IPropertyOption[] = []): IPropertyTemplate {

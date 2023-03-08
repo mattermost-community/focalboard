@@ -3,12 +3,12 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {createCheckboxBlock} from '../../blocks/checkboxBlock'
-import {ContentBlock} from '../../blocks/contentBlock'
-import CheckIcon from '../../widgets/icons/check'
-import mutator from '../../mutator'
-import Editable, {Focusable} from '../../widgets/editable'
-import {useCardDetailContext} from '../cardDetail/cardDetailContext'
+import {createCheckboxBlock} from 'src/blocks/checkboxBlock'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import CheckIcon from 'src/widgets/icons/check'
+import mutator from 'src/mutator'
+import Editable, {Focusable} from 'src/widgets/editable'
+import {useCardDetailContext} from 'src/components/cardDetail/cardDetailContext'
 
 import './checkboxElement.scss'
 

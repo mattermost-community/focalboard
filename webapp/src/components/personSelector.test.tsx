@@ -12,9 +12,9 @@ import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
-import {wrapIntl} from '../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import PersonProperty from '../properties/person/property'
+import PersonProperty from 'src/properties/person/property'
 
 import PersonSelector from './personSelector'
 

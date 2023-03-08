@@ -6,8 +6,8 @@ import {render} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 
-import {TestBlockFactory} from '../../../test/testBlockFactory'
-import {wrapIntl} from '../../../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {wrapIntl} from 'src/testUtils'
 
 import {KanbanCalculationOptions} from './calculationOptions'
 

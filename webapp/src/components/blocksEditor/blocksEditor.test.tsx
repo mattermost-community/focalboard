@@ -3,10 +3,15 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {render, screen, fireEvent, act} from '@testing-library/react'
+import {
+    render,
+    screen,
+    fireEvent,
+    act
+} from '@testing-library/react'
 
-import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {mockDOM, wrapDNDIntl, mockStateStore} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import {BlockData} from './blocks/types'
 import BlocksEditor from './blocksEditor'

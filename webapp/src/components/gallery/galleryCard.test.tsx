@@ -12,21 +12,21 @@ import {mocked} from 'jest-mock'
 
 import {MockStoreEnhanced} from 'redux-mock-store'
 
-import {wrapDNDIntl, mockStateStore} from '../../testUtils'
+import {wrapDNDIntl, mockStateStore} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import {Utils} from '../../utils'
+import {Utils} from 'src/utils'
 
-import octoClient from '../../octoClient'
+import octoClient from 'src/octoClient'
 
 import GalleryCard from './galleryCard'
 
-jest.mock('../../mutator')
-jest.mock('../../utils')
-jest.mock('../../octoClient')
+jest.mock('src/mutator')
+jest.mock('src/utils')
+jest.mock('src/octoClient')
 
 describe('src/components/gallery/GalleryCard', () => {
     const mockedMutator = mocked(mutator, true)

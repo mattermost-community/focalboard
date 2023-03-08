@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import {useEffect} from 'react'
 
-import {getCurrentBoard} from '../../store/boards'
-import {getCurrentView} from '../../store/views'
-import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoard} from 'src/store/boards'
+import {getCurrentView} from 'src/store/views'
+import {useAppSelector} from 'src/store/hooks'
 
 const SetWindowTitleAndIcon = (): null => {
     const board = useAppSelector(getCurrentBoard)

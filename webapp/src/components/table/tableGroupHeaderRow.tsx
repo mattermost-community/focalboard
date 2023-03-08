@@ -4,22 +4,27 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Constants} from '../../constants'
-import {IPropertyOption, Board, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {useSortable} from '../../hooks/sortable'
-import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
-import IconButton from '../../widgets/buttons/iconButton'
-import AddIcon from '../../widgets/icons/add'
-import DeleteIcon from '../../widgets/icons/delete'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import HideIcon from '../../widgets/icons/hide'
-import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import Editable from '../../widgets/editable'
-import Label from '../../widgets/label'
+import {Constants} from 'src/constants'
+import {
+    IPropertyOption,
+    Board,
+    IPropertyTemplate,
+    BoardGroup
+} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {useSortable} from 'src/hooks/sortable'
+import mutator from 'src/mutator'
+import Button from 'src/widgets/buttons/button'
+import IconButton from 'src/widgets/buttons/iconButton'
+import AddIcon from 'src/widgets/icons/add'
+import DeleteIcon from 'src/widgets/icons/delete'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import HideIcon from 'src/widgets/icons/hide'
+import OptionsIcon from 'src/widgets/icons/options'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Editable from 'src/widgets/editable'
+import Label from 'src/widgets/label'
 
 import {useColumnResize} from './tableColumnResizeContext'
 

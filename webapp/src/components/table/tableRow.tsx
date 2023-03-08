@@ -1,27 +1,33 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react'
+import React, {
+    useEffect,
+    useRef,
+    useState,
+    useMemo,
+    useCallback
+} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Card} from '../../blocks/card'
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {Constants} from '../../constants'
-import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
-import Editable from '../../widgets/editable'
-import {useSortable} from '../../hooks/sortable'
+import {Card} from 'src/blocks/card'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {Constants} from 'src/constants'
+import mutator from 'src/mutator'
+import Button from 'src/widgets/buttons/button'
+import Editable from 'src/widgets/editable'
+import {useSortable} from 'src/hooks/sortable'
 
-import {Utils} from '../../utils'
+import {Utils} from 'src/utils'
 
-import PropertyValueElement from '../propertyValueElement'
-import MenuWrapper from '../../widgets/menuWrapper'
-import IconButton from '../../widgets/buttons/iconButton'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import OptionsIcon from '../../widgets/icons/options'
-import Tooltip from '../../widgets/tooltip'
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
+import PropertyValueElement from 'src/components/propertyValueElement'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import OptionsIcon from 'src/widgets/icons/options'
+import Tooltip from 'src/widgets/tooltip'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from 'src/components/confirmationDialogBox'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
+import CardActionsMenu from 'src/components/cardActionsMenu/cardActionsMenu'
 
 import {useColumnResize} from './tableColumnResizeContext'
 

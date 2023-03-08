@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
-import {CommentBlock} from '../blocks/commentBlock'
+import {CommentBlock} from 'src/blocks/commentBlock'
 
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 

@@ -1,18 +1,23 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction, createSelector, createAsyncThunk} from '@reduxjs/toolkit'
+import {
+    createSlice,
+    PayloadAction,
+    createSelector,
+    createAsyncThunk
+} from '@reduxjs/toolkit'
 
-import {Card} from '../blocks/card'
-import {IUser} from '../user'
-import {Board} from '../blocks/board'
-import {Block} from '../blocks/block'
-import {BoardView} from '../blocks/boardView'
-import {CommentBlock} from '../blocks/commentBlock'
-import {Utils} from '../utils'
-import {Constants} from '../constants'
-import {CardFilter} from '../cardFilter'
-import {default as client} from '../octoClient'
+import {Card} from 'src/blocks/card'
+import {IUser} from 'src/user'
+import {Board} from 'src/blocks/board'
+import {Block} from 'src/blocks/block'
+import {BoardView} from 'src/blocks/boardView'
+import {CommentBlock} from 'src/blocks/commentBlock'
+import {Utils} from 'src/utils'
+import {Constants} from 'src/constants'
+import {CardFilter} from 'src/cardFilter'
+import {default as client} from 'src/octoClient'
 
 import {loadBoardData, initialReadOnlyLoad, initialLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'

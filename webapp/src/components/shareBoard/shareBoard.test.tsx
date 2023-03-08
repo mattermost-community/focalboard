@@ -9,13 +9,13 @@ import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'jest-mock'
 
-import {IUser} from '../../user'
-import {ISharing} from '../../blocks/sharing'
-import {Channel} from '../../store/channels'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
-import client from '../../octoClient'
-import {Utils} from '../../utils'
+import {IUser} from 'src/user'
+import {ISharing} from 'src/blocks/sharing'
+import {Channel} from 'src/store/channels'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
+import client from 'src/octoClient'
+import {Utils} from 'src/utils'
 
 import ShareBoard from './shareBoard'
 
@@ -26,8 +26,8 @@ const workspaceId: string|undefined = boardId
 const viewId = boardId
 const teamId = 'team-id'
 
-jest.mock('../../octoClient')
-jest.mock('../../utils')
+jest.mock('src/octoClient')
+jest.mock('src/utils')
 
 const mockedOctoClient = mocked(client, true)
 const mockedUtils = mocked(Utils, true)

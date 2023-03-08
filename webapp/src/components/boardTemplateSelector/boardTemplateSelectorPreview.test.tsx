@@ -6,10 +6,10 @@ import {MockStoreEnhanced} from 'redux-mock-store'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {IPropertyTemplate} from '../../blocks/board'
-import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {mockDOM, mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 
@@ -42,7 +42,7 @@ const groupProperty: IPropertyTemplate = {
     ],
 }
 
-jest.mock('../../octoClient', () => {
+jest.mock('src/octoClient', () => {
     return {
         getAllBlocks: jest.fn(() => Promise.resolve([
             {
@@ -85,8 +85,8 @@ jest.mock('../../octoClient', () => {
         ])),
     }
 })
-jest.mock('../../utils')
-jest.mock('../../mutator')
+jest.mock('src/utils')
+jest.mock('src/mutator')
 
 describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => {
     const template1Title = 'Template 1'

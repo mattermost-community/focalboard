@@ -5,8 +5,8 @@ import React from 'react'
 
 import {useIntl} from 'react-intl'
 
-import {Utils} from '../../utils'
-import {PropertyProps} from '../types'
+import {Utils} from 'src/utils'
+import {PropertyProps} from 'src/properties/types'
 import './createdTime.scss'
 
 const CreatedTime = (props: PropertyProps): JSX.Element => {

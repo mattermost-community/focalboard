@@ -1,16 +1,21 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode, useEffect, useMemo, useState} from 'react'
+import React, {
+    ReactNode,
+    useEffect,
+    useMemo,
+    useState
+} from 'react'
 
 import './searchDialog.scss'
 import {FormattedMessage} from 'react-intl'
 
 import {debounce} from 'lodash'
 
-import Dialog from '../dialog'
-import {Utils} from '../../utils'
-import Search from '../../widgets/icons/search'
-import {Constants} from '../../constants'
+import Dialog from 'src/components/dialog'
+import {Utils} from 'src/utils'
+import Search from 'src/widgets/icons/search'
+import {Constants} from 'src/constants'
 
 type Props = {
     onClose: () => void

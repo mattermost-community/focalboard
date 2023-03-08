@@ -4,11 +4,11 @@
 import {useEffect, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
-import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
-import {sendFlashMessage} from '../flashMessages'
-import {Block} from '../../blocks/block'
-import octoClient from '../../octoClient'
-import mutator from '../../mutator'
+import {ImageBlock, createImageBlock} from 'src/blocks/imageBlock'
+import {sendFlashMessage} from 'src/components/flashMessages'
+import {Block} from 'src/blocks/block'
+import octoClient from 'src/octoClient'
+import mutator from 'src/mutator'
 
 export default function useImagePaste(boardId: string, cardId: string, contentOrder: Array<string | string[]>): void {
     const intl = useIntl()

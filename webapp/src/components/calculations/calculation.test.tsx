@@ -6,12 +6,12 @@ import {render} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {wrapIntl} from '../../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {wrapIntl} from 'src/testUtils'
 
-import {TableCalculationOptions} from '../table/calculation/tableCalculationOptions'
+import {TableCalculationOptions} from 'src/components/table/calculation/tableCalculationOptions'
 
-import {ColumnResizeProvider} from '../table/tableColumnResizeContext'
+import {ColumnResizeProvider} from 'src/components/table/tableColumnResizeContext'
 
 import Calculation from './calculation'
 

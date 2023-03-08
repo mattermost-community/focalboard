@@ -4,12 +4,12 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {BlockTypes, Block} from '../blocks/block'
-import {Card} from '../blocks/card'
-import mutator from '../mutator'
-import octoClient from '../octoClient'
-import {Utils} from '../utils'
-import Menu from '../widgets/menu'
+import {BlockTypes, Block} from 'src/blocks/block'
+import {Card} from 'src/blocks/card'
+import mutator from 'src/mutator'
+import octoClient from 'src/octoClient'
+import {Utils} from 'src/utils'
+import Menu from 'src/widgets/menu'
 
 import {contentRegistry} from './content/contentRegistry'
 

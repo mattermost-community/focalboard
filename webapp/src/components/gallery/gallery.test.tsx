@@ -10,15 +10,15 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {wrapDNDIntl, mockStateStore, blocksById} from '../../testUtils'
+import {wrapDNDIntl, mockStateStore, blocksById} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
 import Gallery from './gallery'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 describe('src/components/gallery/Gallery', () => {

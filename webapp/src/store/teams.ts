@@ -3,9 +3,9 @@
 
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import octoClient from '../octoClient'
+import octoClient from 'src/octoClient'
 
-import {Utils} from '../utils'
+import {Utils} from 'src/utils'
 
 import {initialLoad} from './initialLoad'
 

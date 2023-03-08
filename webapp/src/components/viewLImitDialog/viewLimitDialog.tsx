@@ -6,16 +6,16 @@ import React, {useEffect} from 'react'
 import './viewLimitDialog.scss'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import Dialog from '../dialog'
+import Dialog from 'src/components/dialog'
 
-import upgradeImage from '../../../static/upgrade.png'
-import {useAppSelector} from '../../store/hooks'
-import {getMe} from '../../store/users'
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
-import octoClient from '../../octoClient'
-import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import {getCurrentBoard} from '../../store/boards'
+import upgradeImage from 'static/upgrade.png'
+import {useAppSelector} from 'src/store/hooks'
+import {getMe} from 'src/store/users'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
+import octoClient from 'src/octoClient'
+import telemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
+import {getCurrentBoard} from 'src/store/boards'
 
 export type PublicProps = {
     onClose: () => void

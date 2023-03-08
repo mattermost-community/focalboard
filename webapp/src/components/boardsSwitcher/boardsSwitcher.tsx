@@ -4,28 +4,25 @@ import React, {useEffect, useState} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import MenuWrapper from '../../widgets/menuWrapper'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import Menu from '../../widgets/menu'
-import Search from '../../widgets/icons/search'
-import CreateCategory from '../createCategory/createCategory'
-import {useAppSelector} from '../../store/hooks'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import Menu from 'src/widgets/menu'
+import Search from 'src/widgets/icons/search'
+import CreateCategory from 'src/components/createCategory/createCategory'
+import {useAppSelector} from 'src/store/hooks'
 
-import {
-    getOnboardingTourCategory,
-    getOnboardingTourStep,
-} from '../../store/users'
-import {getCurrentCard} from '../../store/cards'
+import {getOnboardingTourCategory, getOnboardingTourStep} from 'src/store/users'
+import {getCurrentCard} from 'src/store/cards'
 
 import './boardsSwitcher.scss'
-import AddIcon from '../../widgets/icons/add'
-import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
-import {Utils} from '../../utils'
-import {Constants} from '../../constants'
-import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
+import AddIcon from 'src/widgets/icons/add'
+import BoardSwitcherDialog from 'src/components/boardsSwitcherDialog/boardSwitcherDialog'
+import {Utils} from 'src/utils'
+import {Constants} from 'src/constants'
+import {TOUR_SIDEBAR, SidebarTourSteps} from 'src/components/onboardingTour'
 
-import IconButton from '../../widgets/buttons/iconButton'
-import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
+import IconButton from 'src/widgets/buttons/iconButton'
+import SearchForBoardsTourStep from 'src/components/onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
     onBoardTemplateSelectorOpen: () => void

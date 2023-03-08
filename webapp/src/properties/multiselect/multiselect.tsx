@@ -4,15 +4,15 @@
 import React, {useState, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
-import {IPropertyOption} from '../../blocks/board'
-import {Utils, IDType} from '../../utils'
+import {IPropertyOption} from 'src/blocks/board'
+import {Utils, IDType} from 'src/utils'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import Label from '../../widgets/label'
-import ValueSelector from '../../widgets/valueSelector'
+import Label from 'src/widgets/label'
+import ValueSelector from 'src/widgets/valueSelector'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 const MultiSelectProperty = (props: PropertyProps): JSX.Element => {
     const {propertyTemplate, propertyValue, board, card} = props

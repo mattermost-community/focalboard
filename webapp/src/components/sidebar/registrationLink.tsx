@@ -3,13 +3,18 @@
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {sendFlashMessage} from '../flashMessages'
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {getCurrentTeam, Team, refreshCurrentTeam, regenerateSignupToken} from '../../store/teams'
+import {sendFlashMessage} from 'src/components/flashMessages'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {
+    getCurrentTeam,
+    Team,
+    refreshCurrentTeam,
+    regenerateSignupToken
+} from 'src/store/teams'
 
-import Modal from '../modal'
+import Modal from 'src/components/modal'
 
 import './registrationLink.scss'
 

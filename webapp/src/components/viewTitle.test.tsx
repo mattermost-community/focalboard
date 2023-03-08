@@ -2,22 +2,27 @@
 // See LICENSE.txt for license information.
 
 import '@testing-library/jest-dom'
-import {act, render, screen, fireEvent} from '@testing-library/react'
+import {
+    act,
+    render,
+    screen,
+    fireEvent
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {mocked} from 'jest-mock'
 
-import mutator from '../mutator'
-import {Utils} from '../utils'
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {mockDOM, mockStateStore, wrapIntl} from '../testUtils'
+import mutator from 'src/mutator'
+import {Utils} from 'src/utils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockDOM, mockStateStore, wrapIntl} from 'src/testUtils'
 
 import ViewTitle from './viewTitle'
 
-jest.mock('../mutator')
-jest.mock('../utils')
+jest.mock('src/mutator')
+jest.mock('src/utils')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 
 const mockedMutator = mocked(mutator, true)

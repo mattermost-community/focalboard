@@ -4,7 +4,7 @@
 import React, {ReactNode, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import Button from '../widgets/buttons/button'
+import Button from 'src/widgets/buttons/button'
 
 import Dialog from './dialog'
 import './confirmationDialogBox.scss'

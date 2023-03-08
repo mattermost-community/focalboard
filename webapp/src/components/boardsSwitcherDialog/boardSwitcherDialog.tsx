@@ -1,22 +1,29 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode, useRef, createRef, useState, useEffect, MutableRefObject} from 'react'
+import React, {
+    ReactNode,
+    useRef,
+    createRef,
+    useState,
+    useEffect,
+    MutableRefObject
+} from 'react'
 
 import './boardSwitcherDialog.scss'
 import {useIntl} from 'react-intl'
 
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import octoClient from '../../octoClient'
-import SearchDialog from '../searchDialog/searchDialog'
-import Globe from '../../widgets/icons/globe'
-import LockOutline from '../../widgets/icons/lockOutline'
-import {useAppSelector} from '../../store/hooks'
-import {getAllTeams, getCurrentTeam, Team} from '../../store/teams'
-import {getMe} from '../../store/users'
-import {Utils} from '../../utils'
-import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
-import {Constants} from '../../constants'
+import octoClient from 'src/octoClient'
+import SearchDialog from 'src/components/searchDialog/searchDialog'
+import Globe from 'src/widgets/icons/globe'
+import LockOutline from 'src/widgets/icons/lockOutline'
+import {useAppSelector} from 'src/store/hooks'
+import {getAllTeams, getCurrentTeam, Team} from 'src/store/teams'
+import {getMe} from 'src/store/users'
+import {Utils} from 'src/utils'
+import {BoardTypeOpen, BoardTypePrivate} from 'src/blocks/board'
+import {Constants} from 'src/constants'
 
 type Props = {
     onClose: () => void

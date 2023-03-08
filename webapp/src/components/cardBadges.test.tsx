@@ -7,14 +7,14 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {blocksById, mockStateStore, wrapDNDIntl} from '../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {blocksById, mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
-import {RootState} from '../store'
+import {RootState} from 'src/store'
 
-import {CommentBlock} from '../blocks/commentBlock'
+import {CommentBlock} from 'src/blocks/commentBlock'
 
-import {CheckboxBlock} from '../blocks/checkboxBlock'
+import {CheckboxBlock} from 'src/blocks/checkboxBlock'
 
 import CardBadges from './cardBadges'
 

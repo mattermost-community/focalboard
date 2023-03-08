@@ -3,13 +3,13 @@
 
 import React from 'react'
 
-import {Block} from '../../blocks/block'
-import {useAppSelector} from '../../store/hooks'
-import {getLastCardContent} from '../../store/contents'
-import {getLastCardComment} from '../../store/comments'
-import Person from '../person/person'
+import {Block} from 'src/blocks/block'
+import {useAppSelector} from 'src/store/hooks'
+import {getLastCardContent} from 'src/store/contents'
+import {getLastCardComment} from 'src/store/comments'
+import Person from 'src/properties/person/person'
 
-import {PropertyProps} from '../types'
+import {PropertyProps} from 'src/properties/types'
 
 const LastModifiedBy = (props: PropertyProps): JSX.Element => {
     const lastContent = useAppSelector(getLastCardContent(props.card.id || '')) as Block

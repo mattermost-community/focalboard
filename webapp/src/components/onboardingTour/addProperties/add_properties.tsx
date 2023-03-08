@@ -4,26 +4,31 @@ import React, {useEffect} from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
 
 import './add_properties.scss'
-import addProperty from '../../../../static/addProperty.gif'
+import addProperty from 'static/addProperty.gif'
 
-import {BaseTourSteps, CardTourSteps, TOUR_BASE, TOUR_CARD} from '../index'
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
-import {OnboardingBoardTitle, OnboardingCardTitle} from '../../cardDetail/cardDetail'
-import {useAppDispatch, useAppSelector} from '../../../store/hooks'
+import {
+    BaseTourSteps,
+    CardTourSteps,
+    TOUR_BASE,
+    TOUR_CARD
+} from 'src/components/onboardingTour/index'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
+import {OnboardingBoardTitle, OnboardingCardTitle} from 'src/components/cardDetail/cardDetail'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
 import {
     getMe,
     getOnboardingTourCategory,
     getOnboardingTourStarted,
     getOnboardingTourStep,
     patchProps,
-} from '../../../store/users'
-import {IUser, UserConfigPatch} from '../../../user'
-import mutator from '../../../mutator'
-import {getCurrentBoard} from '../../../store/boards'
-import {getCurrentCard} from '../../../store/cards'
+} from 'src/store/users'
+import {IUser, UserConfigPatch} from 'src/user'
+import mutator from 'src/mutator'
+import {getCurrentBoard} from 'src/store/boards'
+import {getCurrentCard} from 'src/store/cards'
 
 const AddPropertiesTourStep = (): JSX.Element | null => {
     const title = (

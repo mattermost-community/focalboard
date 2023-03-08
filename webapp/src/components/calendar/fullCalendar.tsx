@@ -4,32 +4,37 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import FullCalendar, {EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
+import FullCalendar, {
+    EventChangeArg,
+    EventInput,
+    EventContentArg,
+    DayCellContentArg
+} from '@fullcalendar/react'
 
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-import {DatePropertyType} from '../../properties/types'
+import {DatePropertyType} from 'src/properties/types'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import {DateProperty} from '../../properties/date/date'
-import propsRegistry from '../../properties'
-import Tooltip from '../../widgets/tooltip'
-import PropertyValueElement from '../propertyValueElement'
-import {Constants, Permission} from '../../constants'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
-import CardBadges from '../cardBadges'
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import {DateProperty} from 'src/properties/date/date'
+import propsRegistry from 'src/properties'
+import Tooltip from 'src/widgets/tooltip'
+import PropertyValueElement from 'src/components/propertyValueElement'
+import {Constants, Permission} from 'src/constants'
+import {useHasCurrentBoardPermissions} from 'src/hooks/permissions'
+import CardBadges from 'src/components/cardBadges'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from 'src/components/confirmationDialogBox'
 
 import './fullcalendar.scss'
-import MenuWrapper from '../../widgets/menuWrapper'
-import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import CardActionsMenu from 'src/components/cardActionsMenu/cardActionsMenu'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
+import CardActionsMenuIcon from 'src/components/cardActionsMenu/cardActionsMenuIcon'
 
 const oneDay = 60 * 60 * 24 * 1000
 

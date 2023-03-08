@@ -1,12 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useCallback, useState, useRef, useEffect} from 'react'
+import React, {
+    useCallback,
+    useState,
+    useRef,
+    useEffect
+} from 'react'
 
 import {useIntl} from 'react-intl'
 
-import mutator from '../mutator'
-import Editable from '../widgets/editable'
+import mutator from 'src/mutator'
+import Editable from 'src/widgets/editable'
 
 import {PropertyProps} from './types'
 

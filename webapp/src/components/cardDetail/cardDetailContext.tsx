@@ -1,14 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {createContext, ReactElement, ReactNode, useContext, useMemo, useState, useCallback} from 'react'
+import React, {
+    createContext,
+    ReactElement,
+    ReactNode,
+    useContext,
+    useMemo,
+    useState,
+    useCallback
+} from 'react'
 
 import {useIntl} from 'react-intl'
 
-import {Block} from '../../blocks/block'
-import {Card} from '../../blocks/card'
-import {ContentHandler} from '../content/contentRegistry'
-import octoClient from '../../octoClient'
-import mutator from '../../mutator'
+import {Block} from 'src/blocks/block'
+import {Card} from 'src/blocks/card'
+import {ContentHandler} from 'src/components/content/contentRegistry'
+import octoClient from 'src/octoClient'
+import mutator from 'src/mutator'
 
 export type AddedBlock = {
     id: string

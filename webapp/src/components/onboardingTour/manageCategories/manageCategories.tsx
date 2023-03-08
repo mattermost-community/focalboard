@@ -8,11 +8,11 @@ import {FormattedMessage} from 'react-intl'
 
 import {SidebarTourSteps, TOUR_SIDEBAR} from '..'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
 
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
 
-import {ClassForManageCategoriesTourStep} from '../../../components/sidebar/sidebarCategory'
+import {ClassForManageCategoriesTourStep} from 'src/components/sidebar/sidebarCategory'
 
 import './manageCategories.scss'
 

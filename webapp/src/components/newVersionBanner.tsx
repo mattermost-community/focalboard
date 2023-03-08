@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import wsClient from '../wsclient'
+import wsClient from 'src/wsclient'
 
 import './newVersionBanner.scss'
 

@@ -13,15 +13,15 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {mocked} from 'jest-mock'
 
-import {mockStateStore, wrapIntl} from '../../testUtils'
+import {mockStateStore, wrapIntl} from 'src/testUtils'
 
-import {IUser} from '../../user'
+import {IUser} from 'src/user'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
 import CreateCategory from './createCategory'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 describe('components/createCategory/CreateCategory', () => {

@@ -1,14 +1,19 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {Link, Redirect, useLocation, useHistory} from 'react-router-dom'
+import {
+    Link,
+    Redirect,
+    useLocation,
+    useHistory
+} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {fetchMe, getLoggedIn} from '../store/users'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {fetchMe, getLoggedIn} from 'src/store/users'
 
-import Button from '../widgets/buttons/button'
-import client from '../octoClient'
+import Button from 'src/widgets/buttons/button'
+import client from 'src/octoClient'
 import './loginPage.scss'
 
 const LoginPage = () => {

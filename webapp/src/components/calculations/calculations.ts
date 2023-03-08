@@ -5,11 +5,11 @@ import {IntlShape} from 'react-intl'
 
 import moment from 'moment'
 
-import {Card} from '../../blocks/card'
-import {IPropertyTemplate} from '../../blocks/board'
-import {Utils} from '../../utils'
-import {Constants} from '../../constants'
-import {DateProperty} from '../../properties/date/date'
+import {Card} from 'src/blocks/card'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {Utils} from 'src/utils'
+import {Constants} from 'src/constants'
+import {DateProperty} from 'src/properties/date/date'
 
 const ROUNDED_DECIMAL_PLACES = 2
 

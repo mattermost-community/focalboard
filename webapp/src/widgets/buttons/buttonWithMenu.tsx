@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import DropdownIcon from '../icons/dropdown'
-import MenuWrapper from '../menuWrapper'
+import DropdownIcon from 'src/widgets/icons/dropdown'
+import MenuWrapper from 'src/widgets/menuWrapper'
 
 import './buttonWithMenu.scss'
 

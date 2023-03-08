@@ -7,7 +7,7 @@ import {Picker, BaseEmoji} from 'emoji-mart'
 
 import './emojiPicker.scss'
 
-import emojiSpirit from '../../static/emoji_spirit.png'
+import emojiSpirit from 'static/emoji_spirit.png'
 
 type Props = {
     onSelect: (emoji: string) => void

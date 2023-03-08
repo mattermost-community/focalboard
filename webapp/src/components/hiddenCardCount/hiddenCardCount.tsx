@@ -4,7 +4,7 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import Button from '../../widgets/buttons/button'
+import Button from 'src/widgets/buttons/button'
 
 import './hiddenCardCount.scss'
 

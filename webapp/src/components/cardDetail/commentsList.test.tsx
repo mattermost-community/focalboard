@@ -9,12 +9,12 @@ import {act} from 'react-dom/test-utils'
 import {Provider as ReduxProvider} from 'react-redux'
 import configureStore from 'redux-mock-store'
 
-import {CommentBlock} from '../../blocks/commentBlock'
+import {CommentBlock} from 'src/blocks/commentBlock'
 
-import {mockDOM, wrapIntl} from '../../testUtils'
-import {Utils} from '../../utils'
+import {mockDOM, wrapIntl} from 'src/testUtils'
+import {Utils} from 'src/utils'
 
-import {FetchMock} from '../../test/fetchMock'
+import {FetchMock} from 'src/test/fetchMock'
 
 import CommentsList from './commentsList'
 

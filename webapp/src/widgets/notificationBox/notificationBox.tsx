@@ -2,11 +2,11 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {Utils} from '../../utils'
+import {Utils} from 'src/utils'
 
-import IconButton from '../buttons/iconButton'
-import CloseIcon from '../icons/close'
-import Tooltip from '../tooltip'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CloseIcon from 'src/widgets/icons/close'
+import Tooltip from 'src/widgets/tooltip'
 
 import './notificationBox.scss'
 

@@ -3,8 +3,8 @@
 import {render} from '@testing-library/react'
 import React from 'react'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {wrapDNDIntl} from '../../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {wrapDNDIntl} from 'src/testUtils'
 
 import ShareBoardLoginButton from './shareBoardLoginButton'
 jest.useFakeTimers()

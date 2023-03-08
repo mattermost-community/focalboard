@@ -4,12 +4,12 @@
 import React, {FC} from 'react'
 import {useIntl} from 'react-intl'
 
-import {Constants} from '../../constants'
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import mutator from '../../mutator'
-import Menu from '../../widgets/menu'
+import {Constants} from 'src/constants'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import mutator from 'src/mutator'
+import Menu from 'src/widgets/menu'
 
 type Props = {
     templateId: string

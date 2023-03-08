@@ -1,11 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {useAppSelector} from '../store/hooks'
-import {getMyBoardMembership, getCurrentBoardId, getBoard} from '../store/boards'
-import {getCurrentTeam} from '../store/teams'
-import {Permission} from '../constants'
-import {MemberRole} from '../blocks/board'
+import {useAppSelector} from 'src/store/hooks'
+import {getMyBoardMembership, getCurrentBoardId, getBoard} from 'src/store/boards'
+import {getCurrentTeam} from 'src/store/teams'
+import {Permission} from 'src/constants'
+import {MemberRole} from 'src/blocks/board'
 
 export const useHasPermissions = (teamId: string, boardId: string, permissions: Permission[]): boolean => {
     if (!boardId || !teamId) {

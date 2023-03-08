@@ -8,9 +8,9 @@ import {render} from '@testing-library/react'
 
 import configureStore from 'redux-mock-store'
 
-import {IUser} from '../../user'
+import {IUser} from 'src/user'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import CloudMessage from './cloudMessage'
 

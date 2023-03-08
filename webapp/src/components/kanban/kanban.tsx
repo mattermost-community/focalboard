@@ -1,28 +1,38 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useCallback, useState, useMemo, useEffect} from 'react'
+import React, {
+    useCallback,
+    useState,
+    useMemo,
+    useEffect
+} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
 
-import {useAppSelector} from '../../store/hooks'
+import {useAppSelector} from 'src/store/hooks'
 
-import {Position} from '../cardDetail/cardDetailContents'
+import {Position} from 'src/components/cardDetail/cardDetailContents'
 
-import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
-import mutator from '../../mutator'
-import {Utils, IDType} from '../../utils'
-import Button from '../../widgets/buttons/button'
-import {Constants, Permission} from '../../constants'
+import {
+    Board,
+    IPropertyOption,
+    IPropertyTemplate,
+    BoardGroup
+} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
+import {BoardView} from 'src/blocks/boardView'
+import mutator from 'src/mutator'
+import {Utils, IDType} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
+import {Constants, Permission} from 'src/constants'
 
-import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
+import {dragAndDropRearrange} from 'src/components/cardDetail/cardDetailContentsUtility'
 
-import {getCurrentBoardTemplates} from '../../store/cards'
-import BoardPermissionGate from '../permissions/boardPermissionGate'
-import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+import {getCurrentBoardTemplates} from 'src/store/cards'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
+import HiddenCardCount from 'src/components/hiddenCardCount/hiddenCardCount'
 
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'

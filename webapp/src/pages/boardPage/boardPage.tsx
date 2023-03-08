@@ -1,25 +1,30 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useMemo, useCallback} from 'react'
+import React, {
+    useEffect,
+    useState,
+    useMemo,
+    useCallback
+} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch, useHistory} from 'react-router-dom'
 
-import Workspace from '../../components/workspace'
-import CloudMessage from '../../components/messages/cloudMessage'
-import VersionMessage from '../../components/messages/versionMessage'
-import octoClient from '../../octoClient'
-import {Subscription, WSClient} from '../../wsclient'
-import {Utils} from '../../utils'
-import {useWebsockets} from '../../hooks/websockets'
-import {IUser} from '../../user'
-import {Block} from '../../blocks/block'
-import {ContentBlock} from '../../blocks/contentBlock'
-import {CommentBlock} from '../../blocks/commentBlock'
-import {AttachmentBlock} from '../../blocks/attachmentBlock'
-import {Board, BoardMember} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
+import Workspace from 'src/components/workspace'
+import CloudMessage from 'src/components/messages/cloudMessage'
+import VersionMessage from 'src/components/messages/versionMessage'
+import octoClient from 'src/octoClient'
+import {Subscription, WSClient} from 'src/wsclient'
+import {Utils} from 'src/utils'
+import {useWebsockets} from 'src/hooks/websockets'
+import {IUser} from 'src/user'
+import {Block} from 'src/blocks/block'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import {CommentBlock} from 'src/blocks/commentBlock'
+import {AttachmentBlock} from 'src/blocks/attachmentBlock'
+import {Board, BoardMember} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
 import {
     updateBoards,
     updateMembersEnsuringBoardsAndUsers,
@@ -27,33 +32,33 @@ import {
     setCurrent as setCurrentBoard,
     fetchBoardMembers,
     addMyBoardMemberships,
-} from '../../store/boards'
-import {getCurrentViewId, setCurrent as setCurrentView, updateViews} from '../../store/views'
-import ConfirmationDialog from '../../components/confirmationDialogBox'
-import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import {setTeam} from '../../store/teams'
-import {updateCards} from '../../store/cards'
-import {updateComments} from '../../store/comments'
-import {updateAttachments} from '../../store/attachments'
-import {updateContents} from '../../store/contents'
+} from 'src/store/boards'
+import {getCurrentViewId, setCurrent as setCurrentView, updateViews} from 'src/store/views'
+import ConfirmationDialog from 'src/components/confirmationDialogBox'
+import {initialLoad, initialReadOnlyLoad, loadBoardData} from 'src/store/initialLoad'
+import {useAppSelector, useAppDispatch} from 'src/store/hooks'
+import {setTeam} from 'src/store/teams'
+import {updateCards} from 'src/store/cards'
+import {updateComments} from 'src/store/comments'
+import {updateAttachments} from 'src/store/attachments'
+import {updateContents} from 'src/store/contents'
 import {
     fetchUserBlockSubscriptions,
     getMe,
     followBlock,
     unfollowBlock,
-} from '../../store/users'
-import {setGlobalError} from '../../store/globalError'
-import {UserSettings} from '../../userSettings'
+} from 'src/store/users'
+import {setGlobalError} from 'src/store/globalError'
+import {UserSettings} from 'src/userSettings'
 
-import IconButton from '../../widgets/buttons/iconButton'
-import CloseIcon from '../../widgets/icons/close'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CloseIcon from 'src/widgets/icons/close'
 
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
 
-import {Constants} from '../../constants'
+import {Constants} from 'src/constants'
 
-import {getCategoryOfBoard, getHiddenBoardIDs} from '../../store/sidebar'
+import {getCategoryOfBoard, getHiddenBoardIDs} from 'src/store/sidebar'
 
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'

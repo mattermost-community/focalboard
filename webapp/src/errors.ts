@@ -3,7 +3,7 @@
 
 import {useIntl} from 'react-intl'
 
-import {UserSettings} from './userSettings'
+import {UserSettings} from 'src/userSettings'
 
 enum ErrorId {
     TeamUndefined = 'team-undefined',

@@ -6,13 +6,13 @@ import {bottom} from '@popperjs/core'
 
 import {FormattedMessage} from 'react-intl'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
 
-import {BaseTourSteps, TOUR_BASE} from '../index'
+import {BaseTourSteps, TOUR_BASE} from 'src/components/onboardingTour/index'
 
 import './open_card.scss'
-import {OnboardingCardClassName} from '../../kanban/kanbanCard'
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
+import {OnboardingCardClassName} from 'src/components/kanban/kanbanCard'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
 
 const OpenCardTourStep = (): JSX.Element | null => {
     const title = (

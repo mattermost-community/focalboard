@@ -10,7 +10,7 @@ import {History} from 'history'
 import TelemetryClient from './telemetry/telemetryClient'
 
 import {getMessages} from './i18n'
-import {FlashMessages} from './components/flashMessages'
+import FlashMessages from './components/flashMessages'
 import NewVersionBanner from './components/newVersionBanner'
 import {Utils} from './utils'
 import {fetchMe, getMe} from './store/users'

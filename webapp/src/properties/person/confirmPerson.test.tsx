@@ -5,7 +5,12 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {mocked} from 'jest-mock'
 
-import {render, screen, waitFor, within} from '@testing-library/react'
+import {
+    render,
+    screen,
+    waitFor,
+    within
+} from '@testing-library/react'
 
 import configureStore from 'redux-mock-store'
 
@@ -13,22 +18,22 @@ import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {wrapIntl} from '../../testUtils'
-import {IPropertyTemplate} from '../../blocks/board'
+import {wrapIntl} from 'src/testUtils'
+import {IPropertyTemplate} from 'src/blocks/board'
 
-import client from '../../octoClient'
+import client from 'src/octoClient'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
 import PersonProperty from './property'
 
-// import {IPropertyTemplate, Board} from '../blocks/board'
+// import {IPropertyTemplate, Board} from 'src/blocks/board'
 
 import ConfirmPerson from './confirmPerson'
-jest.mock('../../mutator')
-jest.mock('../../octoClient')
+jest.mock('src/mutator')
+jest.mock('src/octoClient')
 
 const mockedMutator = mocked(mutator, true)
 const mockedOctoClient = mocked(client, true)

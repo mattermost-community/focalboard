@@ -12,9 +12,9 @@ import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
-import {wrapIntl} from '../../testUtils'
-import {IPropertyTemplate, Board} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {wrapIntl} from 'src/testUtils'
+import {IPropertyTemplate, Board} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
 
 import MultiPersonProperty from './property'
 import MultiPerson from './multiperson'

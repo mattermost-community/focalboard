@@ -95,6 +95,13 @@ server-test-postgres: setup-go-work ## Run server tests using postgres
 	cd server; go tool cover -func server-postgres-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
+
+webapp/node_modules: $(wildcard webapp/package.json) ## Ensures NPM dependencies are installed without having to run this all the time.
+ifneq ($(HAS_WEBAPP),)
+	cd webapp && $(NPM) install
+	touch $@
+endif
+
 webapp-ci: ## Webapp CI: linting & testing.
 	cd webapp; npm run check
 	cd mattermost-plugin/webapp; npm run lint
@@ -113,12 +120,13 @@ live-watch-plugin: modd-precheck ## Run and update locally the plugin in the dev
 	cd mattermost-plugin; make live-watch
 
 .PHONY: build-product
-build-product: ## Builds the product as something the Mattermost server will pull files from when packaging a release
-	cd mattermost-plugin; make build-product
+build-product: webapp/node_modules ## Builds the product as something the Mattermost server will pull files from when packaging a release
+	cd webapp && npm run build
 
 .PHONY: watch-product
-watch-product: ## Run the product as something the Mattermost web app will watch for
-	cd mattermost-plugin; make watch-product
+watch-product: webapp/node_modules ## Run the product as something the Mattermost web app will watch for
+	cd webapp && npm run start
+
 
 swagger: ## Generate swagger API spec and clients based on it.
 	mkdir -p server/swagger/docs
@@ -133,7 +141,7 @@ swagger: ## Generate swagger API spec and clients based on it.
 	cd server/swagger && openapi-generator generate -i swagger.yml -g python -o clients/python
 
 clean: ## Clean build artifacts.
-	rm -rf webapp/pack
+	rm -rf webapp/dist
 
 cleanall: clean ## Clean all build artifacts and dependencies.
 	rm -rf webapp/node_modules

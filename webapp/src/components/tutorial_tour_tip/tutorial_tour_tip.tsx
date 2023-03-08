@@ -14,12 +14,12 @@ import 'tippy.js/animations/perspective-subtle.css'
 
 import {Placement} from 'tippy.js'
 
-import CloseIcon from '../../widgets/icons/close'
-import Button from '../../widgets/buttons/button'
-import IconButton from '../../widgets/buttons/iconButton'
-import CompassIcon from '../../widgets/icons/compassIcon'
+import CloseIcon from 'src/widgets/icons/close'
+import Button from 'src/widgets/buttons/button'
+import IconButton from 'src/widgets/buttons/iconButton'
+import CompassIcon from 'src/widgets/icons/compassIcon'
 
-import PulsatingDot from '../pulsating_dot'
+import PulsatingDot from 'src/components/pulsating_dot'
 
 import TutorialTourTipBackdrop, {Coords, TutorialTourTipPunchout} from './tutorial_tour_tip_backdrop'
 

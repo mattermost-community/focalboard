@@ -3,11 +3,11 @@
 
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 
-import {ClientConfig} from '../config/clientConfig'
+import {ClientConfig} from 'src/config/clientConfig'
 
-import {default as client} from '../octoClient'
+import {default as client} from 'src/octoClient'
 
-import {ShowUsername} from '../utils'
+import {ShowUsername} from 'src/utils'
 
 import {RootState} from './index'
 

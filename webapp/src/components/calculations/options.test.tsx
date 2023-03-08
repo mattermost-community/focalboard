@@ -4,9 +4,9 @@
 import {render} from '@testing-library/react'
 import React from 'react'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {IPropertyTemplate} from 'src/blocks/board'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import {CalculationOptions} from './options'
 

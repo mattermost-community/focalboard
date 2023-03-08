@@ -5,9 +5,9 @@ import React, {useState, useRef} from 'react'
 import Select from 'react-select'
 import {useIntl, FormattedMessage} from 'react-intl'
 
-import {MemberRole} from '../blocks/board'
+import {MemberRole} from 'src/blocks/board'
 
-import {IUser} from '../user'
+import {IUser} from 'src/user'
 
 import ConfirmationDialog from './confirmationDialogBox'
 

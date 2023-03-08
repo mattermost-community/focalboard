@@ -5,7 +5,7 @@ import {IntlShape, useIntl} from 'react-intl'
 import DayPickerInput from 'react-day-picker/DayPickerInput'
 import MomentLocaleUtils from 'react-day-picker/moment'
 
-import {Utils} from '../utils'
+import {Utils} from 'src/utils'
 
 import 'react-day-picker/lib/style.css'
 import './editableDayPicker.scss'

@@ -9,16 +9,16 @@ import {mocked} from 'jest-mock'
 
 import '@testing-library/jest-dom'
 
-import {wrapIntl} from '../../testUtils'
-import mutator from '../../mutator'
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {wrapIntl} from 'src/testUtils'
+import mutator from 'src/mutator'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {createFilterClause, FilterClause} from '../../blocks/filterClause'
-import {createFilterGroup} from '../../blocks/filterGroup'
+import {createFilterClause, FilterClause} from 'src/blocks/filterClause'
+import {createFilterGroup} from 'src/blocks/filterGroup'
 
 import DateFilter from './dateFilter'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 // create Dates for specific days for this year.

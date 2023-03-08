@@ -7,16 +7,16 @@ import {mocked} from 'jest-mock'
 
 import userEvent from '@testing-library/user-event'
 
-import {IPropertyTemplate, createBoard} from '../../blocks/board'
-import {createCard} from '../../blocks/card'
+import {IPropertyTemplate, createBoard} from 'src/blocks/board'
+import {createCard} from 'src/blocks/card'
 
-import {wrapIntl} from '../../testUtils'
-import mutator from '../../mutator'
+import {wrapIntl} from 'src/testUtils'
+import mutator from 'src/mutator'
 
 import SelectProperty from './property'
 import Select from './select'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 function selectPropertyTemplate(): IPropertyTemplate {

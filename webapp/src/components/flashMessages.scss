@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import 'src/styles/z-index';
 
 .FlashMessages {
     @include z-index(flash-messages);

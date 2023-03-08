@@ -3,15 +3,15 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {Card} from '../../blocks/card'
+import {Card} from 'src/blocks/card'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {IPropertyTemplate} from 'src/blocks/board'
 
-import ChevronUp from '../../widgets/icons/chevronUp'
+import ChevronUp from 'src/widgets/icons/chevronUp'
 
-import {useColumnResize} from '../table/tableColumnResizeContext'
+import {useColumnResize} from 'src/components/table/tableColumnResizeContext'
 
-import {Constants} from '../../constants'
+import {Constants} from 'src/constants'
 
 import {CommonCalculationOptionProps, Options, optionDisplayNameString} from './options'
 

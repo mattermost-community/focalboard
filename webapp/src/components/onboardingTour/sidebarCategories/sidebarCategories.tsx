@@ -6,19 +6,24 @@ import {right} from '@popperjs/core'
 
 import {FormattedMessage} from 'react-intl'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
-import {TOUR_BOARD, TOUR_SIDEBAR, SidebarTourSteps, FINISHED} from '../index'
-import {useAppDispatch, useAppSelector} from '../../../store/hooks'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
+import {
+    TOUR_BOARD,
+    TOUR_SIDEBAR,
+    SidebarTourSteps,
+    FINISHED
+} from 'src/components/onboardingTour/index'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
 import {
     getMe,
     getOnboardingTourCategory,
     getOnboardingTourStep,
     patchProps,
-} from '../../../store/users'
-import {IUser, UserConfigPatch} from '../../../user'
-import mutator from '../../../mutator'
-import {Constants} from '../../../constants'
+} from 'src/store/users'
+import {IUser, UserConfigPatch} from 'src/user'
+import mutator from 'src/mutator'
+import {Constants} from 'src/constants'
 
 import './sidebarCategories.scss'
 

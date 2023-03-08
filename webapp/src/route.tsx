@@ -1,35 +1,28 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
-import {
-    Redirect,
-    Route,
-} from 'react-router-dom'
+import React, {ComponentProps} from 'react'
+import {Redirect, Route as BaseRoute} from 'react-router-dom'
 
-import {getLoggedIn, getMe, getMyConfig} from './store/users'
-import {useAppSelector} from './store/hooks'
-import {UserSettingKey} from './userSettings'
-import {IUser} from './user'
-import {getClientConfig} from './store/clientConfig'
-import {ClientConfig} from './config/clientConfig'
+import {getLoggedIn, getMe, getMyConfig} from 'src/store/users'
+import {useAppSelector} from 'src/store/hooks'
+import {UserSettingKey} from 'src/userSettings'
+import {IUser} from 'src/user'
+import {getClientConfig} from 'src/store/clientConfig'
+import {ClientConfig} from 'src/config/clientConfig'
 
-type RouteProps = {
-    path: string|string[]
-    exact?: boolean
-    render?: (props: any) => React.ReactElement
-    component?: React.ComponentType
-    children?: React.ReactElement
+
+type RouteProps = ComponentProps<typeof BaseRoute> & {
     getOriginalPath?: (match: any) => string
     loginRequired?: boolean
 }
 
-function FBRoute(props: RouteProps) {
+function Route({children, ...props}: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const me = useAppSelector<IUser|null>(getMe)
     const myConfig = useAppSelector(getMyConfig)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
-    let redirect: React.ReactNode = null
+    let redirect: RouteProps['children']
 
     // No FTUE for guests
     const disableTour = me?.is_guest || clientConfig?.featureFlags?.disableTour || false
@@ -41,18 +34,20 @@ function FBRoute(props: RouteProps) {
         !myConfig[UserSettingKey.WelcomePageViewed]
 
     if (showWelcomePage) {
-        redirect = ({match}: any) => {
+        // eslint-disable-next-line react/display-name, react/prop-types
+        redirect = ({match}) => {
             if (props.getOriginalPath) {
-                return <Redirect to={`/welcome?r=${props.getOriginalPath!(match)}`}/>
+                return <Redirect to={`/welcome?r=${props.getOriginalPath(match)}`}/>
             }
             return <Redirect to='/welcome'/>
         }
     }
 
     if (redirect === null && loggedIn === false && props.loginRequired) {
-        redirect = ({match}: any) => {
+        // eslint-disable-next-line react/display-name, react/prop-types
+        redirect = ({match}) => {
             if (props.getOriginalPath) {
-                let redirectUrl = '/' + props.getOriginalPath!(match)
+                let redirectUrl = '/' + props.getOriginalPath(match)
                 if (redirectUrl.indexOf('//') === 0) {
                     redirectUrl = redirectUrl.slice(1)
                 }
@@ -64,15 +59,10 @@ function FBRoute(props: RouteProps) {
     }
 
     return (
-        <Route
-            path={props.path}
-            render={props.render}
-            component={props.component}
-            exact={props.exact}
-        >
-            {redirect || props.children}
-        </Route>
+        <BaseRoute {...props}>
+            {redirect || children}
+        </BaseRoute>
     )
 }
 
-export default React.memo(FBRoute)
+export default React.memo(Route)

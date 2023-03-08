@@ -3,13 +3,13 @@
 import React, {useCallback} from 'react'
 import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 
-import {BlockTypes} from '../../blocks/block'
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
+import {BlockTypes} from 'src/blocks/block'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
 
-import {contentRegistry} from '../content/contentRegistry'
+import {contentRegistry} from 'src/components/content/contentRegistry'
 
 import {useCardDetailContext} from './cardDetailContext'
 

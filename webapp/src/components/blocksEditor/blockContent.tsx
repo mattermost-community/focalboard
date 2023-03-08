@@ -3,9 +3,9 @@
 import React from 'react'
 import {useDrag, useDrop} from 'react-dnd'
 
-import GripIcon from '../../widgets/icons/grip'
+import GripIcon from 'src/widgets/icons/grip'
 
-import AddIcon from '../../widgets/icons/add'
+import AddIcon from 'src/widgets/icons/add'
 
 import Editor from './editor'
 import * as registry from './blocks'

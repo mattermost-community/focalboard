@@ -5,23 +5,28 @@ import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDrag} from 'react-dnd'
 
-import {Constants, Permission} from '../../constants'
-import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import mutator from '../../mutator'
-import IconButton from '../../widgets/buttons/iconButton'
-import AddIcon from '../../widgets/icons/add'
-import DeleteIcon from '../../widgets/icons/delete'
-import HideIcon from '../../widgets/icons/hide'
-import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import Editable from '../../widgets/editable'
-import Label from '../../widgets/label'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import {Constants, Permission} from 'src/constants'
+import {
+    IPropertyOption,
+    IPropertyTemplate,
+    Board,
+    BoardGroup
+} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
+import mutator from 'src/mutator'
+import IconButton from 'src/widgets/buttons/iconButton'
+import AddIcon from 'src/widgets/icons/add'
+import DeleteIcon from 'src/widgets/icons/delete'
+import HideIcon from 'src/widgets/icons/hide'
+import OptionsIcon from 'src/widgets/icons/options'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Editable from 'src/widgets/editable'
+import Label from 'src/widgets/label'
+import {useHasCurrentBoardPermissions} from 'src/hooks/permissions'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
 import {KanbanCalculation} from './calculation/calculation'
 

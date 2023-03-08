@@ -5,7 +5,7 @@ import React from 'react'
 
 import {render} from '@testing-library/react'
 
-import {FileInfo} from '../../../blocks/block'
+import {FileInfo} from 'src/blocks/block'
 
 import ArchivedFile from './archivedFile'
 

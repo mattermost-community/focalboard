@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
 
-import wsClient, {MMWebSocketClient} from '../wsclient'
-import {Utils} from '../utils'
+import wsClient, {MMWebSocketClient} from 'src/wsclient'
+import {Utils} from 'src/utils'
 
 type Props = {
     userId?: string

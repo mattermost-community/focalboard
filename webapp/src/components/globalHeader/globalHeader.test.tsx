@@ -9,7 +9,7 @@ import {render} from '@testing-library/react'
 
 import configureStore from 'redux-mock-store'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import GlobalHeader from './globalHeader'
 

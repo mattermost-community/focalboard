@@ -4,22 +4,28 @@
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import MenuWrapper from '../../widgets/menuWrapper'
-import Menu from '../../widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Menu from 'src/widgets/menu'
 
-import CheckIcon from '../../widgets/icons/check'
-import CompassIcon from '../../widgets/icons/compassIcon'
+import CheckIcon from 'src/widgets/icons/check'
+import CompassIcon from 'src/widgets/icons/compassIcon'
 
-import {Board, createBoard, BoardTypeOpen, BoardTypePrivate, MemberRole} from '../../blocks/board'
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentTeam} from '../../store/teams'
-import {getCurrentBoard} from '../../store/boards'
-import {Permission} from '../../constants'
+import {
+    Board,
+    createBoard,
+    BoardTypeOpen,
+    BoardTypePrivate,
+    MemberRole
+} from 'src/blocks/board'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentTeam} from 'src/store/teams'
+import {getCurrentBoard} from 'src/store/boards'
+import {Permission} from 'src/constants'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
-import ConfirmationDialogBox from '../confirmationDialogBox'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
+import ConfirmationDialogBox from 'src/components/confirmationDialogBox'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
 async function updateBoardType(board: Board, newType: string, newMinimumRole: MemberRole) {
     if (board.type === newType && board.minimumRole === newMinimumRole) {

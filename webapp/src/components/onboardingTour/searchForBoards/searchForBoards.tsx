@@ -7,8 +7,8 @@ import {right} from '@popperjs/core'
 
 import {SidebarTourSteps, TOUR_SIDEBAR} from '..'
 
-import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
+import {useMeasurePunchouts} from 'src/components/tutorial_tour_tip/hooks'
+import TourTipRenderer from 'src/components/onboardingTour/tourTipRenderer/tourTipRenderer'
 
 import './searchForBoards.scss'
 

@@ -3,8 +3,8 @@
 
 import React from 'react'
 
-import Person from '../person/person'
-import {PropertyProps} from '../types'
+import Person from 'src/properties/person/person'
+import {PropertyProps} from 'src/properties/types'
 
 const CreatedBy = (props: PropertyProps): JSX.Element => {
     return (

@@ -3,12 +3,12 @@
 import {IntlShape} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 
-import {Options} from '../../components/calculations/options'
-import {IPropertyTemplate} from '../../blocks/board'
-import {Card} from '../../blocks/card'
-import {Utils} from '../../utils'
+import {Options} from 'src/components/calculations/options'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
+import {Utils} from 'src/utils'
 
-import {PropertyTypeEnum, DatePropertyType} from '../types'
+import {PropertyTypeEnum, DatePropertyType} from 'src/properties/types'
 
 import DateComponent, {createDatePropertyFromString} from './date'
 

@@ -6,17 +6,17 @@ import {useIntl} from 'react-intl'
 
 import {ActionMeta, SingleValue, MultiValue} from 'react-select'
 
-import {IUser} from '../../user'
-import mutator from '../../mutator'
-import {useAppSelector} from '../../store/hooks'
-import {getBoardUsers, getMe} from '../../store/users'
-import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
+import {IUser} from 'src/user'
+import mutator from 'src/mutator'
+import {useAppSelector} from 'src/store/hooks'
+import {getBoardUsers, getMe} from 'src/store/users'
+import {BoardMember, BoardTypeOpen, MemberRole} from 'src/blocks/board'
 
-import {PropertyProps} from '../types'
-import {useHasPermissions} from '../../hooks/permissions'
-import {Permission} from '../../constants'
-import ConfirmAddUserForNotifications from '../../components/confirmAddUserForNotifications'
-import PersonSelector from '../../components/personSelector'
+import {PropertyProps} from 'src/properties/types'
+import {useHasPermissions} from 'src/hooks/permissions'
+import {Permission} from 'src/constants'
+import ConfirmAddUserForNotifications from 'src/components/confirmAddUserForNotifications'
+import PersonSelector from 'src/components/personSelector'
 
 const ConfirmPerson = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, property, readOnly} = props

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {Constants} from '../constants'
+import {Constants} from 'src/constants'
 
 import './label.scss'
 

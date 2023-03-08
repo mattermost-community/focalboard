@@ -5,23 +5,23 @@ import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 
 import '@testing-library/jest-dom'
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
 import 'isomorphic-fetch'
 
-import {Constants} from '../../constants'
-import mutator from '../../mutator'
+import {Constants} from 'src/constants'
+import mutator from 'src/mutator'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {FetchMock} from 'src/test/fetchMock'
 
 import TableHeaderMenu from './tableHeaderMenu'
 
 global.fetch = FetchMock.fn
 
-// import mutator from '../../mutator'
+// import mutator from 'src/mutator'
 
-jest.mock('../../mutator', () => ({
+jest.mock('src/mutator', () => ({
     changeViewSortOptions: jest.fn(),
     insertPropertyTemplate: jest.fn(),
     changeViewVisibleProperties: jest.fn(),

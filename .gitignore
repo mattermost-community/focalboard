@@ -66,3 +66,4 @@ docker/certs
 docker/data
 server/**/*.coverage
 mattermost-plugin/**/*.coverage
+junit.xml

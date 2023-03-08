@@ -3,16 +3,21 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {useIntl, FormattedMessage} from 'react-intl'
 
-import AlertIcon from '../widgets/icons/alert'
+import AlertIcon from 'src/widgets/icons/alert'
 
-import {useAppSelector, useAppDispatch} from '../store/hooks'
-import {IUser, UserConfigPatch} from '../user'
-import {getMe, patchProps, getCardLimitSnoozeUntil, getCardHiddenWarningSnoozeUntil} from '../store/users'
-import {getCurrentBoardHiddenCardsCount, getCardHiddenWarning} from '../store/cards'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
-import CheckIcon from '../widgets/icons/check'
-import NotificationBox from '../widgets/notificationBox/notificationBox'
-import octoClient from '../octoClient'
+import {useAppSelector, useAppDispatch} from 'src/store/hooks'
+import {IUser, UserConfigPatch} from 'src/user'
+import {
+    getMe,
+    patchProps,
+    getCardLimitSnoozeUntil,
+    getCardHiddenWarningSnoozeUntil
+} from 'src/store/users'
+import {getCurrentBoardHiddenCardsCount, getCardHiddenWarning} from 'src/store/cards'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
+import CheckIcon from 'src/widgets/icons/check'
+import NotificationBox from 'src/widgets/notificationBox/notificationBox'
+import octoClient from 'src/octoClient'
 
 import './cardLimitNotification.scss'
 

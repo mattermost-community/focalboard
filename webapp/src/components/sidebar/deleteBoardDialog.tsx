@@ -3,11 +3,11 @@
 import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Utils} from '../../utils'
-import Button from '../../widgets/buttons/button'
+import {Utils} from 'src/utils'
+import Button from 'src/widgets/buttons/button'
 
-import Dialog from '../dialog'
-import RootPortal from '../rootPortal'
+import Dialog from 'src/components/dialog'
+import RootPortal from 'src/components/rootPortal'
 
 import './deleteBoardDialog.scss'
 

@@ -2,12 +2,12 @@
 // See LICENSE.txt for license information.
 import {IntlShape} from 'react-intl'
 
-import {Options} from '../../components/calculations/options'
-import {IPropertyTemplate} from '../../blocks/board'
-import {Card} from '../../blocks/card'
-import {Utils} from '../../utils'
+import {Options} from 'src/components/calculations/options'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
+import {Utils} from 'src/utils'
 
-import {DatePropertyType, PropertyTypeEnum} from '../types'
+import {DatePropertyType, PropertyTypeEnum} from 'src/properties/types'
 
 import CreatedTime from './createdTime'
 

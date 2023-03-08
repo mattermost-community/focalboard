@@ -3,11 +3,11 @@
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import wsClient, {WSClient} from '../../wsclient'
-import {useAppSelector} from '../../store/hooks'
+import wsClient, {WSClient} from 'src/wsclient'
+import {useAppSelector} from 'src/store/hooks'
 
-import {getMe} from '../../store/users'
-import {IUser} from '../../user'
+import {getMe} from 'src/store/users'
+import {IUser} from 'src/user'
 
 const websocketTimeoutForBanner = 5000
 

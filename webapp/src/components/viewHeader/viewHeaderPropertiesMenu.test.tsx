@@ -9,19 +9,19 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {BoardView} from '../../blocks/boardView'
+import {BoardView} from 'src/blocks/boardView'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import {mockStateStore, wrapIntl} from '../../testUtils'
+import {mockStateStore, wrapIntl} from 'src/testUtils'
 
-import {Constants} from '../../constants'
+import {Constants} from 'src/constants'
 
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()

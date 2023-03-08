@@ -3,7 +3,7 @@
 import React from 'react'
 import {useDrop} from 'react-dnd'
 
-import {Card} from '../../blocks/card'
+import {Card} from 'src/blocks/card'
 import './kanbanColumn.scss'
 
 type Props = {

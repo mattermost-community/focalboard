@@ -12,17 +12,18 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {Board} from '../../blocks/board'
+import {IAppWindow} from 'src/types'
 
-import client from '../../octoClient'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {Board} from 'src/blocks/board'
 
-import {IAppWindow} from '../../types'
+import client from 'src/octoClient'
+
 
 import {ViewLimitModal} from './viewLimitDialog'
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 const mockedOctoClient = mocked(client, true)
 
 declare let window: IAppWindow

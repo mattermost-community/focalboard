@@ -5,12 +5,12 @@ import React from 'react'
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import {TestBlockFactory} from '../../../test/testBlockFactory'
-import {FetchMock} from '../../../test/fetchMock'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {FetchMock} from 'src/test/fetchMock'
 import 'isomorphic-fetch'
-import {wrapDNDIntl} from '../../../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
-import {ColumnResizeProvider} from '../tableColumnResizeContext'
+import {ColumnResizeProvider} from 'src/components/table/tableColumnResizeContext'
 
 import CalculationRow from './calculationRow'
 

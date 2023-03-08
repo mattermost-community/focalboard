@@ -5,11 +5,11 @@ import React from 'react'
 import {render, screen, fireEvent} from '@testing-library/react'
 import {mocked} from 'jest-mock'
 
-import octoClient from '../../../../octoClient'
+import octoClient from 'src/octoClient'
 
 import ImageBlock from '.'
 
-jest.mock('../../../../octoClient')
+jest.mock('src/octoClient')
 
 describe('components/blocksEditor/blocks/image', () => {
     test('should match Display snapshot', async () => {

@@ -3,15 +3,15 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
-import {loadTheme} from '../../theme'
-import IconButton from '../../widgets/buttons/iconButton'
-import HamburgerIcon from '../../widgets/icons/hamburger'
-import HideSidebarIcon from '../../widgets/icons/hideSidebar'
-import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getCurrentBoard, getMySortedBoards} from '../../store/boards'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {Utils} from '../../utils'
-import {IUser} from '../../user'
+import {loadTheme} from 'src/theme'
+import IconButton from 'src/widgets/buttons/iconButton'
+import HamburgerIcon from 'src/widgets/icons/hamburger'
+import HideSidebarIcon from 'src/widgets/icons/hideSidebar'
+import ShowSidebarIcon from 'src/widgets/icons/showSidebar'
+import {getCurrentBoard, getMySortedBoards} from 'src/store/boards'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {Utils} from 'src/utils'
+import {IUser} from 'src/user'
 
 import './sidebar.scss'
 
@@ -25,26 +25,26 @@ import {
     updateCategories,
     updateCategoryBoardsOrder,
     updateCategoryOrder,
-} from '../../store/sidebar'
+} from 'src/store/sidebar'
 
-import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
+import BoardsSwitcher from 'src/components/boardsSwitcher/boardsSwitcher'
 
-import wsClient, {WSClient} from '../../wsclient'
+import wsClient, {WSClient} from 'src/wsclient'
 
-import {getCurrentTeam, getCurrentTeamId} from '../../store/teams'
+import {getCurrentTeam, getCurrentTeamId} from 'src/store/teams'
 
-import {Constants} from '../../constants'
+import {Constants} from 'src/constants'
 
-import {getMe} from '../../store/users'
-import {getCurrentViewId} from '../../store/views'
+import {getMe} from 'src/store/users'
+import {getCurrentViewId} from 'src/store/views'
 
-import octoClient from '../../octoClient'
+import octoClient from 'src/octoClient'
 
-import {useWebsockets} from '../../hooks/websockets'
+import {useWebsockets} from 'src/hooks/websockets'
 
-import mutator from '../../mutator'
+import mutator from 'src/mutator'
 
-import {Board} from '../../blocks/board'
+import {Board} from 'src/blocks/board'
 
 import SidebarCategory from './sidebarCategory'
 

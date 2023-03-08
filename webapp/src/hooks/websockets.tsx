@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {useEffect} from 'react'
 
-import wsClient, {WSClient} from '../wsclient'
+import wsClient, {WSClient} from 'src/wsclient'
 
 export const useWebsockets = (teamId: string, fn: (wsClient: WSClient) => () => void, deps: any[] = []): void => {
     useEffect(() => {

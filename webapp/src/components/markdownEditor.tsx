@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, Suspense} from 'react'
 
-import {Utils} from '../utils'
+import {Utils} from 'src/utils'
 import './markdownEditor.scss'
 
 const MarkdownEditorInput = React.lazy(() => import('./markdownEditorInput/markdownEditorInput'))

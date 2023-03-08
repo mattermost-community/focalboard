@@ -5,9 +5,14 @@ import React from 'react'
 
 import {useDrop} from 'react-dnd'
 
-import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
+import {
+    Board,
+    IPropertyOption,
+    IPropertyTemplate,
+    BoardGroup
+} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import {Card} from 'src/blocks/card'
 
 import TableGroupHeaderRow from './tableGroupHeaderRow'
 import TableRows from './tableRows'

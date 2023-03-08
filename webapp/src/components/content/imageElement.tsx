@@ -3,14 +3,14 @@
 import React, {useEffect, useState} from 'react'
 import {IntlShape} from 'react-intl'
 
-import {ContentBlock} from '../../blocks/contentBlock'
-import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
-import octoClient from '../../octoClient'
-import {Utils} from '../../utils'
-import ImageIcon from '../../widgets/icons/image'
-import {sendFlashMessage} from '../../components/flashMessages'
+import {ContentBlock} from 'src/blocks/contentBlock'
+import {ImageBlock, createImageBlock} from 'src/blocks/imageBlock'
+import octoClient from 'src/octoClient'
+import {Utils} from 'src/utils'
+import ImageIcon from 'src/widgets/icons/image'
+import {sendFlashMessage} from 'src/components/flashMessages'
 
-import {FileInfo} from '../../blocks/block'
+import {FileInfo} from 'src/blocks/block'
 
 import {contentRegistry} from './contentRegistry'
 import ArchivedFile from './archivedFile/archivedFile'

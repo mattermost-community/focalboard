@@ -3,10 +3,10 @@
 
 import React from 'react'
 
-import {Board, IPropertyTemplate} from '../blocks/board'
-import {Card} from '../blocks/card'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
 
-import propsRegistry from '../properties'
+import propsRegistry from 'src/properties'
 
 type Props = {
     board: Board

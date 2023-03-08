@@ -3,7 +3,7 @@
 
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 
-import {getCurrentLanguage, storeLanguage as i18nStoreLanguage} from '../i18n'
+import {getCurrentLanguage, storeLanguage as i18nStoreLanguage} from 'src/i18n'
 
 import {RootState} from './index'
 

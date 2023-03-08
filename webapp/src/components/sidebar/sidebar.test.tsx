@@ -14,14 +14,14 @@ import thunk from 'redux-thunk'
 
 import {mocked} from 'jest-mock'
 
-import {mockMatchMedia, wrapIntl} from '../../testUtils'
+import {mockMatchMedia, wrapIntl} from 'src/testUtils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import octoClient from '../../../../webapp/src/octoClient'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import octoClient from 'src/octoClient'
 
 import Sidebar from './sidebar'
 
-jest.mock('../../../../webapp/src/octoClient')
+jest.mock('src/octoClient')
 const mockedOctoClient = mocked(octoClient, true)
 
 beforeAll(() => {

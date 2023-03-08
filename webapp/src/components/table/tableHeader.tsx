@@ -2,16 +2,16 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {Constants} from '../../constants'
-import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
-import SortDownIcon from '../../widgets/icons/sortDown'
-import SortUpIcon from '../../widgets/icons/sortUp'
-import MenuWrapper from '../../widgets/menuWrapper'
-import Label from '../../widgets/label'
-import {useSortable} from '../../hooks/sortable'
-import {Utils} from '../../utils'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {Constants} from 'src/constants'
+import {Card} from 'src/blocks/card'
+import {BoardView} from 'src/blocks/boardView'
+import SortDownIcon from 'src/widgets/icons/sortDown'
+import SortUpIcon from 'src/widgets/icons/sortUp'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Label from 'src/widgets/label'
+import {useSortable} from 'src/hooks/sortable'
+import {Utils} from 'src/utils'
 
 import HorizontalGrip from './horizontalGrip'
 

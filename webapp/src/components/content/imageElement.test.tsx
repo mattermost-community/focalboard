@@ -8,15 +8,15 @@ import {act} from 'react-dom/test-utils'
 
 import {mocked} from 'jest-mock'
 
-import {ImageBlock} from '../../blocks/imageBlock'
+import {ImageBlock} from 'src/blocks/imageBlock'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import octoClient from '../../octoClient'
+import octoClient from 'src/octoClient'
 
 import ImageElement from './imageElement'
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 const mockedOcto = mocked(octoClient, true)
 mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 

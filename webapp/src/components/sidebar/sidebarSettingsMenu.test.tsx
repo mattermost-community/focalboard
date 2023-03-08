@@ -11,15 +11,15 @@ import configureStore from 'redux-mock-store'
 
 import {mocked} from 'jest-mock'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import {defaultThemeName} from '../../theme'
+import {defaultThemeName} from 'src/theme'
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from 'src/telemetry/telemetryClient'
 
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 
-jest.mock('../../telemetry/telemetryClient')
+jest.mock('src/telemetry/telemetryClient')
 const mockedTelemetry = mocked(TelemetryClient, true)
 
 describe('components/sidebar/SidebarSettingsMenu', () => {

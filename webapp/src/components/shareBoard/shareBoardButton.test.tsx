@@ -4,10 +4,10 @@ import {render} from '@testing-library/react'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {BoardTypeOpen} from '../../blocks/board'
+import {BoardTypeOpen} from 'src/blocks/board'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {wrapDNDIntl, mockStateStore} from '../../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {wrapDNDIntl, mockStateStore} from 'src/testUtils'
 
 import ShareBoardButton from './shareBoardButton'
 

@@ -2,10 +2,10 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {MarkdownEditor} from '../../../markdownEditor'
-import {Utils} from '../../../../utils'
+import {MarkdownEditor} from 'src/components/markdownEditor'
+import {Utils} from 'src/utils'
 
-import {BlockInputProps, ContentType} from '../types'
+import {BlockInputProps, ContentType} from 'src/components/blocksEditor/blocks/types'
 
 import './text.scss'
 

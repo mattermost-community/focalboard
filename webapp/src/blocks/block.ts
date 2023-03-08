@@ -3,7 +3,7 @@
 
 import difference from 'lodash/difference'
 
-import {Utils} from '../utils'
+import {Utils} from 'src/utils'
 
 const contentBlockTypes = ['text', 'image', 'divider', 'checkbox', 'h1', 'h2', 'h3', 'list-item', 'attachment', 'quote', 'video'] as const
 

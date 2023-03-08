@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {DividerBlock, createDividerBlock} from '../../blocks/dividerBlock'
-import DividerIcon from '../../widgets/icons/divider'
+import {DividerBlock, createDividerBlock} from 'src/blocks/dividerBlock'
+import DividerIcon from 'src/widgets/icons/divider'
 
 import {contentRegistry} from './contentRegistry'
 import './dividerElement.scss'

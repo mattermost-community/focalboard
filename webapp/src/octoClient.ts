@@ -1,7 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, BlockPatch, FileInfo} from './blocks/block'
-import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
+import {
+    Board,
+    BoardsAndBlocks,
+    BoardsAndBlocksPatch,
+    BoardPatch,
+    BoardMember
+} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
 import {IUser, UserConfigPatch, UserPreference} from './user'

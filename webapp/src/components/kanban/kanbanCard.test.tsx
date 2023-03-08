@@ -11,18 +11,18 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import Mutator from '../../mutator'
-import {Utils} from '../../utils'
+import Mutator from 'src/mutator'
+import {Utils} from 'src/utils'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {IPropertyTemplate} from '../../blocks/board'
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
 import KanbanCard from './kanbanCard'
 
-jest.mock('../../mutator')
-jest.mock('../../utils')
-jest.mock('../../telemetry/telemetryClient')
+jest.mock('src/mutator')
+jest.mock('src/utils')
+jest.mock('src/telemetry/telemetryClient')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
 

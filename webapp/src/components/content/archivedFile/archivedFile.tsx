@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 
-import {FileInfo} from '../../../blocks/block'
-import BrokenFile from '../../../widgets/icons/brokenFile'
-import {Utils} from '../../../utils'
+import {FileInfo} from 'src/blocks/block'
+import BrokenFile from 'src/widgets/icons/brokenFile'
+import {Utils} from 'src/utils'
 
 import './archivedFile.scss'
 

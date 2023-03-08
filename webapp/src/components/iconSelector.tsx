@@ -3,12 +3,12 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import RandomIcon from '../widgets/icons/random'
-import EmojiPicker from '../widgets/emojiPicker'
-import DeleteIcon from '../widgets/icons/delete'
-import EmojiIcon from '../widgets/icons/emoji'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
+import RandomIcon from 'src/widgets/icons/random'
+import EmojiPicker from 'src/widgets/emojiPicker'
+import DeleteIcon from 'src/widgets/icons/delete'
+import EmojiIcon from 'src/widgets/icons/emoji'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
 import './iconSelector.scss'
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
     onRemoveIcon: any
 }
 
-const IconSelector = React.memo((props: Props) => {
+const IconSelector = (props: Props) => {
     const intl = useIntl()
 
     return (
@@ -53,6 +53,6 @@ const IconSelector = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default IconSelector
+export default React.memo(IconSelector)

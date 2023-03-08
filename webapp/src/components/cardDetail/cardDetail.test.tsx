@@ -12,19 +12,19 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'jest-mock'
 
-import {FetchMock} from '../../test/fetchMock'
-import {TestBlockFactory} from '../../test/testBlockFactory'
+import {FetchMock} from 'src/test/fetchMock'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {mockDOM, wrapDNDIntl, wrapIntl} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, wrapIntl} from 'src/testUtils'
 
-import octoClient from '../../octoClient'
+import octoClient from 'src/octoClient'
 
-import {createTextBlock} from '../../blocks/textBlock'
+import {createTextBlock} from 'src/blocks/textBlock'
 
 import CardDetail from './cardDetail'
 
 global.fetch = FetchMock.fn
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 
 const mockedOctoClient = mocked(octoClient, true)
 

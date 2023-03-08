@@ -4,14 +4,14 @@ import React from 'react'
 
 import {useIntl} from 'react-intl'
 
-import AttachmentElement from '../../components/content/attachmentElement'
-import {AttachmentBlock} from '../../blocks/attachmentBlock'
+import AttachmentElement from 'src/components/content/attachmentElement'
+import {AttachmentBlock} from 'src/blocks/attachmentBlock'
 
 import './attachment.scss'
-import {Block} from '../../blocks/block'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import BoardPermissionGate from '../../components/permissions/boardPermissionGate'
-import {Permission} from '../../constants'
+import {Block} from 'src/blocks/block'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
+import {Permission} from 'src/constants'
 
 type Props = {
     attachments: AttachmentBlock[]

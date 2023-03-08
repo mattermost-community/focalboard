@@ -10,17 +10,17 @@ import userEvent from '@testing-library/user-event'
 
 import configureStore from 'redux-mock-store'
 
-import {IUser} from '../../user'
+import {IUser} from 'src/user'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl} from 'src/testUtils'
 
-import client from '../../octoClient'
+import client from 'src/octoClient'
 
-import {versionProperty} from '../../store/users'
+import {versionProperty} from 'src/store/users'
 
 import VersionMessage from './versionMessage'
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 const mockedOctoClient = mocked(client, true)
 
 describe('components/messages/VersionMessage', () => {

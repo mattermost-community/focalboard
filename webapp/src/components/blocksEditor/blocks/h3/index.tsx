@@ -3,7 +3,7 @@
 import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
-import {BlockInputProps, ContentType} from '../types'
+import {BlockInputProps, ContentType} from 'src/components/blocksEditor/blocks/types'
 
 import './h3.scss'
 

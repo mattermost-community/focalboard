@@ -4,13 +4,13 @@
 import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import Button from '../../widgets/buttons/button'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard} from '../../store/boards'
-import Globe from '../../widgets/icons/globe'
-import LockOutline from '../../widgets/icons/lockOutline'
-import {BoardTypeOpen} from '../../blocks/board'
+import Button from 'src/widgets/buttons/button'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from 'src/telemetry/telemetryClient'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentBoard} from 'src/store/boards'
+import Globe from 'src/widgets/icons/globe'
+import LockOutline from 'src/widgets/icons/lockOutline'
+import {BoardTypeOpen} from 'src/blocks/board'
 
 import './shareBoardButton.scss'
 

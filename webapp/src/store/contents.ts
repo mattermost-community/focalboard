@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
-import {ContentBlock} from '../blocks/contentBlock'
+import {ContentBlock} from 'src/blocks/contentBlock'
 
 import {getCards, getTemplates} from './cards'
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'

@@ -5,8 +5,8 @@ import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import {wrapIntl} from '../testUtils'
-import propsRegistry from '../properties'
+import {wrapIntl} from 'src/testUtils'
+import propsRegistry from 'src/properties'
 
 import PropertyMenu from './propertyMenu'
 

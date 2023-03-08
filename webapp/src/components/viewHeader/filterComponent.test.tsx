@@ -10,16 +10,16 @@ import '@testing-library/jest-dom'
 
 import userEvent from '@testing-library/user-event'
 
-import {FilterClause} from '../../blocks/filterClause'
+import {FilterClause} from 'src/blocks/filterClause'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import mutator from '../../mutator'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import mutator from 'src/mutator'
 
-import {wrapIntl, mockStateStore} from '../../testUtils'
+import {wrapIntl, mockStateStore} from 'src/testUtils'
 
 import FilterComponenet from './filterComponent'
 
-jest.mock('../../mutator')
+jest.mock('src/mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()

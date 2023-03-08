@@ -5,13 +5,13 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import {useDispatch} from 'react-redux'
 
-import {FINISHED, TourCategoriesMapToSteps, TOUR_ORDER} from '../onboardingTour'
-import {useAppSelector} from '../../store/hooks'
-import {getMe, getOnboardingTourStep, patchProps} from '../../store/users'
-import {UserConfigPatch} from '../../user'
-import octoClient from '../../octoClient'
-import {Utils, KeyCodes} from '../../utils'
-import TelemetryClient, {TelemetryCategory} from '../../telemetry/telemetryClient'
+import {FINISHED, TourCategoriesMapToSteps, TOUR_ORDER} from 'src/components/onboardingTour'
+import {useAppSelector} from 'src/store/hooks'
+import {getMe, getOnboardingTourStep, patchProps} from 'src/store/users'
+import {UserConfigPatch} from 'src/user'
+import octoClient from 'src/octoClient'
+import {Utils, KeyCodes} from 'src/utils'
+import TelemetryClient, {TelemetryCategory} from 'src/telemetry/telemetryClient'
 
 export interface TutorialTourTipManager {
     show: boolean

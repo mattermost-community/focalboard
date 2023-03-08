@@ -11,17 +11,17 @@ import userEvents from '@testing-library/user-event'
 import 'isomorphic-fetch'
 import {mocked} from 'jest-mock'
 
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {FetchMock} from '../../test/fetchMock'
-import {BoardView} from '../../blocks/boardView'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {FetchMock} from 'src/test/fetchMock'
+import {BoardView} from 'src/blocks/boardView'
 
-import {IUser} from '../../user'
+import {IUser} from 'src/user'
 
-import {Utils, IDType} from '../../utils'
+import {Utils, IDType} from 'src/utils'
 
-import {wrapDNDIntl} from '../../testUtils'
+import {wrapDNDIntl} from 'src/testUtils'
 
-import Mutator from '../../mutator'
+import Mutator from 'src/mutator'
 
 import Table from './table'
 
@@ -31,9 +31,9 @@ beforeEach(() => {
     FetchMock.fn.mockReset()
 })
 
-jest.mock('../../mutator')
-jest.mock('../../utils')
-jest.mock('../../telemetry/telemetryClient')
+jest.mock('src/mutator')
+jest.mock('src/utils')
+jest.mock('src/telemetry/telemetryClient')
 const mockedMutator = mocked(Mutator, true)
 
 describe('components/table/Table', () => {

@@ -4,23 +4,28 @@ import React from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 
-import IconButton from '../../widgets/buttons/iconButton'
-import Button from '../../widgets/buttons/button'
+import IconButton from 'src/widgets/buttons/iconButton'
+import Button from 'src/widgets/buttons/button'
 
-import CloseIcon from '../../widgets/icons/close'
+import CloseIcon from 'src/widgets/icons/close'
 
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import octoClient from '../../octoClient'
-import {IUser, UserConfigPatch} from '../../user'
-import {getMe, patchProps, getVersionMessageCanceled, versionProperty} from '../../store/users'
+import {useAppSelector, useAppDispatch} from 'src/store/hooks'
+import octoClient from 'src/octoClient'
+import {IUser, UserConfigPatch} from 'src/user'
+import {
+    getMe,
+    patchProps,
+    getVersionMessageCanceled,
+    versionProperty
+} from 'src/store/users'
 
-import CompassIcon from '../../widgets/icons/compassIcon'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import CompassIcon from 'src/widgets/icons/compassIcon'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from 'src/telemetry/telemetryClient'
 
 import './versionMessage.scss'
 const helpURL = 'https://mattermost.com/pl/whats-new-boards/'
 
-const VersionMessage = React.memo(() => {
+const VersionMessage = () => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
@@ -87,5 +92,5 @@ const VersionMessage = React.memo(() => {
             />
         </div>
     )
-})
-export default VersionMessage
+}
+export default React.memo(VersionMessage)

@@ -10,20 +10,20 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {Utils} from '../utils'
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
+import {Utils} from 'src/utils'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {mockDOM, wrapDNDIntl, mockStateStore} from 'src/testUtils'
 
-import mutator from '../mutator'
+import mutator from 'src/mutator'
 
-import octoClient from '../octoClient'
+import octoClient from 'src/octoClient'
 
 import ContentBlock from './contentBlock'
 import {CardDetailContext, CardDetailContextType} from './cardDetail/cardDetailContext'
 
-jest.mock('../mutator')
-jest.mock('../utils')
-jest.mock('../octoClient')
+jest.mock('src/mutator')
+jest.mock('src/utils')
+jest.mock('src/octoClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 
 beforeAll(mockDOM)

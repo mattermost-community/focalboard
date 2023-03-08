@@ -3,16 +3,16 @@
 import React, {useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
-import {BoardView, ISortOption} from '../../blocks/boardView'
-import {Constants} from '../../constants'
-import {Card} from '../../blocks/card'
-import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import SortDownIcon from '../../widgets/icons/sortDown'
-import SortUpIcon from '../../widgets/icons/sortUp'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {BoardView, ISortOption} from 'src/blocks/boardView'
+import {Constants} from 'src/constants'
+import {Card} from 'src/blocks/card'
+import mutator from 'src/mutator'
+import Button from 'src/widgets/buttons/button'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import SortDownIcon from 'src/widgets/icons/sortDown'
+import SortUpIcon from 'src/widgets/icons/sortUp'
 
 type Props = {
     properties: readonly IPropertyTemplate[]

@@ -4,17 +4,17 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {DatePropertyType} from '../../properties/types'
+import {DatePropertyType} from 'src/properties/types'
 
-import {IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import CheckIcon from '../../widgets/icons/check'
+import {IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import mutator from 'src/mutator'
+import Button from 'src/widgets/buttons/button'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import CheckIcon from 'src/widgets/icons/check'
 
-import propsRegistry from '../../properties'
+import propsRegistry from 'src/properties'
 
 type Props = {
     properties: readonly IPropertyTemplate[]

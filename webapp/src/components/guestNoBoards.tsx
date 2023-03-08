@@ -3,7 +3,7 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import ErrorIllustration from '../svg/error-illustration'
+import ErrorIllustration from 'src/svg/error-illustration'
 
 import './guestNoBoards.scss'
 

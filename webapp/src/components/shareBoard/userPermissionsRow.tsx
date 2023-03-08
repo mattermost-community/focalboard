@@ -4,22 +4,22 @@
 import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 
-import MenuWrapper from '../../widgets/menuWrapper'
-import Menu from '../../widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import Menu from 'src/widgets/menu'
 
-import CheckIcon from '../../widgets/icons/check'
-import CompassIcon from '../../widgets/icons/compassIcon'
+import CheckIcon from 'src/widgets/icons/check'
+import CompassIcon from 'src/widgets/icons/compassIcon'
 
-import {BoardMember, MemberRole} from '../../blocks/board'
-import {IUser} from '../../user'
-import {Utils} from '../../utils'
-import {Permission} from '../../constants'
-import GuestBadge from '../../widgets/guestBadge'
-import AdminBadge from '../../widgets/adminBadge/adminBadge'
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard} from '../../store/boards'
+import {BoardMember, MemberRole} from 'src/blocks/board'
+import {IUser} from 'src/user'
+import {Utils} from 'src/utils'
+import {Permission} from 'src/constants'
+import GuestBadge from 'src/widgets/guestBadge'
+import AdminBadge from 'src/widgets/adminBadge/adminBadge'
+import {useAppSelector} from 'src/store/hooks'
+import {getCurrentBoard} from 'src/store/boards'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
 type Props = {
     user: IUser

@@ -1,17 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {act, fireEvent, render, screen} from '@testing-library/react'
+import {
+    act,
+    fireEvent,
+    render,
+    screen
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from 'src/testUtils'
 
-import {TestBlockFactory} from '../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
 import {MarkdownEditor} from './markdownEditor'
 
-jest.mock('../utils')
+jest.mock('src/utils')
 jest.useFakeTimers()
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 

@@ -3,7 +3,7 @@
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Archiver} from '../../archiver'
+import {Archiver} from 'src/archiver'
 import {
     darkTheme,
     darkThemeName,
@@ -11,21 +11,22 @@ import {
     defaultThemeName,
     lightTheme,
     lightThemeName,
-    setTheme, systemThemeName,
-    Theme,
-} from '../../theme'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {storeLanguage} from '../../store/language'
-import {getCurrentTeam, Team} from '../../store/teams'
-import {UserSettings} from '../../userSettings'
+    setTheme,
+    systemThemeName,
+    Theme
+} from 'src/theme'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import {useAppDispatch, useAppSelector} from 'src/store/hooks'
+import {storeLanguage} from 'src/store/language'
+import {getCurrentTeam, Team} from 'src/store/teams'
+import {UserSettings} from 'src/userSettings'
 
 import './sidebarSettingsMenu.scss'
-import CheckIcon from '../../widgets/icons/check'
-import {Constants} from '../../constants'
+import CheckIcon from 'src/widgets/icons/check'
+import {Constants} from 'src/constants'
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from 'src/telemetry/telemetryClient'
 
 type Props = {
     activeTheme: string

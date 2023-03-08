@@ -2,18 +2,18 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState, useMemo} from 'react'
 
-import {Board} from '../../blocks/board'
-import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
-import octoClient from '../../octoClient'
-import {getVisibleAndHiddenGroups} from '../../boardUtils'
+import {Board} from 'src/blocks/board'
+import {Card} from 'src/blocks/card'
+import {BoardView} from 'src/blocks/boardView'
+import octoClient from 'src/octoClient'
+import {getVisibleAndHiddenGroups} from 'src/boardUtils'
 
-import ViewHeader from '../viewHeader/viewHeader'
-import ViewTitle from '../viewTitle'
-import Kanban from '../kanban/kanban'
-import Table from '../table/table'
-import CalendarFullView from '../calendar/fullCalendar'
-import Gallery from '../gallery/gallery'
+import ViewHeader from 'src/components/viewHeader/viewHeader'
+import ViewTitle from 'src/components/viewTitle'
+import Kanban from 'src/components/kanban/kanban'
+import Table from 'src/components/table/table'
+import CalendarFullView from 'src/components/calendar/fullCalendar'
+import Gallery from 'src/components/gallery/gallery'
 
 import './boardTemplateSelectorPreview.scss'
 

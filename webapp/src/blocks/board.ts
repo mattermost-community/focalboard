@@ -3,7 +3,7 @@
 
 import difference from 'lodash/difference'
 
-import {Utils, IDType} from '../utils'
+import {Utils, IDType} from 'src/utils'
 
 import {Block, BlockPatch, createPatchesFromBlocks} from './block'
 import {Card} from './card'

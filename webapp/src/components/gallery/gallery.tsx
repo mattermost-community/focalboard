@@ -3,16 +3,16 @@
 import React, {useMemo, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Constants, Permission} from '../../constants'
-import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+import {Constants, Permission} from 'src/constants'
+import HiddenCardCount from 'src/components/hiddenCardCount/hiddenCardCount'
 
-import {Card} from '../../blocks/card'
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import mutator from '../../mutator'
-import {Utils} from '../../utils'
+import {Card} from 'src/blocks/card'
+import {Board, IPropertyTemplate} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
+import mutator from 'src/mutator'
+import {Utils} from 'src/utils'
 
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import BoardPermissionGate from 'src/components/permissions/boardPermissionGate'
 
 import './gallery.scss'
 import GalleryCard from './galleryCard'

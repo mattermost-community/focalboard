@@ -4,30 +4,37 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {DatePropertyType} from '../properties/types'
+import {DatePropertyType} from 'src/properties/types'
 
-import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
-import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {getCurrentBoard, isLoadingBoard, getTemplates} from 'src/store/boards'
+import {
+    refreshCards,
+    getCardLimitTimestamp,
+    getCurrentBoardHiddenCardsCount,
+    setLimitTimestamp,
+    getCurrentViewCardsSortedFilteredAndGrouped,
+    setCurrent as setCurrentCard
+} from 'src/store/cards'
 import {
     getCurrentBoardViews,
     getCurrentViewGroupBy,
     getCurrentViewId,
     getCurrentViewDisplayBy,
     getCurrentView,
-} from '../store/views'
-import {useAppSelector, useAppDispatch} from '../store/hooks'
+} from 'src/store/views'
+import {useAppSelector, useAppDispatch} from 'src/store/hooks'
 
-import {getClientConfig, setClientConfig} from '../store/clientConfig'
+import {getClientConfig, setClientConfig} from 'src/store/clientConfig'
 
-import wsClient, {WSClient} from '../wsclient'
-import {ClientConfig} from '../config/clientConfig'
-import {Utils} from '../utils'
-import {IUser} from '../user'
-import propsRegistry from '../properties'
+import wsClient, {WSClient} from 'src/wsclient'
+import {ClientConfig} from 'src/config/clientConfig'
+import {Utils} from 'src/utils'
+import {IUser} from 'src/user'
+import propsRegistry from 'src/properties'
 
-import {getMe} from '../store/users'
+import {getMe} from 'src/store/users'
 
-import {getHiddenBoardIDs} from '../store/sidebar'
+import {getHiddenBoardIDs} from 'src/store/sidebar'
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'

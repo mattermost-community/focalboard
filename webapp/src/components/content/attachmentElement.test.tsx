@@ -7,15 +7,15 @@ import {render} from '@testing-library/react'
 import {act} from 'react-dom/test-utils'
 import {mocked} from 'jest-mock'
 
-import {AttachmentBlock} from '../../blocks/attachmentBlock'
-import {mockStateStore, wrapIntl} from '../../testUtils'
-import octoClient from '../../octoClient'
-import {TestBlockFactory} from '../../test/testBlockFactory'
-import {IUser} from '../../user'
+import {AttachmentBlock} from 'src/blocks/attachmentBlock'
+import {mockStateStore, wrapIntl} from 'src/testUtils'
+import octoClient from 'src/octoClient'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {IUser} from 'src/user'
 
 import AttachmentElement from './attachmentElement'
 
-jest.mock('../../octoClient')
+jest.mock('src/octoClient')
 const mockedOcto = mocked(octoClient, true)
 mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.txt'})
 mockedOcto.getFileInfo.mockResolvedValue({

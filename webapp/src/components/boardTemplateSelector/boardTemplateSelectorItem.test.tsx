@@ -1,16 +1,21 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {render, within, act, waitFor} from '@testing-library/react'
+import {
+    render,
+    within,
+    act,
+    waitFor
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {MockStoreEnhanced} from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {Board, MemberRole, IPropertyTemplate} from '../../blocks/board'
-import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {Board, MemberRole, IPropertyTemplate} from 'src/blocks/board'
+import {mockStateStore, wrapDNDIntl} from 'src/testUtils'
 
-import {IUser} from '../../user'
-import {Team} from '../../store/teams'
+import {IUser} from 'src/user'
+import {Team} from 'src/store/teams'
 
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'
 
@@ -43,8 +48,8 @@ const groupProperty: IPropertyTemplate = {
     ],
 }
 
-jest.mock('../../utils')
-jest.mock('../../mutator')
+jest.mock('src/utils')
+jest.mock('src/mutator')
 
 describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
     const team1: Team = {

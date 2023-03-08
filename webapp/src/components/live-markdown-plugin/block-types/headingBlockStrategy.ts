@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 import {Modifier, SelectionState} from 'draft-js'
 
-import {BlockStrategy} from '../pluginStrategy'
+import {BlockStrategy} from 'src/components/live-markdown-plugin/pluginStrategy'
 
-import findRangesWithRegex from '../utils/findRangesWithRegex'
+import findRangesWithRegex from 'src/components/live-markdown-plugin/utils/findRangesWithRegex'
 
 const createHeadingBlockStrategy = (): BlockStrategy => {
     const HEADING_REGEX = /(^#{1,6})\s(.*)/gm

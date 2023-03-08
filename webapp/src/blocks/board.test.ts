@@ -1,8 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {TestBlockFactory} from '../test/testBlockFactory'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
 
-import {createPatchesFromBoards, createBoard, IPropertyTemplate, createPatchesFromBoardsAndBlocks} from './board'
+import {
+    createPatchesFromBoards,
+    createBoard,
+    IPropertyTemplate,
+    createPatchesFromBoardsAndBlocks
+} from './board'
 import {createBlock} from './block'
 
 describe('board tests', () => {

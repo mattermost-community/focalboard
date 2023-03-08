@@ -8,18 +8,18 @@ import {CSSObject} from '@emotion/serialize'
 
 import {ActionMeta} from 'react-select'
 
-import {getSelectBaseStyle} from '../theme'
-import {IUser} from '../user'
-import {Utils} from '../utils'
-import {useAppSelector} from '../store/hooks'
-import {getBoardUsers, getBoardUsersList, getMe} from '../store/users'
+import {getSelectBaseStyle} from 'src/theme'
+import {IUser} from 'src/user'
+import {Utils} from 'src/utils'
+import {useAppSelector} from 'src/store/hooks'
+import {getBoardUsers, getBoardUsersList, getMe} from 'src/store/users'
 
-import {ClientConfig} from '../config/clientConfig'
-import {getClientConfig} from '../store/clientConfig'
-import client from '../octoClient'
+import {ClientConfig} from 'src/config/clientConfig'
+import {getClientConfig} from 'src/store/clientConfig'
+import client from 'src/octoClient'
 
-import GuestBadge from '../widgets/guestBadge'
-import {PropertyType} from '../properties/types'
+import GuestBadge from 'src/widgets/guestBadge'
+import {PropertyType} from 'src/properties/types'
 
 import './personSelector.scss'
 

@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
-import {getSelectBaseStyle} from '../../theme'
+import {getSelectBaseStyle} from 'src/theme'
 
 import * as registry from './blocks/'
 import {ContentType} from './blocks/types'

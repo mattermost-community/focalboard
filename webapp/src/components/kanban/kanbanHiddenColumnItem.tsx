@@ -5,16 +5,16 @@ import React from 'react'
 import {IntlShape} from 'react-intl'
 import {useDrop} from 'react-dnd'
 
-import mutator from '../../mutator'
-import Menu from '../../widgets/menu'
-import MenuWrapper from '../../widgets/menuWrapper'
-import ShowIcon from '../../widgets/icons/show'
-import Label from '../../widgets/label'
-import {Card} from '../../blocks/card'
-import {BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import mutator from 'src/mutator'
+import Menu from 'src/widgets/menu'
+import MenuWrapper from 'src/widgets/menuWrapper'
+import ShowIcon from 'src/widgets/icons/show'
+import Label from 'src/widgets/label'
+import {Card} from 'src/blocks/card'
+import {BoardGroup} from 'src/blocks/board'
+import {BoardView} from 'src/blocks/boardView'
 
-import Button from '../../widgets/buttons/button'
+import Button from 'src/widgets/buttons/button'
 
 type Props = {
     activeView: BoardView

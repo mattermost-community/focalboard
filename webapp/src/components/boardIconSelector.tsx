@@ -2,10 +2,10 @@
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 
-import {BlockIcons} from '../blockIcons'
-import {Board} from '../blocks/board'
+import {BlockIcons} from 'src/blockIcons'
+import {Board} from 'src/blocks/board'
 
-import mutator from '../mutator'
+import mutator from 'src/mutator'
 
 import IconSelector from './iconSelector'
 
@@ -45,5 +45,7 @@ const BoardIconSelector = React.memo((props: Props) => {
         />
     )
 })
+
+BoardIconSelector.displayName = 'BoardIconSelector'
 
 export default BoardIconSelector

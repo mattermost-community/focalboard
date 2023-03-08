@@ -12,9 +12,9 @@ import {createMemoryHistory} from 'history'
 
 import configureStore from 'redux-mock-store'
 
-import {FetchMock} from '../test/fetchMock'
-import {TestBlockFactory} from '../test/testBlockFactory'
-import {wrapDNDIntl} from '../testUtils'
+import {FetchMock} from 'src/test/fetchMock'
+import {TestBlockFactory} from 'src/test/testBlockFactory'
+import {wrapDNDIntl} from 'src/testUtils'
 
 import ViewMenu from './viewMenu'
 
