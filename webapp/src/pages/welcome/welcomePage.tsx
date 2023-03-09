@@ -127,59 +127,63 @@ const WelcomePage = () => {
                     />
                 </div>
 
-                {/* This image will be rendered on large screens over 2000px */}
-                <img
-                    src={Utils.buildURL(BoardWelcomePNG, true)}
-                    className='WelcomePage__image WelcomePage__image--large'
-                    alt='Boards Welcome Image'
-                />
+                <div className='WelcomePage__content'>
+                    {/* This image will be rendered on large screens over 2000px */}
+                    <img
+                        src={Utils.buildURL(BoardWelcomePNG, true)}
+                        className='WelcomePage__image WelcomePage__image--large'
+                        alt='Boards Welcome Image'
+                    />
 
-                {/* This image will be rendered on small screens below 2000px */}
-                <img
-                    src={Utils.buildURL(BoardWelcomeSmallPNG, true)}
-                    className='WelcomePage__image WelcomePage__image--small'
-                    alt='Boards Welcome Image'
-                />
+                    {/* This image will be rendered on small screens below 2000px */}
+                    <img
+                        src={Utils.buildURL(BoardWelcomeSmallPNG, true)}
+                        className='WelcomePage__image WelcomePage__image--small'
+                        alt='Boards Welcome Image'
+                    />
 
-                {me?.is_guest !== true &&
-                    <Button
-                        onClick={startTour}
-                        filled={true}
-                        size='large'
-                        icon={
-                            <CompassIcon
-                                icon='chevron-right'
-                                className='Icon Icon--right'
-                            />}
-                        rightIcon={true}
-                    >
-                        <FormattedMessage
-                            id='WelcomePage.Explore.Button'
-                            defaultMessage='Take a tour'
-                        />
-                    </Button>}
+                    <div className='WelcomePage__buttons'>
+                        {me?.is_guest !== true &&
+                        <Button
+                            onClick={startTour}
+                            filled={true}
+                            size='large'
+                            icon={
+                                <CompassIcon
+                                    icon='chevron-right'
+                                    className='Icon Icon--right'
+                                />}
+                            rightIcon={true}
+                        >
+                            <FormattedMessage
+                                id='WelcomePage.Explore.Button'
+                                defaultMessage='Take a tour'
+                            />
+                        </Button>}
 
-                {me?.is_guest !== true &&
-                    <a
-                        className='skip'
-                        onClick={skipTour}
-                    >
-                        <FormattedMessage
-                            id='WelcomePage.NoThanks.Text'
-                            defaultMessage="No thanks, I'll figure it out myself"
-                        />
-                    </a>}
-                {me?.is_guest === true &&
-                    <Button
-                        onClick={skipTour}
-                        filled={true}
-                        size='large'
-                    >
-                        <FormattedMessage
-                            id='WelcomePage.StartUsingIt.Text'
-                            defaultMessage='Start using it'
-                        />
-                    </Button>}
+                        {me?.is_guest !== true &&
+                        <a
+                            className='skip'
+                            onClick={skipTour}
+                        >
+                            <FormattedMessage
+                                id='WelcomePage.NoThanks.Text'
+                                defaultMessage="No thanks, I'll figure it out myself"
+                            />
+                        </a>}
+                        {me?.is_guest === true &&
+                        <Button
+                            onClick={skipTour}
+                            filled={true}
+                            size='large'
+                        >
+                            <FormattedMessage
+                                id='WelcomePage.StartUsingIt.Text'
+                                defaultMessage='Start using it'
+                            />
+                        </Button>}
+                    </div>
+                </div>
             </div>
         </div>
     )

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"path"
 	"reflect"
 	"time"
 
@@ -119,4 +120,8 @@ func DedupeStringArr(arr []string) []string {
 	}
 
 	return dedupedArr
+}
+
+func GetBaseFilePath() string {
+	return path.Join("boards", time.Now().Format("20060102"))
 }

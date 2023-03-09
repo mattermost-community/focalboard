@@ -17,8 +17,10 @@ import CompassIcon from '../../../../webapp/src/widgets/icons/compassIcon'
 
 import {Permission} from '../../../../webapp/src/constants'
 
-import './rhsChannelBoardItem.scss'
 import BoardPermissionGate from '../../../../webapp/src/components/permissions/boardPermissionGate'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../../../webapp/src/telemetry/telemetryClient'
+
+import './rhsChannelBoardItem.scss'
 
 const windowAny = (window as SuiteWindow)
 
@@ -36,6 +38,10 @@ const RHSChannelBoardItem = (props: Props) => {
     }
 
     const handleBoardClicked = (boardID: string) => {
+        // send the telemetry information for the clicked board
+        const extraData = {teamID: team.id, board: boardID}
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelsRHSBoard, extraData)
+
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
     }
 
