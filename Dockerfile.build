@@ -1,10 +1,10 @@
-# This dockerfile is used to build Focalboard for Linux
-# it builds all the parts inside the container and the last stage just holds the
-# package that can be extracted using docker cp command
-# ie
-# docker build -f Dockerfile.build --no-cache -t focalboard-build:dirty .
-# docker run --rm -v /tmp/dist:/tmp -d --name test focalboard-build:dirty /bin/sh -c 'sleep 1000'
-# docker cp test:/dist/focalboard-server-linux-amd64.tar.gz .
+# This Dockerfile is used to build Focalboard for Linux. It builds all the parts inside the image
+# and the last stage just holds the package which is then copied back to the host.
+#
+# docker buildx build -f Dockerfile.build --no-cache --platform linux/amd64 -t focalboard-build:dirty --output out .
+# docker buildx build -f Dockerfile.build --no-cache --platform linux/arm64 -t focalboard-build:dirty --output out .
+#
+# Afterwards the packages can be found in the ./out folder.
 
 # build frontend
 FROM node:16.3.0@sha256:ca6daf1543242acb0ca59ff425509eab7defb9452f6ae07c156893db06c7a9a4 AS frontend
@@ -12,8 +12,10 @@ FROM node:16.3.0@sha256:ca6daf1543242acb0ca59ff425509eab7defb9452f6ae07c156893db
 WORKDIR /webapp
 COPY webapp .
 
-RUN npm install --no-optional
-RUN npm run pack
+### 'CPPFLAGS="-DPNG_ARM_NEON_OPT=0"' Needed To Avoid Bug Described in: https://github.com/imagemin/optipng-bin/issues/118#issuecomment-1019838562
+### Can be Removed when Ticket will be Closed
+RUN CPPFLAGS="-DPNG_ARM_NEON_OPT=0" npm install --no-optional && \
+    npm run pack
 
 # build backend and package
 FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be40540381838d75eebef AS backend
@@ -21,13 +23,13 @@ FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be405403818
 COPY . .
 COPY --from=frontend /webapp/pack webapp/pack
 
+ARG TARGETARCH
+
 # RUN apt-get update && apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev -y
-RUN make server-linux
-RUN make server-linux-package-docker
+RUN EXCLUDE_PLUGIN=true EXCLUDE_SERVER=true EXCLUDE_ENTERPRISE=true make server-linux arch=${TARGETARCH}
+RUN make server-linux-package-docker arch=${TARGETARCH}
 
-# just hold the packages to output later
-FROM alpine:3.12@sha256:c75ac27b49326926b803b9ed43bf088bc220d22556de1bc5f72d742c91398f69 AS dist
-
-WORKDIR /dist
-
-COPY --from=backend /go/dist/focalboard-server-linux-amd64.tar.gz .
+# Copy package back to host
+FROM scratch AS dist
+ARG TARGETARCH
+COPY --from=backend /go/dist/focalboard-server-linux-${TARGETARCH}.tar.gz .
