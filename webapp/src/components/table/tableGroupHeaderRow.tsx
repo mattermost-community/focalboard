@@ -1,13 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
+import {useDrag, useDrop} from 'react-dnd'
 
 import {Constants} from '../../constants'
 import {IPropertyOption, Board, IPropertyTemplate, BoardGroup} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
-import {useSortable} from '../../hooks/sortable'
+import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -33,13 +34,42 @@ type Props = {
     addCard: (groupByOptionId?: string) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
     onDrop: (srcOption: IPropertyOption, dstOption?: IPropertyOption) => void
+    onDropToGroup: (srcCard: Card, groupID: string, dstCardID: string) => void
 }
 
 const TableGroupHeaderRow = (props: Props): JSX.Element => {
     const {board, activeView, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
-    const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, !props.readonly, props.onDrop)
+    const ref = useRef<HTMLDivElement>(null)
+    const [{isDragging}, drag] = useDrag(() => ({
+        type: 'groupHeader',
+        item: group.option,
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+        canDrag: () => !props.readonly,
+    }), ['groupHeader', group.option, props.readonly])
+
+    const [{isOver}, drop] = useDrop(() => ({
+        accept: ['groupHeader', 'card'],
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
+        drop: (dragItem: IPropertyOption | Card, monitor) => {
+            // @ts-ignore
+            if (dragItem?.type === 'card' && monitor.isOver({shallow: true})) {
+                // @ts-ignore
+                props.onDropToGroup(dragItem, group.option.id, '')
+                return;
+            }
+            // @ts-ignore
+            props.onDrop(dragItem, group.option)
+        },
+        canDrop: () => !props.readonly,
+    }), [group.option, props.onDrop, props.readonly])
+    drop(drag(ref))
+
     const intl = useIntl()
     const columnResize = useColumnResize()
 
@@ -59,7 +89,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
     return (
         <div
             key={group.option.id + 'header'}
-            ref={groupHeaderRef}
+            ref={ref}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
         >

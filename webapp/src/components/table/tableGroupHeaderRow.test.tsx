@@ -71,6 +71,7 @@ test('should match snapshot, no groups', async () => {
                     type: 'text',
                     options: [{id: 'property1', value: 'Property 1', color: ''}],
                 }}
+                onDropToGroup={jest.fn()}
             />
         </Wrapper>,
     )
@@ -89,6 +90,7 @@ test('should match snapshot with Group', async () => {
                 addCard={jest.fn()}
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
+                onDropToGroup={jest.fn()}
             />
         </Wrapper>,
     )
@@ -107,6 +109,7 @@ test('should match snapshot on read only', async () => {
                 addCard={jest.fn()}
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
+                onDropToGroup={jest.fn()}
             />
         </Wrapper>,
     )
@@ -130,6 +133,7 @@ test('should match snapshot, hide group', async () => {
                 addCard={jest.fn()}
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
+                onDropToGroup={jest.fn()}
             />
         </Wrapper>,
     )
@@ -158,6 +162,7 @@ test('should match snapshot, add new', async () => {
                 addCard={addNew}
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
+                onDropToGroup={jest.fn()}
             />
         </Wrapper>,
     )
@@ -184,6 +189,7 @@ test('should match snapshot, edit title', async () => {
                 addCard={jest.fn()}
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
+                onDropToGroup={jest.fn()}
             />
         </Wrapper>,
     )

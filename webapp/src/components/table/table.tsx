@@ -188,27 +188,27 @@ const Table = (props: Props): JSX.Element => {
                     {/* Table rows */}
                     <div className='table-row-container'>
                         {activeView.fields.groupById &&
-                    visibleGroups.map((group) => {
-                        return (
-                            <TableGroup
-                                key={group.option.id}
-                                board={board}
-                                activeView={activeView}
-                                groupByProperty={groupByProperty}
-                                group={group}
-                                readonly={props.readonly || !canEditCards}
-                                selectedCardIds={props.selectedCardIds}
-                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                                hideGroup={hideGroup}
-                                addCard={props.addCard}
-                                showCard={props.showCard}
-                                propertyNameChanged={propertyNameChanged}
-                                onCardClicked={props.onCardClicked}
-                                onDropToGroupHeader={onDropToGroupHeader}
-                                onDropToCard={onDropToCard}
-                                onDropToGroup={onDropToGroup}
-                            />)
-                    })
+                            visibleGroups.map((group) => {
+                                return (
+                                    <TableGroup
+                                        key={group.option.id}
+                                        board={board}
+                                        activeView={activeView}
+                                        groupByProperty={groupByProperty}
+                                        group={group}
+                                        readonly={props.readonly || !canEditCards}
+                                        selectedCardIds={props.selectedCardIds}
+                                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                                        hideGroup={hideGroup}
+                                        addCard={props.addCard}
+                                        showCard={props.showCard}
+                                        propertyNameChanged={propertyNameChanged}
+                                        onCardClicked={props.onCardClicked}
+                                        onDropToGroupHeader={onDropToGroupHeader}
+                                        onDropToCard={onDropToCard}
+                                        onDropToGroup={onDropToGroup}
+                                    />)
+                            })
                         }
 
                         {/* No Grouping, Rows, one per card */}
@@ -224,6 +224,7 @@ const Table = (props: Props): JSX.Element => {
                             addCard={props.addCard}
                             onCardClicked={props.onCardClicked}
                             onDrop={onDropToCard}
+                            useVirtualizedList={true}
                         />
                         }
                     </div>
