@@ -853,7 +853,7 @@ func (s *SQLStore) doesDuplicateCategoryBoardsExist() (bool, error) {
 		Having("count(*) > 1")
 
 	query := s.getQueryBuilder(s.db).
-		Select("COUNT(*)").
+		Select("COUNT(user_id)").
 		FromSelect(subQuery, "duplicate_dataset")
 
 	row := query.QueryRow()
