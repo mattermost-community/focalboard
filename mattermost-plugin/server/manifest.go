@@ -45,8 +45,7 @@ const manifestStr = `
         "type": "bool",
         "help_text": "This allows board editors to share boards that can be accessed by anyone with the link.",
         "placeholder": "",
-        "default": false,
-        "hosting": ""
+        "default": false
       }
     ]
   }
