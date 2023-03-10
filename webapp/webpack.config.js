@@ -51,14 +51,18 @@ if (NPM_TARGET === 'build:watch' || NPM_TARGET === 'debug:watch' || NPM_TARGET =
 const config = {
     entry: './src/remote_entry.ts',
     resolve: {
+        alias: {
+            src: path.resolve(__dirname, './src/'),
+            // 'mattermost-redux': path.resolve(__dirname, '../channels/src/packages/mattermost-redux/src/'),
+            // reselect: path.resolve(__dirname, '../channels/src/packages/reselect/src/index'),
+            '@mattermost/client': path.resolve(__dirname, '../platform/client/src/'),
+            '@mattermost/components': path.resolve(__dirname, '../platform/components/src/'),
+        },
         modules: [
             'src',
             'node_modules',
-            path.resolve(__dirname),
+            '.'
         ],
-        alias: {
-            src: path.resolve(__dirname, 'src'),
-        },
         extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     },
     module: {
@@ -68,6 +72,9 @@ const config = {
                 use: {
                     loader: 'ts-loader',
                     options: {
+                        compilerOptions: {
+                            noEmit: false,
+                        },
                         getCustomTransformers: {
                             before: [
                                 tsTransformer.transform({

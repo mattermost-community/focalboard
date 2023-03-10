@@ -1,22 +1,17 @@
 {
   "extends": [
-    "plugin:react/recommended",
-    "plugin:cypress/recommended",
-    "plugin:jquery/deprecated"
+    "plugin:react/recommended"
   ],
   "plugins": [
     "react",
     "babel",
     "import",
-    "cypress",
-    "jquery",
     "no-only-tests",
     "header",
     "formatjs",
     "unused-imports",
     "no-relative-import-paths",
     "import-newlines"
-
   ],
   "parser": "@typescript-eslint/parser",
   "settings": {
@@ -94,7 +89,7 @@
     "unused-imports/no-unused-imports": 2,
     "no-relative-import-paths/no-relative-import-paths": [
       "error",
-      { "allowSameFolder": true, "rootDir": "webapp/" }
+      { "allowSameFolder": true, "rootDir": "webapp/src"}
     ],
  /*    "no-restricted-imports": ["error", {
       "patterns": ["..*"]

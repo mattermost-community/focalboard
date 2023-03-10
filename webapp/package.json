@@ -65,17 +65,12 @@
 		"trim-newlines": "^4.0.2"
 	},
 	"jest": {
-		"globals": {
-			"ts-jest": {
-				"tsconfig": "./src/tsconfig.json"
-			}
-		},
-		"transform": {
-			"^.+\\.tsx?$": "@swc/jest"
-		},
+    "transform": {
+      "^.+\\.(js|tsx|ts|tsx)$": "@swc/jest"
+    },
 		"transformIgnorePatterns": [
 			"/nanoevents/",
-			"node_modules/(?!react-native|react-router|mattermost-webapp)"
+			"node_modules/(?!react-native|react-router|mattermost-webapp|react-day-picker)"
 		],
 		"maxWorkers": "50%",
 		"testEnvironment": "jsdom",
@@ -84,6 +79,7 @@
 			"src/**/*.{ts,tsx,js,jsx}",
 			"!src/test/**"
 		],
+    "moduleFileExtensions": ["js", "jsx", "ts", "tsx"],
 		"testPathIgnorePatterns": [
 			"/node_modules/",
 			"/non_npm_dependencies/"
@@ -94,12 +90,13 @@
 			"text-summary"
 		],
 		"moduleNameMapper": {
-			"^.+\\.(scss|css)$": "<rootDir>/test/style_mock.json",
-			"^.*i18n.*\\.(json)$": "<rootDir>/test/i18n_mock.json",
+			"^.+\\.(scss|css)$": "<rootDir>/src/test/style_mock.json",
+			"^.*i18n.*\\.(json)$": "<rootDir>/src/test/i18n_mock.json",
 			"^bundle-loader\\?lazy\\!(.*)$": "$1",
 			"^react$": "<rootDir>/node_modules/react",
 			"^react-redux$": "<rootDir>/node_modules/react-redux",
-			"^react-intl$": "<rootDir>/node_modules/react-intl"
+			"^react-intl$": "<rootDir>/node_modules/react-intl",
+      "^src(.*)$": "<rootDir>/src$1"
 		},
 		"moduleDirectories": [
 			"src",
@@ -114,7 +111,7 @@
 			"jest-canvas-mock"
 		],
 		"setupFilesAfterEnv": [
-			"<rootDir>/test/setup.tsx"
+			"<rootDir>/src/test/setup.tsx"
 		],
 		"testURL": "http://localhost:8065"
 	},
@@ -132,8 +129,7 @@
 		"@babel/runtime": "7.17.8",
 		"@formatjs/cli": "^4.8.2",
 		"@formatjs/ts-transformer": "^3.9.2",
-		"@swc/jest": "^0.2.20",
-		"@testing-library/cypress": "^8.0.2",
+		"@swc/jest": "^0.2.24",
 		"@testing-library/dom": "^8.11.4",
 		"@testing-library/jest-dom": "^5.16.3",
 		"@testing-library/react": "^11.2.5",
@@ -156,21 +152,16 @@
 		"@types/redux-mock-store": "1.0.3",
 		"@typescript-eslint/eslint-plugin": "5.16.0",
 		"@typescript-eslint/parser": "5.16.0",
-		"babel-eslint": "10.1.0",
-		"babel-jest": "27.5.1",
-		"babel-loader": "8.2.4",
-		"babel-plugin-typescript-to-proptypes": "2.0.0",
+    "babel-eslint": "10.1.0",
 		"cross-env": "^7.0.3",
 		"css-loader": "6.7.1",
 		"eslint": "^8.11.0",
 		"eslint-import-resolver-webpack": "0.13.2",
 		"eslint-plugin-babel": "^5.3.1",
-		"eslint-plugin-cypress": "2.12.1",
 		"eslint-plugin-formatjs": "4.9.0",
 		"eslint-plugin-header": "3.1.1",
 		"eslint-plugin-import": "2.25.4",
 		"eslint-plugin-import-newlines": "1.3.1",
-		"eslint-plugin-jquery": "1.5.1",
 		"eslint-plugin-no-only-tests": "2.6.0",
 		"eslint-plugin-no-relative-import-paths": "1.5.2",
 		"eslint-plugin-react": "7.29.4",
@@ -198,7 +189,6 @@
 		"style-loader": "3.3.1",
 		"stylelint": "^14.6.1",
 		"stylelint-config-sass-guidelines": "^9.0.1",
-		"ts-jest": "^27.1.4",
 		"ts-loader": "9.4.2",
 		"typescript": "4.6.2",
 		"webpack": "5.70.0",
