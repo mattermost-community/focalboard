@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useDrag, useDrop} from 'react-dnd'
 
@@ -35,6 +35,7 @@ type Props = {
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
     onDrop: (srcOption: IPropertyOption, dstOption?: IPropertyOption) => void
     onDropToGroup: (srcCard: Card, groupID: string, dstCardID: string) => void
+    groupToggle: () => void
 }
 
 const TableGroupHeaderRow = (props: Props): JSX.Element => {
@@ -86,6 +87,14 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
 
     const canEditOption = groupByProperty?.type !== 'person' && group.option.id
 
+    const toggleGroup = useCallback(() => {
+        if (props.readonly) {
+            return
+        }
+        props.hideGroup(group.option.id || 'undefined')
+        props.groupToggle()
+    }, [props.readonly, group.option.id, props.groupToggle, props.hideGroup])
+
     return (
         <div
             key={group.option.id + 'header'}
@@ -103,7 +112,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                         <CompassIcon
                             icon='menu-right'
                         />}
-                    onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
+                    onClick={toggleGroup}
                     className={`octo-table-cell__expand ${props.readonly ? 'readonly' : ''}`}
                 />
 

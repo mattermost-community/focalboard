@@ -47,6 +47,7 @@ const TableGroup = (props: Props): JSX.Element => {
                 onDrop={props.onDropToGroupHeader}
                 key={group.option.id}
                 onDropToGroup={onDropToGroup}
+                groupToggle={() => {}}
             />
 
             {(group.cards.length > 0) &&
@@ -63,8 +64,7 @@ const TableGroup = (props: Props): JSX.Element => {
                 onDrop={props.onDropToCard}
                 useVirtualizedList={false}
             />}
-        </>
-            
+        </>    
     )
 }
 

@@ -66,6 +66,7 @@
 		"react-router-dom": "^5.2.0",
 		"react-select": "^5.2.2",
 		"react-virtualized-auto-sizer": "^1.0.7",
+		"react-vtree": "^2.0.4",
 		"react-window": "^1.8.8",
 		"trim-newlines": "^4.0.2"
 	},
