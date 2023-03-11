@@ -127,6 +127,7 @@ func TestAddMemberToBoard(t *testing.T) {
 			},
 		}, nil).Times(2)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", []string{"board_id_1"}).Return(nil)
+		th.API.EXPECT().HasPermissionToTeam("user_id_1", "team_id_1", model.PermissionManageTeam).Return(false).Times(1)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -180,10 +181,11 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUserByID(userID).Return(&model.User{ID: userID, Username: "UserName"}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -218,7 +220,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
@@ -256,7 +258,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -294,7 +296,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -332,7 +334,10 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(3)
+
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -370,7 +375,11 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+			ChannelID:  "",
+		}, nil).Times(1)
+
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -390,6 +399,104 @@ func TestPatchBoard(t *testing.T) {
 		patchedBoard, err := th.App.PatchBoard(patch, boardID, userID)
 		require.NoError(t, err)
 		require.Equal(t, boardID, patchedBoard.ID)
+	})
+
+	t.Run("patch type channel, user without post permissions", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		channelID := "myChannel"
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type:      &patchType,
+			ChannelID: &channelID,
+		}
+
+		// Type not nil, will cause board to be reteived
+		// to check isTemplate
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}, nil).Times(1)
+
+		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(false).Times(1)
+		_, err := th.App.PatchBoard(patch, boardID, userID)
+		require.Error(t, err)
+	})
+
+	t.Run("patch type channel, user with post permissions", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		channelID := "myChannel"
+		patch := &model.BoardPatch{
+			ChannelID: &channelID,
+		}
+
+		// Type not nil, will cause board to be reteived
+		// to check isTemplate
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     boardID,
+			TeamID: teamID,
+		}, nil).Times(2)
+
+		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(true).Times(1)
+
+		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
+			&model.Board{
+				ID:     boardID,
+				TeamID: teamID,
+			},
+			nil)
+
+		// Should call GetMembersForBoard 2 times
+		// - for WS BroadcastBoardChange
+		// - for AddTeamMembers check
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil).Times(2)
+
+		th.Store.EXPECT().PostMessage(utils.Anything, "", "").Times(1)
+
+		patchedBoard, err := th.App.PatchBoard(patch, boardID, userID)
+		require.NoError(t, err)
+		require.Equal(t, boardID, patchedBoard.ID)
+	})
+
+	t.Run("patch type remove channel, user without post permissions", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		const channelID = "myChannel"
+		clearChannel := ""
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type:      &patchType,
+			ChannelID: &clearChannel,
+		}
+
+		// Type not nil, will cause board to be reteived
+		// to check isTemplate
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+			ChannelID:  channelID,
+		}, nil).Times(2)
+
+		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(false).Times(1)
+
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+		// Should call GetMembersForBoard 2 times
+		// for WS BroadcastBoardChange
+		// for AddTeamMembers check
+		// We are returning the user as a direct Board Member, so BroadcastMemberDelete won't be called
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{{BoardID: boardID, UserID: userID, SchemeEditor: true}}, nil).Times(1)
+
+		_, err := th.App.PatchBoard(patch, boardID, userID)
+		require.Error(t, err)
 	})
 }
 
@@ -564,5 +671,101 @@ func TestDuplicateBoard(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, bab)
 		assert.NotNil(t, members)
+	})
+}
+
+func TestGetMembersForBoard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	const boardID = "board_id_1"
+	const userID = "user_id_1"
+	const teamID = "team_id_1"
+
+	th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
+		{
+			BoardID:      boardID,
+			UserID:       userID,
+			SchemeEditor: true,
+		},
+	}, nil).Times(3)
+	th.Store.EXPECT().GetBoard(boardID).Return(nil, nil).Times(1)
+	t.Run("-base case", func(t *testing.T) {
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	board := &model.Board{
+		ID:     boardID,
+		TeamID: teamID,
+	}
+	th.Store.EXPECT().GetBoard(boardID).Return(board, nil).Times(2)
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
+	t.Run("-team check false ", func(t *testing.T) {
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+	t.Run("-team check true", func(t *testing.T) {
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.True(t, members[0].SchemeAdmin)
+	})
+}
+
+func TestGetMembersForUser(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	const boardID = "board_id_1"
+	const userID = "user_id_1"
+	const teamID = "team_id_1"
+
+	th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
+		{
+			BoardID:      boardID,
+			UserID:       userID,
+			SchemeEditor: true,
+		},
+	}, nil).Times(3)
+	th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
+	t.Run("-base case", func(t *testing.T) {
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	board := &model.Board{
+		ID:     boardID,
+		TeamID: teamID,
+	}
+	th.Store.EXPECT().GetBoard(boardID).Return(board, nil).Times(2)
+
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+	t.Run("-team check false ", func(t *testing.T) {
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+	t.Run("-team check true", func(t *testing.T) {
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.True(t, members[0].SchemeAdmin)
 	})
 }

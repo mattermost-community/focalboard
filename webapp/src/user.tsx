@@ -14,6 +14,7 @@ interface IUser {
     update_at: number
     is_bot: boolean
     is_guest: boolean
+    permissions?: string[]
     roles: string
 }
 

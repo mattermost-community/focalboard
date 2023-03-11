@@ -51,7 +51,7 @@ class OctoClient {
         localStorage.setItem('focalboardSessionId', value)
     }
 
-    constructor(serverUrl?: string, public teamId = Constants.globalTeamId) {
+    constructor(serverUrl?: string, public teamId = Constants.globalTeamId, public channelId = Constants.noChannelID) {
         this.serverUrl = serverUrl
     }
 
@@ -160,7 +160,22 @@ class OctoClient {
     }
 
     async getMe(): Promise<IUser | undefined> {
-        const path = '/api/v2/users/me'
+        let path = '/api/v2/users/me'
+        let parameters = ''
+        if (this.teamId !== Constants.globalTeamId) {
+            parameters = `teamID=${this.teamId}`
+        }
+        if (this.channelId !== Constants.noChannelID) {
+            const channelClause = `channelID=${this.channelId}`
+            if (parameters) {
+                parameters += '&' + channelClause
+            } else {
+                parameters = channelClause
+            }
+        }
+        if (parameters) {
+            path += '?' + parameters
+        }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined
@@ -467,12 +482,15 @@ class OctoClient {
         return this.getJson<BoardMember>(response, {} as BoardMember)
     }
 
-    async joinBoard(boardId: string): Promise<BoardMember|undefined> {
+    async joinBoard(boardId: string, allowAdmin: boolean): Promise<BoardMember|undefined> {
         Utils.log(`joinBoard: board ${boardId}`)
-
-        const response = await fetch(this.getBaseURL() + `/api/v2/boards/${boardId}/join`, {
-            method: 'POST',
+        let path = `/api/v2/boards/${boardId}/join`
+        if (allowAdmin) {
+            path += '?allow_admin'
+        }
+        const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
+            method: 'POST',
         })
 
         if (response.status !== 200) {
@@ -677,6 +695,22 @@ class OctoClient {
         if (response.status !== 200) {
             return []
         }
+        return (await this.getJson(response, [])) as IUser[]
+    }
+
+    async getTeamUsersList(userIds: string[], teamId: string): Promise<IUser[] | []> {
+        const path = this.teamPath(teamId) + '/users'
+        const body = JSON.stringify(userIds)
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+            body,
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
         return (await this.getJson(response, [])) as IUser[]
     }
 

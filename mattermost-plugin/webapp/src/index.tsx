@@ -249,6 +249,7 @@ export default class Plugin {
             if (lastViewedChannel !== currentChannel && currentChannel) {
                 localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
                 lastViewedChannel = currentChannel
+                octoClient.channelId = currentChannel
                 const currentChannelObj = mmStore.getState().entities.channels.channels[lastViewedChannel]
                 store.dispatch(setChannel(currentChannelObj))
             }

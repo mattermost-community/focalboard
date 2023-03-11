@@ -1,4 +1,7 @@
 {
+  "AppBar.Tooltip": "Chuyển sang các bảng đã liên kết",
+  "Attachment.Attachment-title": "Đính kèm",
+  "AttachmentBlock.DeleteAction": "xóa",
   "BoardComponent.add-a-group": "+ Thêm nhóm",
   "BoardComponent.delete": "Xóa",
   "BoardComponent.hidden-columns": "Cột ẩn",

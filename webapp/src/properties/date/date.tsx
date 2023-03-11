@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo, useState, useCallback} from 'react'
+import React, {useMemo, useState, useCallback, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -58,6 +58,12 @@ function DateRange(props: PropertyProps): JSX.Element {
     const [value, setValue] = useState(propertyValue)
     const intl = useIntl()
 
+    useEffect(() => {
+        if (value !== propertyValue) {
+            setValue(propertyValue)
+        }
+    }, [propertyValue, setValue])
+
     const onChange = useCallback((newValue) => {
         if (value !== newValue) {
             setValue(newValue)
@@ -97,6 +103,7 @@ function DateRange(props: PropertyProps): JSX.Element {
 
     const handleDayClick = (day: Date) => {
         const range: DateProperty = {}
+        day.setHours(12)
         if (isRange) {
             const newRange = DateUtils.addDayToRange(day, {from: dateFrom, to: dateTo})
             range.from = newRange.from?.getTime()

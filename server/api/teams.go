@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,6 +16,7 @@ func (a *API) registerTeamsRoutes(r *mux.Router) {
 	r.HandleFunc("/teams", a.sessionRequired(a.handleGetTeams)).Methods("GET")
 	r.HandleFunc("/teams/{teamID}", a.sessionRequired(a.handleGetTeam)).Methods("GET")
 	r.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
+	r.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsersByID)).Methods("POST")
 	r.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
 }
 
@@ -255,5 +257,108 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("userCount", len(users))
+	auditRec.Success()
+}
+
+func (a *API) handleGetTeamUsersByID(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /teams/{teamID}/users getTeamUsersByID
+	//
+	// Returns a user[]
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: []UserIDs to return
+	//   required: true
+	//   type: []string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/User"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	var userIDs []string
+	if err = json.Unmarshal(requestBody, &userIDs); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getTeamUsersByID", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
+		return
+	}
+
+	var users []*model.User
+	var error error
+
+	if len(userIDs) == 0 {
+		a.errorResponse(w, r, model.NewErrBadRequest("User IDs are empty"))
+		return
+	}
+
+	if userIDs[0] == model.SingleUser {
+		ws, _ := a.app.GetRootTeam()
+		now := utils.GetMillis()
+		user := &model.User{
+			ID:       model.SingleUser,
+			Username: model.SingleUser,
+			Email:    model.SingleUser,
+			CreateAt: ws.UpdateAt,
+			UpdateAt: now,
+		}
+		users = append(users, user)
+	} else {
+		users, error = a.app.GetUsersList(userIDs)
+		if error != nil {
+			a.errorResponse(w, r, error)
+			return
+		}
+
+		for i, u := range users {
+			if a.permissions.HasPermissionToTeam(u.ID, teamID, model.PermissionManageTeam) {
+				users[i].Permissions = append(users[i].Permissions, model.PermissionManageTeam.Id)
+			}
+			if a.permissions.HasPermissionTo(u.ID, model.PermissionManageSystem) {
+				users[i].Permissions = append(users[i].Permissions, model.PermissionManageSystem.Id)
+			}
+		}
+	}
+
+	usersList, err := json.Marshal(users)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(usersList))
 	auditRec.Success()
 }

@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/morph/models"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // EnsureSchemaMigrationFormat checks the schema migrations table
@@ -21,6 +23,7 @@ func (s *SQLStore) EnsureSchemaMigrationFormat() error {
 	}
 
 	if !migrationNeeded {
+		s.logger.Info("Schema migration table is correct format")
 		return nil
 	}
 
@@ -105,8 +108,8 @@ func filterMigrations(migrations []*models.Migration, legacySchemaVersion uint32
 }
 
 func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
-	// Check if `dirty` column exists on schema version table.
-	// This column exists only for the old schema version table.
+	// Check if `name` column exists on schema version table.
+	// This column exists only for the new schema version table.
 
 	// SQLite needs a bit of a special handling
 	if s.dbType == model.SqliteDBType {
@@ -114,22 +117,46 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	}
 
 	query := s.getQueryBuilder(s.db).
-		Select("count(*)").
+		Select("COLUMN_NAME").
 		From("information_schema.COLUMNS").
 		Where(sq.Eq{
-			"TABLE_NAME":  s.tablePrefix + "schema_migrations",
-			"COLUMN_NAME": "dirty",
+			"TABLE_NAME": s.tablePrefix + "schema_migrations",
 		})
 
-	row := query.QueryRow()
-
-	var count int
-	if err := row.Scan(&count); err != nil {
-		s.logger.Error("failed to check for columns of schema_migrations table", mlog.Err(err))
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("failed to fetch columns in schema_migrations table", mlog.Err(err))
 		return false, err
 	}
 
-	return count == 1, nil
+	defer s.CloseRows(rows)
+
+	data := []string{}
+	for rows.Next() {
+		var columnName string
+
+		err := rows.Scan(&columnName)
+		if err != nil {
+			s.logger.Error("error scanning rows from schema_migrations table definition", mlog.Err(err))
+			return false, err
+		}
+
+		data = append(data, columnName)
+	}
+
+	if len(data) == 0 {
+		// if no data then table does not exist and therefore a schema migration is not needed.
+		return false, nil
+	}
+
+	for _, columnName := range data {
+		// look for a column named 'name', if found then no migration is needed
+		if strings.ToLower(columnName) == "name" {
+			return false, nil
+		}
+	}
+
+	return true, nil
 }
 
 func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
@@ -145,18 +172,27 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 
 	defer s.CloseRows(rows)
 
+	const (
+		idxCid = iota
+		idxName
+		idxType
+		idxNotnull
+		idxDfltValue
+		idxPk
+	)
+
 	data := [][]*string{}
 	for rows.Next() {
 		// PRAGMA returns 6 columns
 		row := make([]*string, 6)
 
 		err := rows.Scan(
-			&row[0],
-			&row[1],
-			&row[2],
-			&row[3],
-			&row[4],
-			&row[5],
+			&row[idxCid],
+			&row[idxName],
+			&row[idxType],
+			&row[idxNotnull],
+			&row[idxDfltValue],
+			&row[idxPk],
 		)
 		if err != nil {
 			s.logger.Error("error scanning rows from SQLite schema_migrations table definition", mlog.Err(err))
@@ -166,15 +202,19 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 		data = append(data, row)
 	}
 
-	nameColumnFound := false
+	if len(data) == 0 {
+		// if no data then table does not exist and therefore a schema migration is not needed.
+		return false, nil
+	}
+
 	for _, row := range data {
-		if len(row) >= 2 && *row[1] == "dirty" {
-			nameColumnFound = true
-			break
+		// look for a column named 'name', if found then no migration is needed
+		if len(row) >= 2 && strings.ToLower(*row[idxName]) == "name" {
+			return false, nil
 		}
 	}
 
-	return nameColumnFound, nil
+	return true, nil
 }
 
 func (s *SQLStore) getLegacySchemaVersion() (uint32, error) {

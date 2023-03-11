@@ -8,6 +8,7 @@ enum Permission {
     DeleteBoard = 'delete_board',
     ShareBoard = 'share_board',
     ManageBoardRoles = 'manage_board_roles',
+    ChannelCreatePost = 'create_post',
     ManageBoardCards = 'manage_board_cards',
     ManageBoardProperties = 'manage_board_properties',
     CommentBoardCards = 'comment_board_cards',
@@ -36,8 +37,8 @@ class Constants {
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '7.9.0'
-    static readonly versionDisplayString = 'Mar 2023'
+    static readonly versionString = '7.10.0'
+    static readonly versionDisplayString = 'Apr 2023'
 
     static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/migrate-to-boards.html'
     static readonly imports = [
@@ -196,6 +197,7 @@ class Constants {
     }
 
     static readonly globalTeamId = '0'
+    static readonly noChannelID = '0'
 
     static readonly myInsights = 'MY'
 

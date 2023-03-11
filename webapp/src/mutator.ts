@@ -12,6 +12,7 @@ import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from '
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
 import {CommentBlock} from './blocks/commentBlock'
+import {AttachmentBlock} from './blocks/attachmentBlock'
 import {FilterGroup} from './blocks/filterGroup'
 import octoClient from './octoClient'
 import undoManager from './undomanager'
@@ -26,6 +27,7 @@ import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
 import {updateCards} from './store/cards'
+import {updateAttachments} from './store/attachments'
 import {updateComments} from './store/comments'
 import {updateContents} from './store/contents'
 import {addBoardUsers, removeBoardUsersById} from './store/users'
@@ -35,6 +37,7 @@ function updateAllBoardsAndBlocks(boards: Board[], blocks: Block[]) {
         store.dispatch(updateBoards(boards.filter((b: Board) => b.deleteAt !== 0) as Board[]))
         store.dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
         store.dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+        store.dispatch(updateAttachments(blocks.filter((b: Block) => b.type === 'attachment' || b.deleteAt !== 0) as AttachmentBlock[]))
         store.dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
         store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
     })
