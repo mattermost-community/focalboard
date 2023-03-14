@@ -121,6 +121,10 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 			"COLUMN_NAME": "dirty",
 		})
 
+	if s.dbType == model.MysqlDBType {
+		query = query.Where(sq.Eq{"TABLE_SCHEMA": s.schemaName})
+	}
+
 	row := query.QueryRow()
 
 	var count int
