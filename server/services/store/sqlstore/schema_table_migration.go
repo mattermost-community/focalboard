@@ -120,18 +120,9 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 		Select("COLUMN_NAME").
 		From("information_schema.COLUMNS").
 		Where(sq.Eq{
-			"TABLE_NAME": s.tablePrefix + "schema_migrations",
-		})
-
-	if s.dbType == model.MysqlDBType {
-		query = query.Where(sq.Eq{
+			"TABLE_NAME":   s.tablePrefix + "schema_migrations",
 			"TABLE_SCHEMA": s.schemaName,
 		})
-	} else {
-		query = query.Where(sq.Eq{
-			"TABLE_CATALOG": s.schemaName,
-		})
-	}
 
 	rows, err := query.Query()
 	if err != nil {
