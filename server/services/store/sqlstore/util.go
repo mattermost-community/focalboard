@@ -146,7 +146,7 @@ func (s *SQLStore) GetSchemaName() (string, error) {
 	case model.MysqlDBType:
 		query = s.getQueryBuilder(s.db).Select("DATABASE()")
 	case model.PostgresDBType:
-		query = s.getQueryBuilder(s.db).Select("current_schema()")
+		query = s.getQueryBuilder(s.db).Select("current_catalog")
 	case model.SqliteDBType:
 		return "", nil
 	default:
