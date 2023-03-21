@@ -178,7 +178,8 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func writeFileResponse(filename string, contentType string, contentSize int64, lastModification time.Time, webserverMode string, fileReader io.ReadSeeker, forceDownload bool, w http.ResponseWriter, r *http.Request) {
+func writeFileResponse(filename string, contentType string, contentSize int64,
+	lastModification time.Time, webserverMode string, fileReader io.ReadSeeker, forceDownload bool, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "private, no-cache")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 
