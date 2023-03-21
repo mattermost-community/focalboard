@@ -3,7 +3,6 @@
 PACKAGE_FOLDER = focalboard
 
 # Build Flags
-# Change to kick off and test CI
 BUILD_NUMBER ?= $(BUILD_NUMBER:)
 BUILD_DATE = $(shell date -u)
 BUILD_HASH = $(shell git rev-parse HEAD)
