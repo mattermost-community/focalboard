@@ -8,14 +8,14 @@ on:
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
  EXCLUDE_ENTERPRISE: true
 
 jobs:
 
   ubuntu:
     runs-on: ubuntu-18.04
- 
+
     steps:
     - uses: actions/checkout@v3
       with:
@@ -25,16 +25,16 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
@@ -101,16 +101,16 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
@@ -159,16 +159,16 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
@@ -229,16 +229,16 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
