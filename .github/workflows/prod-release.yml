@@ -9,7 +9,7 @@ env:
 jobs:
 
   ubuntu:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
@@ -216,7 +216,7 @@ jobs:
         path: ${{ github.workspace }}/focalboard/win-wpf/dist/focalboard-win.zip
 
   plugin-release:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
