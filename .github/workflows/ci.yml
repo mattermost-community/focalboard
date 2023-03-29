@@ -15,7 +15,7 @@ env:
 jobs:
 
   ci-ubuntu-server:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -44,7 +44,7 @@ jobs:
         repository: "mattermost/mattermost-server"
         fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
@@ -54,7 +54,7 @@ jobs:
       run: cd focalboard; make server-test-${{matrix['db']}}
 
   ci-ubuntu-webapp:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -74,7 +74,7 @@ jobs:
         repository: "mattermost/mattermost-server"
         fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
     - name: npm ci
       run: |
         cd focalboard/webapp && npm ci && cd -
@@ -132,7 +132,7 @@ jobs:
         repository: "mattermost/mattermost-server"
         fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -169,7 +169,7 @@ jobs:
         repository: "mattermost/mattermost-server"
         fetch-depth: "20"
         path: "mattermost-server"
-        ref : "master"
+        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Set up Go
       uses: actions/setup-go@v3
