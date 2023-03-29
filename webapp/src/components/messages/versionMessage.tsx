@@ -71,7 +71,7 @@ const VersionMessage = React.memo(() => {
                     }}
                 >
                     <FormattedMessage
-                        id='cloudMessage.learn-more'
+                        id='VersionMessage.learn-more'
                         defaultMessage='Learn more'
                     />
                 </Button>
