@@ -13,7 +13,7 @@ env:
 
 jobs:
   down-migrations:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,7 +26,7 @@ jobs:
 
   golangci:
     name: plugin
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
         with:
