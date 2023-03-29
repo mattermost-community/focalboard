@@ -465,12 +465,6 @@ func (ws *Server) getListenersForBlock(blockID string) []*websocketSession {
 	return ws.listenersByBlock[blockID]
 }
 
-// getListenersForTeam returns the listeners subscribed to a
-// team changes.
-func (ws *Server) getListenersForTeam(teamID string) []*websocketSession {
-	return ws.listenersByTeam[teamID]
-}
-
 // getListenersForUser returns the listener for a user subscribed to a
 // team changes.
 func (ws *Server) getListenerForUser(teamID, userID string) *websocketSession {
