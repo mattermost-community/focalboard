@@ -10,10 +10,6 @@ import {Utils} from '../utils'
 
 import {Subscription} from '../wsclient'
 
-// TODO: change this whene the initial load is complete
-// import {initialLoad} from './initialLoad'
-import {UserSettings} from '../userSettings'
-
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
