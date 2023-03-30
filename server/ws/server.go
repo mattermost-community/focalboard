@@ -465,10 +465,15 @@ func (ws *Server) getListenersForBlock(blockID string) []*websocketSession {
 	return ws.listenersByBlock[blockID]
 }
 
-// getListenersForTeam returns the listeners subscribed to a
+// getListenersForUser returns the listener for a user subscribed to a
 // team changes.
-func (ws *Server) getListenersForTeam(teamID string) []*websocketSession {
-	return ws.listenersByTeam[teamID]
+func (ws *Server) getListenerForUser(teamID, userID string) *websocketSession {
+	for _, listener := range ws.listenersByTeam[teamID] {
+		if listener.userID == userID {
+			return listener
+		}
+	}
+	return nil
 }
 
 // getListenersForTeamAndBoard returns the listeners subscribed to a
@@ -567,16 +572,10 @@ func (ws *Server) BroadcastCategoryChange(category model.Category) {
 		Category: &category,
 	}
 
-	listeners := ws.getListenersForTeam(category.TeamID)
-	ws.logger.Debug("listener(s) for teamID",
-		mlog.Int("listener_count", len(listeners)),
-		mlog.String("teamID", category.TeamID),
-		mlog.String("categoryID", category.ID),
-	)
-
-	for _, listener := range listeners {
-		ws.logger.Debug("Broadcast block change",
-			mlog.Int("listener_count", len(listeners)),
+	listener := ws.getListenerForUser(category.TeamID, category.UserID)
+	if listener != nil {
+		ws.logger.Debug("Broadcast category change",
+			mlog.String("userID", category.UserID),
 			mlog.String("teamID", category.TeamID),
 			mlog.String("categoryID", category.ID),
 			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
@@ -596,15 +595,10 @@ func (ws *Server) BroadcastCategoryReorder(teamID, userID string, categoryOrder 
 		TeamID:        teamID,
 	}
 
-	listeners := ws.getListenersForTeam(teamID)
-	ws.logger.Debug("listener(s) for teamID",
-		mlog.Int("listener_count", len(listeners)),
-		mlog.String("teamID", teamID),
-	)
-
-	for _, listener := range listeners {
+	listener := ws.getListenerForUser(teamID, userID)
+	if listener != nil {
 		ws.logger.Debug("Broadcast category order change",
-			mlog.Int("listener_count", len(listeners)),
+			mlog.String("userID", userID),
 			mlog.String("teamID", teamID),
 			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
 		)
@@ -624,21 +618,17 @@ func (ws *Server) BroadcastCategoryBoardsReorder(teamID, userID, categoryID stri
 		TeamID:     teamID,
 	}
 
-	listeners := ws.getListenersForTeam(teamID)
-	ws.logger.Debug("listener(s) for teamID",
-		mlog.Int("listener_count", len(listeners)),
-		mlog.String("teamID", teamID),
-	)
-
-	for _, listener := range listeners {
+	listener := ws.getListenerForUser(teamID, userID)
+	if listener != nil {
 		ws.logger.Debug("Broadcast board category order change",
-			mlog.Int("listener_count", len(listeners)),
+			mlog.String("userID", userID),
 			mlog.String("teamID", teamID),
+			mlog.String("categoryID", categoryID),
 			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
 		)
 
 		if err := listener.WriteJSON(message); err != nil {
-			ws.logger.Error("broadcast category order change error", mlog.Err(err))
+			ws.logger.Error("broadcast category boards order change error", mlog.Err(err))
 			listener.conn.Close()
 		}
 	}
@@ -651,16 +641,10 @@ func (ws *Server) BroadcastCategoryBoardChange(teamID, userID string, boardCateg
 		BoardCategories: boardCategories,
 	}
 
-	listeners := ws.getListenersForTeam(teamID)
-	ws.logger.Debug("listener(s) for teamID",
-		mlog.Int("listener_count", len(listeners)),
-		mlog.String("teamID", teamID),
-		mlog.Int("numEntries", len(boardCategories)),
-	)
-
-	for _, listener := range listeners {
-		ws.logger.Debug("Broadcast block change",
-			mlog.Int("listener_count", len(listeners)),
+	listener := ws.getListenerForUser(teamID, userID)
+	if listener != nil {
+		ws.logger.Debug("Broadcast category board change",
+			mlog.String("userID", userID),
 			mlog.String("teamID", teamID),
 			mlog.Int("numEntries", len(boardCategories)),
 			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),

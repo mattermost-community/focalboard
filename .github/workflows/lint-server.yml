@@ -13,7 +13,7 @@ env:
 
 jobs:
   down-migrations:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,7 +26,7 @@ jobs:
 
   golangci:
     name: plugin
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
         with:
@@ -48,7 +48,7 @@ jobs:
           repository: "mattermost/mattermost-server"
           fetch-depth: "20"
           path: "mattermost-server"
-          ref : "master"
+          ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.50.1
       - name: lint
