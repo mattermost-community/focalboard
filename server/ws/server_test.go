@@ -101,6 +101,48 @@ func TestTeamSubscription(t *testing.T) {
 		require.Empty(t, server.listenersByTeam[teamID])
 		require.Empty(t, server.listenersByTeam[teamID2])
 	})
+
+	t.Run("Subscribe users to team retrieve by user", func(t *testing.T) {
+		userID1 := "fake-user-id"
+		userSession1 := &websocketSession{
+			conn:   &websocket.Conn{},
+			mu:     sync.Mutex{},
+			userID: userID1,
+			teams:  []string{},
+			blocks: []string{},
+		}
+		userID2 := "fake-user-id2"
+		userSession2 := &websocketSession{
+			conn:   &websocket.Conn{},
+			mu:     sync.Mutex{},
+			userID: userID2,
+			teams:  []string{},
+			blocks: []string{},
+		}
+		teamID := "fake-team-id"
+
+		server.addListener(session)
+		server.subscribeListenerToTeam(session, teamID)
+		server.addListener(userSession1)
+		server.subscribeListenerToTeam(userSession1, teamID)
+		server.addListener(userSession2)
+		server.subscribeListenerToTeam(userSession2, teamID)
+
+		require.Len(t, server.listeners, 3)
+		require.Len(t, server.listenersByTeam[teamID], 3)
+
+		listener := server.getListenerForUser(teamID, userID1)
+		require.NotNil(t, listener)
+		require.Equal(t, listener.userID, userID1)
+
+		server.removeListener(session)
+		server.removeListener(userSession1)
+		server.removeListener(userSession2)
+
+		require.Empty(t, server.listeners)
+		require.Empty(t, server.listenersByTeam[teamID])
+		require.Empty(t, server.getListenerForUser(teamID, userID1))
+	})
 }
 
 func TestBlocksSubscription(t *testing.T) {
