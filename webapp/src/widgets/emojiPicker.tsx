@@ -6,7 +6,6 @@ import 'emoji-mart/css/emoji-mart.css'
 import {Picker, BaseEmoji} from 'emoji-mart'
 
 import {Utils} from '../utils'
-
 import './emojiPicker.scss'
 
 import emojiSpirit from '../../static/emoji_spirit.png'
