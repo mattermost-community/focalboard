@@ -1,4 +1,6 @@
-INSERT INTO focalboard_category_boards VALUES
+INSERT INTO focalboard_category_boards
+(id, user_id, category_id, board_id, create_at, update_at, sort_order, hidden)
+VALUES
 ('id-1', 'user-id-1', 'category-id-1', 'board-id-1', 1672889246832, 1672889246832, 0, false),
 ('id-2', 'user-id-1', 'category-id-2', 'board-id-2', 1672889246832, 1672889246832, 0, false),
 ('id-3', 'user-id-2', 'category-id-3', 'board-id-3', 1672889246832, 1672889246832, 0, false),
