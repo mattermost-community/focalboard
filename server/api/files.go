@@ -19,6 +19,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/focalboard/server/services/audit"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -167,7 +168,14 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 		_ = a.app.MoveFile(board.ChannelID, board.TeamID, boardID, filename)
 	}
 
+	if err != nil {
+		// if err is still not nil then it is an error other than `not found` so we must
+		// return the error to the requestor.  fileReader and Fileinfo are nil in this case.
+		a.errorResponse(w, r, err)
+	}
+
 	defer fileReader.Close()
+
 	mimeType := ""
 	var fileSize int64
 	if fileInfo != nil {
