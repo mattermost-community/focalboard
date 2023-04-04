@@ -22,7 +22,7 @@ jest.mock('../../mutator')
 
 const mockedMutator = mocked(mutator)
 
-describe('properties/link', () => {
+describe('properties/number', () => {
     let board: Board
     let card: Card
     let propertyTemplate: IPropertyTemplate
