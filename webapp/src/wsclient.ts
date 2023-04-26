@@ -429,7 +429,7 @@ class WSClient {
             Utils.log(`WSClient websocket onclose, code: ${e.code}, reason: ${e.reason}`)
             if (ws === this.ws) {
                 // Unexpected close, re-open
-                Utils.logError(`Unexpected WSClient close`)
+                Utils.logError('Unexpected WSClient close')
                 for (const handler of this.onStateChange) {
                     handler(this, 'close')
                 }
