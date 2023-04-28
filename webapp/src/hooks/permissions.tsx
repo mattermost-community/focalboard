@@ -4,7 +4,6 @@
 import {useAppSelector} from '../store/hooks'
 import {getMyBoardMembership, getCurrentBoardId, getBoard} from '../store/boards'
 import {getCurrentTeam} from '../store/teams'
-import {Utils} from '../utils'
 import {Permission} from '../constants'
 import {MemberRole} from '../blocks/board'
 
