@@ -4,7 +4,6 @@
 import {useAppSelector} from '../store/hooks'
 import {getMyBoardMembership, getCurrentBoardId, getBoard} from '../store/boards'
 import {getCurrentTeam} from '../store/teams'
-import {Utils} from '../utils'
 import {Permission} from '../constants'
 import {MemberRole} from '../blocks/board'
 
@@ -22,10 +21,6 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
 
     if (!member) {
         return false
-    }
-
-    if (!Utils.isFocalboardPlugin()) {
-        return true
     }
 
     const adminPermissions = [Permission.ManageBoardType, Permission.DeleteBoard, Permission.ShareBoard, Permission.ManageBoardRoles, Permission.DeleteOthersComments]
