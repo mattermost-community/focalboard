@@ -12,7 +12,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
@@ -403,8 +405,8 @@ func TestGetFilePath(t *testing.T) {
 	})
 
 	t.Run("when FileInfo exists but FileInfo.Path is not set", func(t *testing.T) {
-Expand All
-	@@ -366,22 +412,158 @@ func TestGetFile(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+			Id:   "fileInfoID",
 			Path: "",
 		}, nil)
 
