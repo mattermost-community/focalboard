@@ -12,7 +12,6 @@ import (
 )
 
 func NewFileInfo(name string) *mm_model.FileInfo {
-
 	extension := strings.ToLower(filepath.Ext(name))
 	now := utils.GetMillis()
 	return &mm_model.FileInfo{
@@ -23,5 +22,4 @@ func NewFileInfo(name string) *mm_model.FileInfo {
 		Extension: extension,
 		MimeType:  mime.TypeByExtension(extension),
 	}
-
 }

@@ -104,8 +104,8 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 	}
 }
 
-// Update image and attachment blocks
-func (a *App) fixImagesAttachments(boardMap map[string]*model.Board, fileMap map[string]string, teamID string, userId string) {
+// Update image and attachment blocks.
+func (a *App) fixImagesAttachments(boardMap map[string]*model.Board, fileMap map[string]string, teamID string, userID string) {
 	blockIDs := make([]string, 0)
 	blockPatches := make([]model.BlockPatch, 0)
 	for _, board := range boardMap {
@@ -125,19 +125,22 @@ func (a *App) fixImagesAttachments(boardMap map[string]*model.Board, fileMap map
 		for _, block := range newBlocks {
 			if block.Type == "image" || block.Type == "attachment" {
 				fieldName := "fileId"
-				oldId := block.Fields[fieldName]
+				oldID := block.Fields[fieldName]
 				blockIDs = append(blockIDs, block.ID)
 
 				blockPatches = append(blockPatches, model.BlockPatch{
 					UpdatedFields: map[string]interface{}{
-						fieldName: fileMap[oldId.(string)],
+						fieldName: fileMap[oldID.(string)],
 					},
 				})
 			}
 		}
 
 		blockPatchBatch := model.BlockPatchBatch{BlockIDs: blockIDs, BlockPatches: blockPatches}
-		a.PatchBlocks(teamID, &blockPatchBatch, userId)
+		err = a.PatchBlocks(teamID, &blockPatchBatch, userID)
+		if err != nil {
+			a.logger.Info("Error patching blocks for image import", mlog.Err(err))
+		}
 	}
 }
 

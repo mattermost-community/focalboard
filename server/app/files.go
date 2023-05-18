@@ -237,16 +237,16 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block, a
 			continue
 		}
 
-		fileId, isOk := block.Fields["fileId"].(string)
+		fileID, isOk := block.Fields["fileId"].(string)
 		if !isOk {
-			fileId, isOk = block.Fields["attachmentId"].(string)
+			fileID, isOk = block.Fields["attachmentId"].(string)
 			if !isOk {
 				continue
 			}
 		}
 
 		// create unique filename
-		ext := filepath.Ext(fileId)
+		ext := filepath.Ext(fileID)
 		fileInfoID := utils.NewID(utils.IDTypeNone)
 		destFilename := fileInfoID + ext
 
@@ -262,7 +262,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block, a
 
 		// GetFilePath will retrieve the correct path
 		// depending on whether FileInfo table is used for the file.
-		fileInfo, sourceFilePath, err := a.GetFilePath(sourceBoard.TeamID, sourceBoard.ID, fileId)
+		fileInfo, sourceFilePath, err := a.GetFilePath(sourceBoard.TeamID, sourceBoard.ID, fileID)
 		if err != nil {
 			return nil, fmt.Errorf("cannot fetch destination board %s for CopyCardFiles: %w", sourceBoardID, err)
 		}
@@ -292,7 +292,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block, a
 				mlog.Err(err),
 			)
 		}
-		newFileNames[fileId] = destFilename
+		newFileNames[fileID] = destFilename
 	}
 
 	return newFileNames, nil

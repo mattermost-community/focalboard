@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/focalboard/server/model"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
@@ -23,6 +22,7 @@ import (
 const (
 	testFileName = "temp-file-name"
 	testBoardID  = "test-board-id"
+	testPath     = "/path/to/file/fileName.txt"
 )
 
 var errDummy = errors.New("hello")
@@ -267,7 +267,7 @@ func TestGetFileInfo(t *testing.T) {
 	th, _ := SetupTestHelper(t)
 
 	t.Run("should return file info", func(t *testing.T) {
-		fileInfo := &mmModel.FileInfo{
+		fileInfo := &mm_model.FileInfo{
 			Id:       "file_info_id",
 			Archived: false,
 		}
@@ -286,7 +286,7 @@ func TestGetFileInfo(t *testing.T) {
 	})
 
 	t.Run("should return archived file info", func(t *testing.T) {
-		fileInfo := &mmModel.FileInfo{
+		fileInfo := &mm_model.FileInfo{
 			Id:       "file_info_id",
 			Archived: true,
 		}
@@ -310,11 +310,10 @@ func TestGetFileInfo(t *testing.T) {
 
 func TestGetFile(t *testing.T) {
 	th, _ := SetupTestHelper(t)
-
 	t.Run("happy path, no errors", func(t *testing.T) {
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mmModel.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
 			Id:   "fileInfoID",
-			Path: "/path/to/file/fileName.txt",
+			Path: testPath,
 		}, nil)
 
 		mockedFileBackend := &mocks.FileBackend{}
@@ -327,8 +326,8 @@ func TestGetFile(t *testing.T) {
 		readerErrorFunc := func(path string) error {
 			return nil
 		}
-		mockedFileBackend.On("Reader", "/path/to/file/fileName.txt").Return(readerFunc, readerErrorFunc)
-		mockedFileBackend.On("FileExists", "/path/to/file/fileName.txt").Return(true, nil)
+		mockedFileBackend.On("Reader", testPath).Return(readerFunc, readerErrorFunc)
+		mockedFileBackend.On("FileExists", testPath).Return(true, nil)
 
 		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
 		assert.NoError(t, err)
@@ -348,12 +347,12 @@ func TestGetFile(t *testing.T) {
 	t.Run("when FileExists returns false", func(t *testing.T) {
 		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
 			Id:   "fileInfoID",
-			Path: "/path/to/file/fileName.txt",
+			Path: testPath,
 		}, nil)
 
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
-		mockedFileBackend.On("FileExists", "/path/to/file/fileName.txt").Return(false, nil)
+		mockedFileBackend.On("FileExists", testPath).Return(false, nil)
 
 		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
 		assert.Error(t, err)
@@ -363,36 +362,34 @@ func TestGetFile(t *testing.T) {
 	t.Run("when FileReader throws error", func(t *testing.T) {
 		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
 			Id:   "fileInfoID",
-			Path: "/path/to/file/fileName.txt",
+			Path: testPath,
 		}, nil)
 
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
-		mockedFileBackend.On("Reader", "/path/to/file/fileName.txt").Return(nil, errDummy)
-		mockedFileBackend.On("FileExists", "/path/to/file/fileName.txt").Return(true, nil)
+		mockedFileBackend.On("Reader", testPath).Return(nil, errDummy)
+		mockedFileBackend.On("FileExists", testPath).Return(true, nil)
 
 		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
 		assert.Error(t, err)
 		assert.Nil(t, fileInfo)
 		assert.Nil(t, seeker)
 	})
-
 }
 
 func TestGetFilePath(t *testing.T) {
 	th, _ := SetupTestHelper(t)
 
 	t.Run("when FileInfo exists", func(t *testing.T) {
-		path := "/path/to/file/fileName.txt"
 		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
 			Id:   "fileInfoID",
-			Path: path,
+			Path: testPath,
 		}, nil)
 
 		fileInfo, filePath, err := th.App.GetFilePath("teamID", "boardID", "7fileInfoID.txt")
 		assert.NoError(t, err)
 		assert.NotNil(t, fileInfo)
-		assert.Equal(t, path, filePath)
+		assert.Equal(t, testPath, filePath)
 	})
 
 	t.Run("when FileInfo doesn't exist", func(t *testing.T) {
@@ -440,10 +437,9 @@ func TestCopyCard(t *testing.T) {
 	})
 
 	t.Run("Board exists, image block, with FileInfo", func(t *testing.T) {
-		path := "/path/to/file/fileName.txt"
 		fileInfo := &mm_model.FileInfo{
 			Id:   "imageBlock",
-			Path: path,
+			Path: testPath,
 		}
 		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
 			ID:         "boardID",
@@ -479,10 +475,9 @@ func TestCopyCard(t *testing.T) {
 			BoardID:    "boardID",
 		}
 
-		path := "/path/to/file/fileName.txt"
 		fileInfo := &mm_model.FileInfo{
 			Id:   "attachmentBlock",
-			Path: path,
+			Path: testPath,
 		}
 		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
 			ID:         "boardID",
@@ -501,11 +496,6 @@ func TestCopyCard(t *testing.T) {
 	})
 
 	t.Run("Board exists, image block, without FileInfo", func(t *testing.T) {
-		// path := "/path/to/file/fileName.txt"
-		// fileInfo := &mm_model.FileInfo{
-		// 	Id:   "imageBlock",
-		// 	Path: path,
-		// }
 		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
 			ID:         "boardID",
 			IsTemplate: false,
@@ -542,10 +532,9 @@ func TestCopyAndUpdateCardFiles(t *testing.T) {
 	}
 
 	t.Run("Board exists, image block, with FileInfo", func(t *testing.T) {
-		path := "/path/to/file/fileName.txt"
 		fileInfo := &mm_model.FileInfo{
 			Id:   "imageBlock",
-			Path: path,
+			Path: testPath,
 		}
 		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
 			ID:         "boardID",
@@ -562,6 +551,6 @@ func TestCopyAndUpdateCardFiles(t *testing.T) {
 		err := th.App.CopyAndUpdateCardFiles("boardID", "userID", []*model.Block{imageBlock}, false)
 		assert.NoError(t, err)
 
-		assert.NotEqual(t, path, imageBlock.Fields["fileId"])
+		assert.NotEqual(t, testPath, imageBlock.Fields["fileId"])
 	})
 }
