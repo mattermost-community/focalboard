@@ -12,7 +12,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/focalboard/server/model"
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
@@ -21,6 +22,7 @@ import (
 const (
 	testFileName = "temp-file-name"
 	testBoardID  = "test-board-id"
+	testPath     = "/path/to/file/fileName.txt"
 )
 
 var errDummy = errors.New("hello")
@@ -207,7 +209,7 @@ func TestSaveFile(t *testing.T) {
 		}
 
 		mockedFileBackend.On("WriteFile", mockedReadCloseSeek, mock.Anything).Return(writeFileFunc, writeFileErrorFunc)
-		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", testBoardID, fileName)
+		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", testBoardID, fileName, false)
 		assert.Equal(t, fileName, actual)
 		assert.Nil(t, err)
 	})
@@ -231,7 +233,7 @@ func TestSaveFile(t *testing.T) {
 		}
 
 		mockedFileBackend.On("WriteFile", mockedReadCloseSeek, mock.Anything).Return(writeFileFunc, writeFileErrorFunc)
-		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName)
+		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName, false)
 		assert.Nil(t, err)
 		assert.NotNil(t, actual)
 	})
@@ -255,7 +257,7 @@ func TestSaveFile(t *testing.T) {
 		}
 
 		mockedFileBackend.On("WriteFile", mockedReadCloseSeek, mock.Anything).Return(writeFileFunc, writeFileErrorFunc)
-		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName)
+		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName, false)
 		assert.Equal(t, "", actual)
 		assert.Equal(t, "unable to store the file in the files storage: Mocked File backend error", err.Error())
 	})
@@ -265,7 +267,7 @@ func TestGetFileInfo(t *testing.T) {
 	th, _ := SetupTestHelper(t)
 
 	t.Run("should return file info", func(t *testing.T) {
-		fileInfo := &mmModel.FileInfo{
+		fileInfo := &mm_model.FileInfo{
 			Id:       "file_info_id",
 			Archived: false,
 		}
@@ -284,7 +286,7 @@ func TestGetFileInfo(t *testing.T) {
 	})
 
 	t.Run("should return archived file info", func(t *testing.T) {
-		fileInfo := &mmModel.FileInfo{
+		fileInfo := &mm_model.FileInfo{
 			Id:       "file_info_id",
 			Archived: true,
 		}
@@ -308,11 +310,10 @@ func TestGetFileInfo(t *testing.T) {
 
 func TestGetFile(t *testing.T) {
 	th, _ := SetupTestHelper(t)
-
-	t.Run("when FileInfo exists", func(t *testing.T) {
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mmModel.FileInfo{
+	t.Run("happy path, no errors", func(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
 			Id:   "fileInfoID",
-			Path: "/path/to/file/fileName.txt",
+			Path: testPath,
 		}, nil)
 
 		mockedFileBackend := &mocks.FileBackend{}
@@ -325,60 +326,231 @@ func TestGetFile(t *testing.T) {
 		readerErrorFunc := func(path string) error {
 			return nil
 		}
-		mockedFileBackend.On("Reader", "/path/to/file/fileName.txt").Return(readerFunc, readerErrorFunc)
-		mockedFileBackend.On("FileExists", "/path/to/file/fileName.txt").Return(true, nil)
+		mockedFileBackend.On("Reader", testPath).Return(readerFunc, readerErrorFunc)
+		mockedFileBackend.On("FileExists", testPath).Return(true, nil)
 
 		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
 		assert.NoError(t, err)
 		assert.NotNil(t, fileInfo)
 		assert.NotNil(t, seeker)
+	})
+
+	t.Run("when GetFilePath() throws error", func(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(nil, errDummy)
+
+		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
+		assert.Error(t, err)
+		assert.Nil(t, fileInfo)
+		assert.Nil(t, seeker)
+	})
+
+	t.Run("when FileExists returns false", func(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+			Id:   "fileInfoID",
+			Path: testPath,
+		}, nil)
+
+		mockedFileBackend := &mocks.FileBackend{}
+		th.App.filesBackend = mockedFileBackend
+		mockedFileBackend.On("FileExists", testPath).Return(false, nil)
+
+		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
+		assert.Error(t, err)
+		assert.Nil(t, fileInfo)
+		assert.Nil(t, seeker)
+	})
+	t.Run("when FileReader throws error", func(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+			Id:   "fileInfoID",
+			Path: testPath,
+		}, nil)
+
+		mockedFileBackend := &mocks.FileBackend{}
+		th.App.filesBackend = mockedFileBackend
+		mockedFileBackend.On("Reader", testPath).Return(nil, errDummy)
+		mockedFileBackend.On("FileExists", testPath).Return(true, nil)
+
+		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
+		assert.Error(t, err)
+		assert.Nil(t, fileInfo)
+		assert.Nil(t, seeker)
+	})
+}
+
+func TestGetFilePath(t *testing.T) {
+	th, _ := SetupTestHelper(t)
+
+	t.Run("when FileInfo exists", func(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+			Id:   "fileInfoID",
+			Path: testPath,
+		}, nil)
+
+		fileInfo, filePath, err := th.App.GetFilePath("teamID", "boardID", "7fileInfoID.txt")
+		assert.NoError(t, err)
+		assert.NotNil(t, fileInfo)
+		assert.Equal(t, testPath, filePath)
 	})
 
 	t.Run("when FileInfo doesn't exist", func(t *testing.T) {
 		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(nil, nil)
 
-		mockedFileBackend := &mocks.FileBackend{}
-		th.App.filesBackend = mockedFileBackend
-		mockedReadCloseSeek := &mocks.ReadCloseSeeker{}
-		readerFunc := func(path string) filestore.ReadCloseSeeker {
-			return mockedReadCloseSeek
-		}
-
-		readerErrorFunc := func(path string) error {
-			return nil
-		}
-
-		mockedFileBackend.On("Reader", "teamID/boardID/7fileInfoID.txt").Return(readerFunc, readerErrorFunc)
-		mockedFileBackend.On("FileExists", "teamID/boardID/7fileInfoID.txt").Return(true, nil)
-
-		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
+		fileInfo, filePath, err := th.App.GetFilePath("teamID", "boardID", "7fileInfoID.txt")
 		assert.NoError(t, err)
 		assert.Nil(t, fileInfo)
-		assert.NotNil(t, seeker)
+		assert.Equal(t, "teamID/boardID/7fileInfoID.txt", filePath)
 	})
 
 	t.Run("when FileInfo exists but FileInfo.Path is not set", func(t *testing.T) {
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mmModel.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
 			Id:   "fileInfoID",
 			Path: "",
 		}, nil)
 
-		mockedFileBackend := &mocks.FileBackend{}
-		th.App.filesBackend = mockedFileBackend
-		mockedReadCloseSeek := &mocks.ReadCloseSeeker{}
-		readerFunc := func(path string) filestore.ReadCloseSeeker {
-			return mockedReadCloseSeek
-		}
-
-		readerErrorFunc := func(path string) error {
-			return nil
-		}
-		mockedFileBackend.On("Reader", "teamID/boardID/7fileInfoID.txt").Return(readerFunc, readerErrorFunc)
-		mockedFileBackend.On("FileExists", "teamID/boardID/7fileInfoID.txt").Return(true, nil)
-
-		fileInfo, seeker, err := th.App.GetFile("teamID", "boardID", "7fileInfoID.txt")
+		fileInfo, filePath, err := th.App.GetFilePath("teamID", "boardID", "7fileInfoID.txt")
 		assert.NoError(t, err)
 		assert.NotNil(t, fileInfo)
-		assert.NotNil(t, seeker)
+		assert.Equal(t, "teamID/boardID/7fileInfoID.txt", filePath)
+	})
+}
+
+func TestCopyCard(t *testing.T) {
+	th, _ := SetupTestHelper(t)
+	imageBlock := &model.Block{
+		ID:         "imageBlock",
+		ParentID:   "c3zqnh6fsu3f4mr6hzq9hizwske",
+		CreatedBy:  "6k6ynxdp47dujjhhojw9nqhmyh",
+		ModifiedBy: "6k6ynxdp47dujjhhojw9nqhmyh",
+		Schema:     1,
+		Type:       "image",
+		Title:      "",
+		Fields:     map[string]interface{}{"fileId": "7fileName.jpg"},
+		CreateAt:   1680725585250,
+		UpdateAt:   1680725585250,
+		DeleteAt:   0,
+		BoardID:    "boardID",
+	}
+	t.Run("Board doesn't exist", func(t *testing.T) {
+		th.Store.EXPECT().GetBoard("boardID").Return(nil, errDummy)
+		_, err := th.App.CopyCardFiles("boardID", []*model.Block{}, false)
+		assert.Error(t, err)
+	})
+
+	t.Run("Board exists, image block, with FileInfo", func(t *testing.T) {
+		fileInfo := &mm_model.FileInfo{
+			Id:   "imageBlock",
+			Path: testPath,
+		}
+		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
+			ID:         "boardID",
+			IsTemplate: false,
+		}, nil)
+		th.Store.EXPECT().GetFileInfo("fileName").Return(fileInfo, nil)
+		th.Store.EXPECT().SaveFileInfo(fileInfo).Return(nil)
+
+		mockedFileBackend := &mocks.FileBackend{}
+		th.App.filesBackend = mockedFileBackend
+		mockedFileBackend.On("CopyFile", mock.Anything, mock.Anything).Return(nil)
+
+		updatedFileNames, err := th.App.CopyCardFiles("boardID", []*model.Block{imageBlock}, false)
+		assert.NoError(t, err)
+		assert.Equal(t, "7fileName.jpg", imageBlock.Fields["fileId"])
+		assert.NotNil(t, updatedFileNames["7fileName.jpg"])
+		assert.NotNil(t, updatedFileNames[imageBlock.Fields["fileId"].(string)])
+	})
+
+	t.Run("Board exists, attachment block, with FileInfo", func(t *testing.T) {
+		attachmentBlock := &model.Block{
+			ID:         "attachmentBlock",
+			ParentID:   "c3zqnh6fsu3f4mr6hzq9hizwske",
+			CreatedBy:  "6k6ynxdp47dujjhhojw9nqhmyh",
+			ModifiedBy: "6k6ynxdp47dujjhhojw9nqhmyh",
+			Schema:     1,
+			Type:       "attachment",
+			Title:      "",
+			Fields:     map[string]interface{}{"fileId": "7fileName.jpg"},
+			CreateAt:   1680725585250,
+			UpdateAt:   1680725585250,
+			DeleteAt:   0,
+			BoardID:    "boardID",
+		}
+
+		fileInfo := &mm_model.FileInfo{
+			Id:   "attachmentBlock",
+			Path: testPath,
+		}
+		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
+			ID:         "boardID",
+			IsTemplate: false,
+		}, nil)
+		th.Store.EXPECT().GetFileInfo("fileName").Return(fileInfo, nil)
+		th.Store.EXPECT().SaveFileInfo(fileInfo).Return(nil)
+
+		mockedFileBackend := &mocks.FileBackend{}
+		th.App.filesBackend = mockedFileBackend
+		mockedFileBackend.On("CopyFile", mock.Anything, mock.Anything).Return(nil)
+
+		updatedFileNames, err := th.App.CopyCardFiles("boardID", []*model.Block{attachmentBlock}, false)
+		assert.NoError(t, err)
+		assert.NotNil(t, updatedFileNames[imageBlock.Fields["fileId"].(string)])
+	})
+
+	t.Run("Board exists, image block, without FileInfo", func(t *testing.T) {
+		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
+			ID:         "boardID",
+			IsTemplate: false,
+		}, nil)
+		th.Store.EXPECT().GetFileInfo(gomock.Any()).Return(nil, nil)
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
+
+		mockedFileBackend := &mocks.FileBackend{}
+		th.App.filesBackend = mockedFileBackend
+		mockedFileBackend.On("CopyFile", mock.Anything, mock.Anything).Return(nil)
+
+		updatedFileNames, err := th.App.CopyCardFiles("boardID", []*model.Block{imageBlock}, false)
+		assert.NoError(t, err)
+		assert.NotNil(t, imageBlock.Fields["fileId"].(string))
+		assert.NotNil(t, updatedFileNames[imageBlock.Fields["fileId"].(string)])
+	})
+}
+
+func TestCopyAndUpdateCardFiles(t *testing.T) {
+	th, _ := SetupTestHelper(t)
+	imageBlock := &model.Block{
+		ID:         "imageBlock",
+		ParentID:   "c3zqnh6fsu3f4mr6hzq9hizwske",
+		CreatedBy:  "6k6ynxdp47dujjhhojw9nqhmyh",
+		ModifiedBy: "6k6ynxdp47dujjhhojw9nqhmyh",
+		Schema:     1,
+		Type:       "image",
+		Title:      "",
+		Fields:     map[string]interface{}{"fileId": "7fileName.jpg"},
+		CreateAt:   1680725585250,
+		UpdateAt:   1680725585250,
+		DeleteAt:   0,
+		BoardID:    "boardID",
+	}
+
+	t.Run("Board exists, image block, with FileInfo", func(t *testing.T) {
+		fileInfo := &mm_model.FileInfo{
+			Id:   "imageBlock",
+			Path: testPath,
+		}
+		th.Store.EXPECT().GetBoard("boardID").Return(&model.Board{
+			ID:         "boardID",
+			IsTemplate: false,
+		}, nil)
+		th.Store.EXPECT().GetFileInfo("fileName").Return(fileInfo, nil)
+		th.Store.EXPECT().SaveFileInfo(fileInfo).Return(nil)
+		th.Store.EXPECT().PatchBlocks(gomock.Any(), "userID").Return(nil)
+
+		mockedFileBackend := &mocks.FileBackend{}
+		th.App.filesBackend = mockedFileBackend
+		mockedFileBackend.On("CopyFile", mock.Anything, mock.Anything).Return(nil)
+
+		err := th.App.CopyAndUpdateCardFiles("boardID", "userID", []*model.Block{imageBlock}, false)
+		assert.NoError(t, err)
+
+		assert.NotEqual(t, testPath, imageBlock.Fields["fileId"])
 	})
 }
