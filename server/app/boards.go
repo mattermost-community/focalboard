@@ -188,8 +188,8 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	err = a.CopyAndUpdateCardFiles(boardID, userID, bab.Blocks, asTemplate)
 	if err != nil {
 		dbab := model.NewDeleteBoardsAndBlocksFromBabs(bab)
-		if err = a.store.DeleteBoardsAndBlocks(dbab, userID); err != nil {
-			a.logger.Error("Cannot delete board after duplication error when updating block's file info", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(err))
+		if dErr := a.store.DeleteBoardsAndBlocks(dbab, userID); dErr != nil {
+			a.logger.Error("Cannot delete board after duplication error when updating block's file info", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(dErr))
 		}
 		return nil, nil, fmt.Errorf("could not patch file IDs while duplicating board %s: %w", boardID, err)
 	}
