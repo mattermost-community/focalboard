@@ -3,7 +3,6 @@ package app
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -301,14 +300,6 @@ func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
 
 func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	return a.DeleteBlockAndNotify(blockID, modifiedBy, false)
-}
-
-func retriveFileIDFromBlockFieldStorage(id string) string {
-	parts := strings.Split(id, ".")
-	if len(parts) < 1 {
-		return ""
-	}
-	return parts[0][1:]
 }
 
 func (a *App) DeleteBlockAndNotify(blockID string, modifiedBy string, disableNotify bool) error {

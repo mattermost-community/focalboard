@@ -365,7 +365,7 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 	return s.deleteBlockAndChildren(db, blockID, modifiedBy, false)
 }
 
-func retriveFileIDFromBlockFieldStorage(id string) string {
+func retrieveFileIDFromBlockFieldStorage(id string) string {
 	parts := strings.Split(id, ".")
 	if len(parts) < 1 {
 		return ""
@@ -427,11 +427,14 @@ func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modi
 	fileID := ""
 	fileIdWithExtention, fileIDExists := block.Fields["fileId"]
 	if fileIDExists {
-		fileID = retriveFileIDFromBlockFieldStorage(fileIdWithExtention.(string))
+		fileID = retrieveFileIDFromBlockFieldStorage(fileIdWithExtention.(string))
 	}
-	attachmentIDWithExtention, attachmentIDExists := block.Fields["attachmentId"]
-	if attachmentIDExists {
-		fileID = retriveFileIDFromBlockFieldStorage(attachmentIDWithExtention.(string))
+
+	if fileID == "" {
+		attachmentIDWithExtention, attachmentIDExists := block.Fields["attachmentId"]
+		if attachmentIDExists {
+			fileID = retrieveFileIDFromBlockFieldStorage(attachmentIDWithExtention.(string))
+		}
 	}
 
 	if fileID != "" {
@@ -979,11 +982,11 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 	for _, block := range blocks {
 		fileIdWithExtention, fileIDExists := block.Fields["fileId"]
 		if fileIDExists {
-			fileIDs = append(fileIDs, retriveFileIDFromBlockFieldStorage(fileIdWithExtention.(string)))
+			fileIDs = append(fileIDs, retrieveFileIDFromBlockFieldStorage(fileIdWithExtention.(string)))
 		}
 		attachmentIDWithExtention, attachmentIDExists := block.Fields["attachmentId"]
 		if attachmentIDExists {
-			fileIDs = append(fileIDs, retriveFileIDFromBlockFieldStorage(attachmentIDWithExtention.(string)))
+			fileIDs = append(fileIDs, retrieveFileIDFromBlockFieldStorage(attachmentIDWithExtention.(string)))
 		}
 	}
 
