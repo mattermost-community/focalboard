@@ -425,9 +425,9 @@ func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modi
 
 	// fileId and attachmentId shoudn't exist at the same time
 	fileID := ""
-	fileIdWithExtention, fileIDExists := block.Fields["fileId"]
+	fileIDWithExtention, fileIDExists := block.Fields["fileId"]
 	if fileIDExists {
-		fileID = retrieveFileIDFromBlockFieldStorage(fileIdWithExtention.(string))
+		fileID = retrieveFileIDFromBlockFieldStorage(fileIDWithExtention.(string))
 	}
 
 	if fileID == "" {
@@ -980,9 +980,9 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 
 	fileIDs := make([]string, 0, len(blocks))
 	for _, block := range blocks {
-		fileIdWithExtention, fileIDExists := block.Fields["fileId"]
+		fileIDWithExtention, fileIDExists := block.Fields["fileId"]
 		if fileIDExists {
-			fileIDs = append(fileIDs, retrieveFileIDFromBlockFieldStorage(fileIdWithExtention.(string)))
+			fileIDs = append(fileIDs, retrieveFileIDFromBlockFieldStorage(fileIDWithExtention.(string)))
 		}
 		attachmentIDWithExtention, attachmentIDExists := block.Fields["attachmentId"]
 		if attachmentIDExists {
