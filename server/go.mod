@@ -10,7 +10,7 @@ require (
 	github.com/krolaw/zipstream v0.0.0-20180621105154-0a2661891f94
 	github.com/lib/pq v1.10.7
 	github.com/mattermost/mattermost-plugin-api v0.1.1
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20230116174708-240304ad0728
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20230321114510-b61c096497ac
 	github.com/mattermost/morph v1.0.5-0.20221115094356-4c18a75b1f5e
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mgdelacroix/foundation v0.0.0-20220812143423-0bfc18f73538
@@ -57,7 +57,7 @@ require (
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattermost/go-i18n v1.11.1-0.20211013152124-5c415071e404 // indirect
 	github.com/mattermost/ldap v0.0.0-20201202150706-ee0e6284187d // indirect
-	github.com/mattermost/logr/v2 v2.0.15 // indirect
+	github.com/mattermost/logr/v2 v2.0.16 // indirect
 	github.com/mattermost/squirrel v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
