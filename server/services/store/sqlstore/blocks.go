@@ -365,6 +365,14 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 	return s.deleteBlockAndChildren(db, blockID, modifiedBy, false)
 }
 
+func retriveFileIDFromBlockFieldStorage(id string) string {
+	parts := strings.Split(id, ".")
+	if len(parts) < 1 {
+		return ""
+	}
+	return parts[0][1:]
+}
+
 func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modifiedBy string, keepChildren bool) error {
 	block, err := s.getBlock(db, blockID)
 	if model.IsErrNotFound(err) {
@@ -413,6 +421,27 @@ func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modi
 
 	if _, err := insertQuery.Exec(); err != nil {
 		return err
+	}
+
+	// fileId and attachmentId shoudn't exist at the same time
+	fileID := ""
+	fileIdWithExtention, fileIDExists := block.Fields["fileId"]
+	if fileIDExists {
+		fileID = retriveFileIDFromBlockFieldStorage(fileIdWithExtention.(string))
+	}
+	attachmentIDWithExtention, attachmentIDExists := block.Fields["attachmentId"]
+	if attachmentIDExists {
+		fileID = retriveFileIDFromBlockFieldStorage(attachmentIDWithExtention.(string))
+	}
+
+	if fileID != "" {
+		deleteFileInfoQuery := s.getQueryBuilder(db).
+			Update("FileInfo").
+			Set("DeleteAt", model.GetMillis()).
+			Where(sq.Eq{"id": fileID})
+		if _, err := deleteFileInfoQuery.Exec(); err != nil {
+			return err
+		}
 	}
 
 	deleteQuery := s.getQueryBuilder(db).
@@ -929,6 +958,44 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 
 	if _, err := insertQuery.Exec(); err != nil {
 		return err
+	}
+
+	fileDeleteQuery := s.getQueryBuilder(db).
+		Select(s.blockFields("")...).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"board_id": boardID})
+
+	rows, err := fileDeleteQuery.Query()
+	if err != nil {
+		return err
+	}
+	defer s.CloseRows(rows)
+	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return err
+	}
+
+	fileIDs := make([]string, 0, len(blocks))
+	for _, block := range blocks {
+		fileIdWithExtention, fileIDExists := block.Fields["fileId"]
+		if fileIDExists {
+			fileIDs = append(fileIDs, retriveFileIDFromBlockFieldStorage(fileIdWithExtention.(string)))
+		}
+		attachmentIDWithExtention, attachmentIDExists := block.Fields["attachmentId"]
+		if attachmentIDExists {
+			fileIDs = append(fileIDs, retriveFileIDFromBlockFieldStorage(attachmentIDWithExtention.(string)))
+		}
+	}
+
+	if len(fileIDs) > 0 {
+		deleteFileInfoQuery := s.getQueryBuilder(db).
+			Update("FileInfo").
+			Set("DeleteAt", model.GetMillis()).
+			Where(sq.Eq{"id": fileIDs})
+
+		if _, err := deleteFileInfoQuery.Exec(); err != nil {
+			return err
+		}
 	}
 
 	deleteQuery := s.getQueryBuilder(db).

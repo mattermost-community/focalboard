@@ -3,7 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
-	"path/filepath"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -303,6 +303,14 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	return a.DeleteBlockAndNotify(blockID, modifiedBy, false)
 }
 
+func retriveFileIDFromBlockFieldStorage(id string) string {
+	parts := strings.Split(id, ".")
+	if len(parts) < 1 {
+		return ""
+	}
+	return parts[0][1:]
+}
+
 func (a *App) DeleteBlockAndNotify(blockID string, modifiedBy string, disableNotify bool) error {
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
@@ -322,20 +330,6 @@ func (a *App) DeleteBlockAndNotify(blockID string, modifiedBy string, disableNot
 	err = a.store.DeleteBlock(blockID, modifiedBy)
 	if err != nil {
 		return err
-	}
-
-	if block.Type == model.TypeImage {
-		fileName, fileIDExists := block.Fields["fileId"]
-		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
-			filePath := filepath.Join(block.BoardID, fileName)
-			err = a.filesBackend.RemoveFile(filePath)
-
-			if err != nil {
-				a.logger.Error("Error deleting image file",
-					mlog.String("FilePath", filePath),
-					mlog.Err(err))
-			}
-		}
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
