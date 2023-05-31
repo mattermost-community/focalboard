@@ -12,6 +12,7 @@ var (
 	PermissionCreatePrivateChannel = mmModel.PermissionCreatePrivateChannel
 
 	PermissionCreatePost            = mmModel.PermissionCreatePost
+	PermissionManageTeam            = mmModel.PermissionManageTeam
 	PermissionManageBoardType       = &mmModel.Permission{Id: "manage_board_type", Name: "", Description: "", Scope: ""}
 	PermissionDeleteBoard           = &mmModel.Permission{Id: "delete_board", Name: "", Description: "", Scope: ""}
 	PermissionViewBoard             = &mmModel.Permission{Id: "view_board", Name: "", Description: "", Scope: ""}
