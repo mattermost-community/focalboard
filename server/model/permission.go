@@ -6,6 +6,7 @@ import (
 
 var (
 	PermissionViewTeam              = mmModel.PermissionViewTeam
+	PermissionCreatePost            = mmModel.PermissionCreatePost
 	PermissionReadChannel           = mmModel.PermissionReadChannel
 	PermissionViewMembers           = mmModel.PermissionViewMembers
 	PermissionCreatePublicChannel   = mmModel.PermissionCreatePublicChannel
