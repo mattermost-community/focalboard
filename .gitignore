@@ -46,6 +46,7 @@ build/Release
 node_modules
 dist
 pack
+package
 bin
 debug
 __debug_bin

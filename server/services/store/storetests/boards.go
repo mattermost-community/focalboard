@@ -778,6 +778,9 @@ func testDeleteMember(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		initialMemberHistory := len(memberHistory)
 
+		// wait to avoid hitting pk uniqueness constraint in history
+		time.Sleep(1 * time.Millisecond)
+
 		require.NoError(t, store.DeleteMember(boardID, userID))
 
 		rbm, err := store.GetMemberForBoard(boardID, userID)

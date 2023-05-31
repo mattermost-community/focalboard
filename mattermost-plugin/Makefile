@@ -60,9 +60,6 @@ all: check-style test dist
 apply:
 	./build/bin/manifest apply
 
-setup-go-work: ## Sets up a go.work file
-	cd ..; go run ./build/gowork/main.go
-
 ## Runs eslint and golangci-lint
 .PHONY: check-style
 check-style: webapp/node_modules
@@ -83,7 +80,7 @@ ifneq ($(HAS_SERVER),)
 	golangci-lint run ./...
 endif
 
-templates-archive: setup-go-work ## Build templates archive file
+templates-archive: ## Build templates archive file
 	cd ../server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
 
 ## Builds the server, if it exists, for all supported architectures.
@@ -173,14 +170,6 @@ endif
 .PHONY: deploy-from-watch
 deploy-from-watch: bundle
 	./build/bin/pluginctl deploy $(PLUGIN_ID) dist/$(BUNDLE_NAME)
-
-.PHONY: build-product
-build-product: apply
-	cd webapp && npm run build:product
-
-.PHONY: watch-product
-watch-product: apply
-	cd webapp && npm run start:product
 
 ## Setup dlv for attaching, identifying the plugin PID for other targets.
 .PHONY: setup-attach

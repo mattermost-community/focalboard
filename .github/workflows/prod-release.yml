@@ -16,21 +16,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
@@ -60,11 +45,11 @@ jobs:
     - name: apt-get update
       run: sudo apt-get update
 
-    - name: apt-get install libgtk-3-dev
-      run: sudo apt-get install libgtk-3-dev
+    - name: apt-get install -y libgtk-3-dev
+      run: sudo apt-get install -y libgtk-3-dev
 
-    - name: apt-get install libwebkit2gtk-4.0-dev
-      run: sudo apt-get install libwebkit2gtk-4.0-dev
+    - name: apt-get install -y libwebkit2gtk-4.0-dev
+      run: sudo apt-get install -y libwebkit2gtk-4.0-dev
 
     - name: Build Linux server and app
       run: cd focalboard; make server-linux-package linux-app
@@ -92,21 +77,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
@@ -151,21 +121,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
@@ -223,21 +178,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
