@@ -5,11 +5,13 @@ import (
 )
 
 var (
-	PermissionViewTeam              = mmModel.PermissionViewTeam
-	PermissionReadChannel           = mmModel.PermissionReadChannel
-	PermissionViewMembers           = mmModel.PermissionViewMembers
-	PermissionCreatePublicChannel   = mmModel.PermissionCreatePublicChannel
-	PermissionCreatePrivateChannel  = mmModel.PermissionCreatePrivateChannel
+	PermissionViewTeam             = mmModel.PermissionViewTeam
+	PermissionReadChannel          = mmModel.PermissionReadChannel
+	PermissionViewMembers          = mmModel.PermissionViewMembers
+	PermissionCreatePublicChannel  = mmModel.PermissionCreatePublicChannel
+	PermissionCreatePrivateChannel = mmModel.PermissionCreatePrivateChannel
+
+	PermissionCreatePost            = mmModel.PermissionCreatePost
 	PermissionManageBoardType       = &mmModel.Permission{Id: "manage_board_type", Name: "", Description: "", Scope: ""}
 	PermissionDeleteBoard           = &mmModel.Permission{Id: "delete_board", Name: "", Description: "", Scope: ""}
 	PermissionViewBoard             = &mmModel.Permission{Id: "view_board", Name: "", Description: "", Scope: ""}

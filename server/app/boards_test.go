@@ -413,7 +413,6 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil).Times(1)
 
-		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(false).Times(1)
 		_, err := th.App.PatchBoard(patch, boardID, userID)
 		require.Error(t, err)
 	})
@@ -434,8 +433,6 @@ func TestPatchBoard(t *testing.T) {
 			ID:     boardID,
 			TeamID: teamID,
 		}, nil).Times(2)
-
-		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(true).Times(1)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -478,9 +475,6 @@ func TestPatchBoard(t *testing.T) {
 			ChannelID:  channelID,
 		}, nil).Times(2)
 
-		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(false).Times(1)
-
-		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
 		// Should call GetMembersForBoard 2 times
 		// for WS BroadcastBoardChange
 		// for AddTeamMembers check
