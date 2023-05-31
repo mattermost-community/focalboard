@@ -2,18 +2,18 @@ name: golangci-lint
 
 on:
   push:
-    branches: [ main, release-** ]
+    branches: [main, release-**]
   pull_request:
-    branches: [ main, release-** ]
+    branches: [main, release-**]
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
- EXCLUDE_ENTERPRISE: true
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  EXCLUDE_ENTERPRISE: true
 
 jobs:
   down-migrations:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,7 +26,7 @@ jobs:
 
   golangci:
     name: plugin
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/setup-go@v3
         with:
@@ -48,7 +48,7 @@ jobs:
           repository: "mattermost/mattermost-server"
           fetch-depth: "20"
           path: "mattermost-server"
-          ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
+          ref: "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
       - name: lint

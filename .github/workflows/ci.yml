@@ -3,19 +3,18 @@ name: Check-in tests
 on:
   push:
     branches:
-      - 'main'
-      - 'releases-**'
+      - "main"
+      - "releases-**"
   pull_request:
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
- EXCLUDE_ENTERPRISE: true
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  EXCLUDE_ENTERPRISE: true
 
 jobs:
-
   ci-ubuntu-server:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     strategy:
       matrix:
@@ -26,84 +25,84 @@ jobs:
           - postgres
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18.1
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: "focalboard"
+      - id: "mattermostServer"
+        uses: actions/checkout@v3
+        continue-on-error: true
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: ${{ env.BRANCH_NAME }}
+      - uses: actions/checkout@v3
+        if: steps.mattermostServer.outcome == 'failure'
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.1
 
-    - name: "Test server: ${{matrix['db']}}"
-      run: cd focalboard; make server-test-${{matrix['db']}}
+      - name: "Test server: ${{matrix['db']}}"
+        run: cd focalboard; make server-test-${{matrix['db']}}
 
   ci-ubuntu-webapp:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
-    - name: npm ci
-      run: |
-        cd focalboard/webapp && npm ci && cd -
-        cd focalboard/mattermost-plugin/webapp && npm ci
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: "focalboard"
+      - id: "mattermostServer"
+        uses: actions/checkout@v3
+        continue-on-error: true
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: ${{ env.BRANCH_NAME }}
+      - uses: actions/checkout@v3
+        if: steps.mattermostServer.outcome == 'failure'
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
+      - name: npm ci
+        run: |
+          cd focalboard/webapp && npm ci && cd -
+          cd focalboard/mattermost-plugin/webapp && npm ci
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18.1
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.1
 
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.1.0
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.1.0
 
-    - name: Build Linux server
-      run: cd focalboard; make server-linux-package
+      - name: Build Linux server
+        run: cd focalboard; make server-linux-package
 
-    - name: Copy server binary for Cypress
-      run: cp focalboard/bin/linux/focalboard-server focalboard/bin/
+      - name: Copy server binary for Cypress
+        run: cp focalboard/bin/linux/focalboard-server focalboard/bin/
 
-    - name: Upload server package
-      uses: actions/upload-artifact@v1
-      with:
-        name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
+      - name: Upload server package
+        uses: actions/upload-artifact@v1
+        with:
+          name: focalboard-server-linux-amd64.tar.gz
+          path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
 
-    - name: Lint & test webapp
-      run: cd focalboard; make webapp-ci
+      - name: Lint & test webapp
+        run: cd focalboard; make webapp-ci
 
   ci-windows-server:
     runs-on: windows-2022
@@ -114,33 +113,33 @@ jobs:
           - sqlite
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: "focalboard"
+      - id: "mattermostServer"
+        uses: actions/checkout@v3
+        continue-on-error: true
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: ${{ env.BRANCH_NAME }}
+      - uses: actions/checkout@v3
+        if: steps.mattermostServer.outcome == 'failure'
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18.1
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.1
 
-    - name: "Test server (minimum): ${{matrix['db']}}"
-      run: cd focalboard; make server-test-mini-${{matrix['db']}}
+      - name: "Test server (minimum): ${{matrix['db']}}"
+        run: cd focalboard; make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
     runs-on: macos-11
@@ -151,30 +150,30 @@ jobs:
           - sqlite
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20"
-        path: "mattermost-server"
-        ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: "focalboard"
+      - id: "mattermostServer"
+        uses: actions/checkout@v3
+        continue-on-error: true
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: ${{ env.BRANCH_NAME }}
+      - uses: actions/checkout@v3
+        if: steps.mattermostServer.outcome == 'failure'
+        with:
+          repository: "mattermost/mattermost-server"
+          fetch-depth: "20"
+          path: "mattermost-server"
+          ref: "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18.1
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18.1
 
-    - name: "Test server (minimum): ${{matrix['db']}}"
-      run: cd focalboard; make server-test-mini-${{matrix['db']}}
+      - name: "Test server (minimum): ${{matrix['db']}}"
+        run: cd focalboard; make server-test-mini-${{matrix['db']}}
