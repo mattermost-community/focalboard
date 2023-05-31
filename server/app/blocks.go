@@ -3,11 +3,8 @@ package app
 import (
 	"errors"
 	"fmt"
-<<<<<<< HEAD
 	"path/filepath"
 	"strings"
-=======
->>>>>>> c3b1c82b (Fix cards not deleting properly. (#4746))
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
