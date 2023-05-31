@@ -10,6 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
+	mmpermissionsMocks "github.com/mattermost/focalboard/server/services/permissions/mmpermissions/mocks"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
@@ -23,6 +24,7 @@ type TestHelper struct {
 	Store        *mockstore.MockStore
 	FilesBackend *mocks.FileBackend
 	logger       mlog.LoggerIFace
+	API          *mmpermissionsMocks.MockAPI
 }
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
@@ -37,6 +39,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
+	mockAPI := mmpermissionsMocks.NewMockAPI(ctrl)
 	appServices := Services{
 		Auth:             auth,
 		Store:            store,
@@ -60,5 +63,6 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 		Store:        store,
 		FilesBackend: filesBackend,
 		logger:       logger,
+		API:          mockAPI,
 	}, tearDown
 }
