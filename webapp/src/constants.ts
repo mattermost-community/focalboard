@@ -111,12 +111,12 @@ class Constants {
             displayName: 'Pусский',
         },
         {
-            code: 'zh-cn',
-            name: 'chinese',
+            code: 'zh-tw',
+            name: 'traditional-chinese',
             displayName: '中文 (繁體)',
         },
         {
-            code: 'zh-tw',
+            code: 'zh-cn',
             name: 'simplified-chinese',
             displayName: '中文 (简体)',
         },
