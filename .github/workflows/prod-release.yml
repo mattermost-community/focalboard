@@ -20,16 +20,16 @@ jobs:
       uses: actions/checkout@v3
       continue-on-error: true
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
@@ -96,16 +96,16 @@ jobs:
       uses: actions/checkout@v3
       continue-on-error: true
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
@@ -155,16 +155,16 @@ jobs:
       uses: actions/checkout@v3
       continue-on-error: true
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
@@ -227,16 +227,16 @@ jobs:
       uses: actions/checkout@v3
       continue-on-error: true
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
-        repository: "mattermost/mattermost-server"
+        repository: "mattermost/mattermost"
         fetch-depth: "20"
-        path: "mattermost-server"
+        path: "mattermost"
         ref : "b61c096497ac1f22f64b77afe58d0dd5a72b38f1"
 
     - name: Replace token 1 server
