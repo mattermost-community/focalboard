@@ -10,7 +10,7 @@ endif
 
 MM_SERVER_PATH ?= $(MM_SERVER_PATH:)
 ifeq ($(MM_SERVER_PATH),)
-	MM_SERVER_PATH := ../../mattermost-server
+	MM_SERVER_PATH := ../../mattermost
 endif
 
 
