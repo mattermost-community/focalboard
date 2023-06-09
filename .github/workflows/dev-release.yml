@@ -14,7 +14,7 @@ env:
 jobs:
 
   ubuntu:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
       with:
@@ -172,7 +172,7 @@ jobs:
         path: ${{ github.workspace }}/focalboard/win-wpf/dist/focalboard-win.zip
 
   plugin:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v3
