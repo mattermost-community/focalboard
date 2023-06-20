@@ -15,6 +15,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const emptyString = "empty"
+
 var errEmptyFilename = errors.New("IsFileArchived: empty filename not allowed")
 var ErrFileNotFound = errors.New("file not found")
 
@@ -102,7 +104,7 @@ func (a *App) GetFilePath(teamID, rootID, fileName string) (*mm_model.FileInfo, 
 
 	var filePath string
 
-	if fileInfo != nil && fileInfo.Path != "" {
+	if fileInfo != nil && fileInfo.Path != "" && fileInfo.Path != emptyString {
 		filePath = fileInfo.Path
 	} else {
 		filePath = filepath.Join(teamID, rootID, fileName)
