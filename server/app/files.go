@@ -97,7 +97,7 @@ func (a *App) GetFile(teamID, rootID, fileName string) (*mmModel.FileInfo, files
 
 	var filePath string
 
-	if fileInfo != nil && fileInfo.Path != "" {
+	if fileInfo != nil && fileInfo.Path != "" && fileInfo.Path != emptyString {
 		filePath = fileInfo.Path
 	} else {
 		filePath = filepath.Join(teamID, rootID, fileName)
