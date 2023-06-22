@@ -20,12 +20,14 @@ import (
 )
 
 const (
-	archiveVersion  = 2
-	legacyFileBegin = "{\"version\":1"
+	archiveVersion    = 2
+	legacyFileBegin   = "{\"version\":1"
+	importMaxFileSize = 1024 * 1024 * 70
 )
 
 var (
-	errBlockIsNotABoard = errors.New("block is not a board")
+	errBlockIsNotABoard  = errors.New("block is not a board")
+	errSizeLimitExceeded = errors.New("size limit exceeded")
 )
 
 // ImportArchive imports an archive containing zero or more boards, plus all
@@ -129,7 +131,8 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		Blocks: make([]*model.Block, 0, 10),
 		Boards: make([]*model.Board, 0, 10),
 	}
-	lineReader := bufio.NewReader(r)
+	lineReader := &io.LimitedReader{R: r, N: importMaxFileSize + 1}
+	scanner := bufio.NewScanner(lineReader)
 
 	userID := opt.ModifiedBy
 	if userID == model.SingleUser {
@@ -141,8 +144,12 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 
 	lineNum := 1
 	firstLine := true
-	for {
-		line, errRead := readLine(lineReader)
+	for scanner.Scan() {
+		if lineReader.N <= 0 {
+			return "", fmt.Errorf("error parsing archive line %d: %w", lineNum, errSizeLimitExceeded)
+		}
+
+		line := bytes.TrimSpace(scanner.Bytes())
 		if len(line) != 0 {
 			var skip bool
 			if firstLine {
@@ -209,14 +216,10 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 				firstLine = false
 			}
 		}
+	}
 
-		if errRead != nil {
-			if errors.Is(errRead, io.EOF) {
-				break
-			}
-			return "", fmt.Errorf("error reading archive line %d: %w", lineNum, errRead)
-		}
-		lineNum++
+	if errRead := scanner.Err(); errRead != nil {
+		return "", fmt.Errorf("error reading archive line %d: %w", lineNum, errRead)
 	}
 
 	// loop to remove the people how are not part of the team and system
@@ -437,10 +440,4 @@ func parseVersionFile(r io.Reader) (int, error) {
 		return 0, fmt.Errorf("cannot parse version.json: %w", err)
 	}
 	return header.Version, nil
-}
-
-func readLine(r *bufio.Reader) ([]byte, error) {
-	line, err := r.ReadBytes('\n')
-	line = bytes.TrimSpace(line)
-	return line, err
 }
