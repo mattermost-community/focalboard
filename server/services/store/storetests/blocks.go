@@ -148,11 +148,28 @@ func testInsertBlock(t *testing.T, store store.Store) {
 			ID:         "id-test",
 			BoardID:    boardID,
 			ModifiedBy: userID,
-			Title: strings.Repeat("A", model.BlockTitleMaxRunes + 1),
+			Title:      strings.Repeat("A", model.BlockTitleMaxRunes+1),
 		}
 
 		err := store.InsertBlock(block, "user-id-1")
 		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
+	})
+
+	t.Run("block with aggregated fields size too large", func(t *testing.T) {
+		block := &model.Block{
+			ID:         "id-test",
+			BoardID:    boardID,
+			ModifiedBy: userID,
+			Fields: map[string]any{
+				"one":   strings.Repeat("1", model.BlockFieldsMaxRunes/4),
+				"two":   strings.Repeat("2", model.BlockFieldsMaxRunes/4),
+				"three": strings.Repeat("3", model.BlockFieldsMaxRunes/4),
+				"four":  strings.Repeat("4", model.BlockFieldsMaxRunes/4),
+			},
+		}
+
+		err := store.InsertBlock(block, "user-id-2")
+		require.ErrorIs(t, err, model.ErrBlockFieldsSizeLimitExceeded)
 	})
 
 	t.Run("insert new block", func(t *testing.T) {

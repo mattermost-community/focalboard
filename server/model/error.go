@@ -167,7 +167,8 @@ func (ni *ErrNotImplemented) Error() string {
 // - model.ErrInvalidCategory
 // - model.ErrBoardMemberIsLastAdmin
 // - model.ErrBoardIDMismatch
-// - model.ErrBlockTitleSizeLimitExceeded.
+// - model.ErrBlockTitleSizeLimitExceeded
+// - model.ErrBlockFieldsSizeLimitExceeded.
 func IsErrBadRequest(err error) bool {
 	if err == nil {
 		return false
@@ -207,7 +208,12 @@ func IsErrBadRequest(err error) bool {
 	}
 
 	// check if this is a model.ErrBlockTitleSizeLimitExceeded
-	return errors.Is(err, ErrBlockTitleSizeLimitExceeded)
+	if errors.Is(err, ErrBlockTitleSizeLimitExceeded) {
+		return true
+	}
+
+	// check if this is a model.ErrBlockTitleSizeLimitExceeded
+	return errors.Is(err, ErrBlockFieldsSizeLimitExceeded)
 }
 
 // IsErrUnauthorized returns true if `err` is or wraps one of:
