@@ -3,6 +3,7 @@ package storetests
 import (
 	"math"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -140,6 +141,18 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		blocks, err := store.GetBlocksForBoard(boardID)
 		require.NoError(t, err)
 		require.Len(t, blocks, initialCount+1)
+	})
+
+	t.Run("block with title too large", func(t *testing.T) {
+		block := &model.Block{
+			ID:         "id-test",
+			BoardID:    boardID,
+			ModifiedBy: userID,
+			Title: strings.Repeat("A", model.BlockTitleMaxRunes + 1),
+		}
+
+		err := store.InsertBlock(block, "user-id-1")
+		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
 	})
 
 	t.Run("insert new block", func(t *testing.T) {

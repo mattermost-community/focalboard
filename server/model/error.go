@@ -166,7 +166,8 @@ func (ni *ErrNotImplemented) Error() string {
 // - model.ErrAuthParam
 // - model.ErrInvalidCategory
 // - model.ErrBoardMemberIsLastAdmin
-// - model.ErrBoardIDMismatch.
+// - model.ErrBoardIDMismatch
+// - model.ErrBlockTitleSizeLimitExceeded.
 func IsErrBadRequest(err error) bool {
 	if err == nil {
 		return false
@@ -201,7 +202,12 @@ func IsErrBadRequest(err error) bool {
 	}
 
 	// check if this is a model.ErrBoardMemberIsLastAdmin
-	return errors.Is(err, ErrBoardIDMismatch)
+	if errors.Is(err, ErrBoardIDMismatch) {
+		return true
+	}
+
+	// check if this is a model.ErrBlockTitleSizeLimitExceeded
+	return errors.Is(err, ErrBlockTitleSizeLimitExceeded)
 }
 
 // IsErrUnauthorized returns true if `err` is or wraps one of:

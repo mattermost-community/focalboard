@@ -2,11 +2,14 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"strconv"
 
 	"github.com/mattermost/focalboard/server/services/audit"
 )
+
+var ErrBlockTitleSizeLimitExceeded = errors.New("block title size limit exceeded")
 
 // Block is the basic data unit
 // swagger:model

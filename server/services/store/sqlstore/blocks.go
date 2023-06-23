@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -242,6 +243,10 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]*model.Block, error) {
 func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID string) error {
 	if block.BoardID == "" {
 		return ErrEmptyBoardID{}
+	}
+
+	if utf8.RuneCountInString(block.Title) > model.BlockTitleMaxRunes {
+		return model.ErrBlockTitleSizeLimitExceeded
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
