@@ -3,6 +3,7 @@ package storetests
 import (
 	"math"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -142,6 +143,35 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		require.Len(t, blocks, initialCount+1)
 	})
 
+	t.Run("block with title too large", func(t *testing.T) {
+		block := &model.Block{
+			ID:         "id-test",
+			BoardID:    boardID,
+			ModifiedBy: userID,
+			Title:      strings.Repeat("A", model.BlockTitleMaxRunes+1),
+		}
+
+		err := store.InsertBlock(block, "user-id-1")
+		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
+	})
+
+	t.Run("block with aggregated fields size too large", func(t *testing.T) {
+		block := &model.Block{
+			ID:         "id-test",
+			BoardID:    boardID,
+			ModifiedBy: userID,
+			Fields: map[string]any{
+				"one":   strings.Repeat("1", model.BlockFieldsMaxRunes/4),
+				"two":   strings.Repeat("2", model.BlockFieldsMaxRunes/4),
+				"three": strings.Repeat("3", model.BlockFieldsMaxRunes/4),
+				"four":  strings.Repeat("4", model.BlockFieldsMaxRunes/4),
+			},
+		}
+
+		err := store.InsertBlock(block, "user-id-2")
+		require.ErrorIs(t, err, model.ErrBlockFieldsSizeLimitExceeded)
+	})
+
 	t.Run("insert new block", func(t *testing.T) {
 		block := &model.Block{
 			BoardID: testBoardID,
@@ -182,6 +212,71 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		// created by is not altered for existing blocks
 		require.Equal(t, "user-id-3", newBlock.CreatedBy)
 		require.Equal(t, "New Title", newBlock.Title)
+	})
+
+	t.Run("update existing block with title too large", func(t *testing.T) {
+		block := &model.Block{
+			ID:        "id-3",
+			BoardID:   "board-id-1",
+			CreatedBy: "user-id-3",
+			Title:     "New Title",
+		}
+
+		// inserting
+		err := store.InsertBlock(block, "user-id-3")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-3", block.CreatedBy)
+
+		// hack to avoid multiple, quick updates to a card
+		// violating block_history composite primary key constraint
+		time.Sleep(1 * time.Millisecond)
+
+		// updating
+		newBlock := &model.Block{
+			ID:        "id-3",
+			BoardID:   "board-id-1",
+			CreatedBy: "user-id-3",
+			Title:     strings.Repeat("A", model.BlockTitleMaxRunes+1),
+		}
+		err = store.InsertBlock(newBlock, "user-id-3")
+		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
+	})
+
+	t.Run("update existing block with aggregated fields size too large", func(t *testing.T) {
+		block := &model.Block{
+			ID:        "id-3",
+			BoardID:   "board-id-1",
+			CreatedBy: "user-id-3",
+			Title:     "New Title",
+		}
+
+		// inserting
+		err := store.InsertBlock(block, "user-id-3")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-3", block.CreatedBy)
+
+		// hack to avoid multiple, quick updates to a card
+		// violating block_history composite primary key constraint
+		time.Sleep(1 * time.Millisecond)
+
+		// updating
+		newBlock := &model.Block{
+			ID:        "id-3",
+			BoardID:   "board-id-1",
+			CreatedBy: "user-id-3",
+			Fields: map[string]any{
+				"one":   strings.Repeat("1", model.BlockFieldsMaxRunes/4),
+				"two":   strings.Repeat("2", model.BlockFieldsMaxRunes/4),
+				"three": strings.Repeat("3", model.BlockFieldsMaxRunes/4),
+				"four":  strings.Repeat("4", model.BlockFieldsMaxRunes/4),
+			},
+		}
+		err = store.InsertBlock(newBlock, "user-id-3")
+		require.ErrorIs(t, err, model.ErrBlockFieldsSizeLimitExceeded)
 	})
 
 	createdAt, err := time.Parse(time.RFC822, "01 Jan 90 01:00 IST")
