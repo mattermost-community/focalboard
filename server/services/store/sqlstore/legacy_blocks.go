@@ -162,7 +162,7 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID 
 //nolint:unused
 func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block *model.Block, userID string) error {
 	if block.BoardID == "" {
-		return ErrEmptyBoardID{}
+		return model.ErrBlockEmptyBoardID
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
