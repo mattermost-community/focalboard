@@ -31,6 +31,8 @@ func TestErrorResponse(t *testing.T) {
 		{"ErrInvalidCategory", model.NewErrInvalidCategory("open"), http.StatusBadRequest, "open"},
 		{"ErrBoardMemberIsLastAdmin", model.ErrBoardMemberIsLastAdmin, http.StatusBadRequest, "no admins"},
 		{"ErrBoardIDMismatch", model.ErrBoardIDMismatch, http.StatusBadRequest, "Board IDs do not match"},
+		{"ErrBlockTitleSizeLimitExceeded", model.ErrBlockTitleSizeLimitExceeded, http.StatusBadRequest, "block title size limit exceeded"},
+		{"ErrBlockFieldsSizeLimitExceeded", model.ErrBlockFieldsSizeLimitExceeded, http.StatusBadRequest, "block fields size limit exceeded"},
 
 		// unauthorized
 		{"ErrUnauthorized", model.NewErrUnauthorized("not enough permissions"), http.StatusUnauthorized, "not enough permissions"},
