@@ -180,14 +180,14 @@ func IsErrBadRequest(err error) bool {
 		return true
 	}
 
-	// check if this is a model.ErrAuthParam
-	var ap *ErrAuthParam
-	if errors.As(err, &ap) {
+	// check if this is a model.ErrViewsLimitReached
+	if errors.Is(err, ErrViewsLimitReached) {
 		return true
 	}
 
-	// check if this is a model.ErrViewsLimitReached
-	if errors.Is(err, ErrViewsLimitReached) {
+	// check if this is a model.ErrAuthParam
+	var ap *ErrAuthParam
+	if errors.As(err, &ap) {
 		return true
 	}
 
@@ -197,12 +197,12 @@ func IsErrBadRequest(err error) bool {
 		return true
 	}
 
-	// check if this is a model.ErrBoardIDMismatch
+	// check if this is a model.ErrBoardMemberIsLastAdmin
 	if errors.Is(err, ErrBoardMemberIsLastAdmin) {
 		return true
 	}
 
-	// check if this is a model.ErrBoardMemberIsLastAdmin
+	// check if this is a model.ErrBoardIDMismatch
 	if errors.Is(err, ErrBoardIDMismatch) {
 		return true
 	}
