@@ -2,10 +2,24 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"strconv"
+	"unicode/utf8"
 
 	"github.com/mattermost/focalboard/server/services/audit"
+)
+
+const (
+	BlockTitleMaxBytes  = 65535                  // Maximum size of a TEXT column in MySQL
+	BlockTitleMaxRunes  = BlockTitleMaxBytes / 4 // Assume a worst-case representation
+	BlockFieldsMaxRunes = 800000
+)
+
+var (
+	ErrBlockEmptyBoardID            = errors.New("boardID is empty")
+	ErrBlockTitleSizeLimitExceeded  = errors.New("block title size limit exceeded")
+	ErrBlockFieldsSizeLimitExceeded = errors.New("block fields size limit exceeded")
 )
 
 // Block is the basic data unit
@@ -122,6 +136,29 @@ func BlocksFromJSON(data io.Reader) []*Block {
 	var blocks []*Block
 	_ = json.NewDecoder(data).Decode(&blocks)
 	return blocks
+}
+
+// IsValid checks the block for errors before inserting, and makes
+// sure it complies with the requirements of a valid block.
+func (b *Block) IsValid() error {
+	if b.BoardID == "" {
+		return ErrBlockEmptyBoardID
+	}
+
+	if utf8.RuneCountInString(b.Title) > BlockTitleMaxRunes {
+		return ErrBlockTitleSizeLimitExceeded
+	}
+
+	fieldsJSON, err := json.Marshal(b.Fields)
+	if err != nil {
+		return err
+	}
+
+	if utf8.RuneCountInString(string(fieldsJSON)) > BlockFieldsMaxRunes {
+		return ErrBlockFieldsSizeLimitExceeded
+	}
+
+	return nil
 }
 
 // LogClone implements the `mlog.LogCloner` interface to provide a subset of Block fields for logging.
