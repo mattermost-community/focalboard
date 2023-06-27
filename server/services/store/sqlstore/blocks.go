@@ -20,18 +20,6 @@ const (
 	descClause     = " DESC "
 )
 
-type ErrEmptyBoardID struct{}
-
-func (re ErrEmptyBoardID) Error() string {
-	return "boardID is empty"
-}
-
-type ErrLimitExceeded struct{ max int }
-
-func (le ErrLimitExceeded) Error() string {
-	return fmt.Sprintf("limit exceeded (max=%d)", le.max)
-}
-
 func (s *SQLStore) timestampToCharField(name string, as string) string {
 	switch s.dbType {
 	case model.MysqlDBType:
@@ -240,8 +228,8 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]*model.Block, error) {
 }
 
 func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID string) error {
-	if block.BoardID == "" {
-		return ErrEmptyBoardID{}
+	if err := block.IsValid(); err != nil {
+		return fmt.Errorf("error validating block %s: %w", block.ID, err)
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
@@ -348,8 +336,8 @@ func (s *SQLStore) patchBlocks(db sq.BaseRunner, blockPatches *model.BlockPatchB
 
 func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []*model.Block, userID string) error {
 	for _, block := range blocks {
-		if block.BoardID == "" {
-			return ErrEmptyBoardID{}
+		if err := block.IsValid(); err != nil {
+			return fmt.Errorf("error validating block %s: %w", block.ID, err)
 		}
 	}
 	for i := range blocks {
@@ -1018,7 +1006,7 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 
 func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, parentID string, modifiedBy string) error {
 	if boardID == "" {
-		return ErrEmptyBoardID{}
+		return model.ErrBlockEmptyBoardID
 	}
 
 	where := fmt.Sprintf("board_id='%s'", boardID)
