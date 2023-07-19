@@ -9,6 +9,7 @@ import (
 // release at the front of the list.
 var versions = []string{
 	"7.10.5",
+	"7.10.4",
 	"7.10.3",
 	"7.10.2",
 	"7.10.1",
