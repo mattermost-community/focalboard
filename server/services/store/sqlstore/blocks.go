@@ -956,6 +956,10 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"board_id": boardID})
 
+	if parentID != "" {
+		fileDeleteQuery = fileDeleteQuery.Where(sq.Eq{"parent_id": parentID})
+	}
+
 	rows, err := fileDeleteQuery.Query()
 	if err != nil {
 		return err
