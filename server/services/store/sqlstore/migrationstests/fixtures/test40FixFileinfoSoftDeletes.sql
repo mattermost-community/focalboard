@@ -6,7 +6,7 @@ VALUES
 ('image-3-3', 'board-1', '', 'user-id', 'user-id', 'image', 'image-3-3', 123, 123, 0, '{"fileId":"7fileinfo-3-3.png"}');
 
 INSERT INTO FileInfo
-(id, creatorid, createat, updateat, deleteat)
+(Id, CreatorId, CreateAt, UpdateAt, DeleteAt)
 VALUES
 ('fileinfo-1', 'boards', 1, 1, 1000),
 ('fileinfo-2-1', 'boards', 1, 1, 2000),
