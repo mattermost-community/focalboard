@@ -8,7 +8,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
-	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/stretchr/testify/require"
@@ -19,13 +18,7 @@ var errTest = errors.New("failed to patch bot")
 func TestGetBoardsBotID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	servicesAPI := mockservicesapi.NewMockServicesAPI(ctrl)
-	mmconfig := servicesAPI.GetConfig()
-	cfg := &config.Configuration{
-		ShowEmailAddress: mmconfig.PrivacySettings.ShowEmailAddress != nil,
-		ShowFullName:     mmconfig.PrivacySettings.ShowFullName != nil,
-	}
-
-	mmAuthLayer, _ := New("test", nil, nil, cfg, mlog.CreateConsoleTestLogger(true, mlog.LvlError), servicesAPI, "")
+	mmAuthLayer, _ := New("test", nil, nil, mlog.CreateConsoleTestLogger(true, mlog.LvlError), servicesAPI, "")
 
 	servicesAPI.EXPECT().EnsureBot(model.FocalboardBot).Return("", errTest)
 	_, err := mmAuthLayer.getBoardsBotID()

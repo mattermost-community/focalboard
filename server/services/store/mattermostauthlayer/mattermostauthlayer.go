@@ -13,7 +13,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -48,7 +47,6 @@ type servicesAPI interface {
 type MattermostAuthLayer struct {
 	store.Store
 	dbType      string
-	config      *config.Configuration
 	mmDB        *sql.DB
 	logger      mlog.LoggerIFace
 	servicesAPI servicesAPI
@@ -56,11 +54,10 @@ type MattermostAuthLayer struct {
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, cfg *config.Configuration, logger mlog.LoggerIFace, api servicesAPI, tablePrefix string) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger mlog.LoggerIFace, api servicesAPI, tablePrefix string) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:       store,
 		dbType:      dbType,
-		config:      cfg,
 		mmDB:        db,
 		logger:      logger,
 		servicesAPI: api,
@@ -97,7 +94,7 @@ func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
 		return nil, err
 	}
 
-	user := s.mmUserToFbUser(mmuser)
+	user := mmUserToFbUser(mmuser)
 	return &user, nil
 }
 
@@ -106,7 +103,7 @@ func (s *MattermostAuthLayer) GetUserByEmail(email string) (*model.User, error) 
 	if err != nil {
 		return nil, err
 	}
-	user := s.mmUserToFbUser(mmuser)
+	user := mmUserToFbUser(mmuser)
 	return &user, nil
 }
 
@@ -115,7 +112,7 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 	if err != nil {
 		return nil, err
 	}
-	user := s.mmUserToFbUser(mmuser)
+	user := mmUserToFbUser(mmuser)
 	return &user, nil
 }
 
@@ -490,12 +487,12 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	return channel.Id, nil
 }
 
-func (s *MattermostAuthLayer) mmUserToFbUser(mmUser *mmModel.User) model.User {
+func mmUserToFbUser(mmUser *mmModel.User) model.User {
 	authData := ""
 	if mmUser.AuthData != nil {
 		authData = *mmUser.AuthData
 	}
-	user := model.User{
+	return model.User{
 		ID:          mmUser.Id,
 		Username:    mmUser.Username,
 		Email:       mmUser.Email,
@@ -513,12 +510,6 @@ func (s *MattermostAuthLayer) mmUserToFbUser(mmUser *mmModel.User) model.User {
 		IsGuest:     mmUser.IsGuest(),
 		Roles:       mmUser.Roles,
 	}
-
-	options := make(map[string]bool)
-	options["fullname"] = s.config.ShowFullName
-	options["email"] = s.config.ShowEmailAddress
-	user.Sanitize(options)
-	return user
 }
 
 func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {

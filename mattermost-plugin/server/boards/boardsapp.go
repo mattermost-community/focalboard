@@ -93,7 +93,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 		return nil, fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, cfg, logger, api, storeParams.TablePrefix)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, api, storeParams.TablePrefix)
 		if err2 != nil {
 			return nil, fmt.Errorf("error initializing the DB: %w", err2)
 		}
