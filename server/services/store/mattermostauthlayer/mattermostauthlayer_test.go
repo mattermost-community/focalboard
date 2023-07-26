@@ -18,7 +18,6 @@ var errTest = errors.New("failed to patch bot")
 func TestGetBoardsBotID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	servicesAPI := mockservicesapi.NewMockServicesAPI(ctrl)
-
 	mmAuthLayer, _ := New("test", nil, nil, mlog.CreateConsoleTestLogger(true, mlog.LvlError), servicesAPI, "")
 
 	servicesAPI.EXPECT().EnsureBot(model.FocalboardBot).Return("", errTest)
