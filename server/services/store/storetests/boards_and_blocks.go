@@ -2,6 +2,7 @@ package storetests
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -141,6 +142,30 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 		require.Empty(t, bab)
 		require.Empty(t, members)
 	})
+
+	t.Run("should apply block size limits", func(t *testing.T) {
+		// one of the blocks is invalid as it has a title too large
+		newBab := &model.BoardsAndBlocks{
+			Boards: []*model.Board{
+				{ID: "board-id-7", TeamID: teamID, Type: model.BoardTypeOpen},
+				{ID: "board-id-8", TeamID: teamID, Type: model.BoardTypePrivate},
+				{ID: "board-id-9", TeamID: teamID, Type: model.BoardTypeOpen},
+			},
+			Blocks: []*model.Block{
+				{ID: "block-id-5", BoardID: "board-id-7", Type: model.TypeCard},
+				{ID: "block-id-6", BoardID: "board-id-8", Type: model.TypeCard, Title: strings.Repeat("A", model.BlockTitleMaxRunes+1)},
+			},
+		}
+
+		bab, err := store.CreateBoardsAndBlocks(newBab, userID)
+		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
+		require.Nil(t, bab)
+
+		bab, members, err := store.CreateBoardsAndBlocksWithAdmin(newBab, userID)
+		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
+		require.Empty(t, bab)
+		require.Empty(t, members)
+	})
 }
 
 func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
@@ -190,11 +215,55 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 		require.Error(t, err)
 		require.Nil(t, bab)
 
-		// check that things have changed
+		// check that things have not changed
 		rBoard, err := store.GetBoard("board-id-1")
 		require.NoError(t, err)
 		require.Equal(t, initialTitle, rBoard.Title)
 
+		rBlock, err := store.GetBlock("block-id-1")
+		require.NoError(t, err)
+		require.Equal(t, initialTitle, rBlock.Title)
+	})
+
+	t.Run("should apply block size limits", func(t *testing.T) {
+		if store.DBType() == model.SqliteDBType {
+			t.Skip("No transactions support int sqlite")
+		}
+
+		initialTitle := "initial title"
+		newTitle := strings.Repeat("A", model.BlockTitleMaxRunes+1)
+
+		board := &model.Board{
+			ID:     "board-id-1",
+			Title:  initialTitle,
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		_, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+
+		block := &model.Block{
+			ID:      "block-id-1",
+			BoardID: "board-id-1",
+			Title:   initialTitle,
+		}
+		require.NoError(t, store.InsertBlock(block, userID))
+
+		// apply the patches
+		pbab := &model.PatchBoardsAndBlocks{
+			BlockIDs: []string{"block-id-1"},
+			BlockPatches: []*model.BlockPatch{
+				{Title: &newTitle},
+			},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		bab, err := store.PatchBoardsAndBlocks(pbab, userID)
+		require.ErrorIs(t, err, model.ErrBlockTitleSizeLimitExceeded)
+		require.Nil(t, bab)
+
+		// check that things have not changed
 		rBlock, err := store.GetBlock("block-id-1")
 		require.NoError(t, err)
 		require.Equal(t, initialTitle, rBlock.Title)

@@ -166,7 +166,9 @@ func (ni *ErrNotImplemented) Error() string {
 // - model.ErrAuthParam
 // - model.ErrInvalidCategory
 // - model.ErrBoardMemberIsLastAdmin
-// - model.ErrBoardIDMismatch.
+// - model.ErrBoardIDMismatch
+// - model.ErrBlockTitleSizeLimitExceeded
+// - model.ErrBlockFieldsSizeLimitExceeded.
 func IsErrBadRequest(err error) bool {
 	if err == nil {
 		return false
@@ -178,14 +180,14 @@ func IsErrBadRequest(err error) bool {
 		return true
 	}
 
-	// check if this is a model.ErrAuthParam
-	var ap *ErrAuthParam
-	if errors.As(err, &ap) {
+	// check if this is a model.ErrViewsLimitReached
+	if errors.Is(err, ErrViewsLimitReached) {
 		return true
 	}
 
-	// check if this is a model.ErrViewsLimitReached
-	if errors.Is(err, ErrViewsLimitReached) {
+	// check if this is a model.ErrAuthParam
+	var ap *ErrAuthParam
+	if errors.As(err, &ap) {
 		return true
 	}
 
@@ -195,13 +197,23 @@ func IsErrBadRequest(err error) bool {
 		return true
 	}
 
-	// check if this is a model.ErrBoardIDMismatch
+	// check if this is a model.ErrBoardMemberIsLastAdmin
 	if errors.Is(err, ErrBoardMemberIsLastAdmin) {
 		return true
 	}
 
-	// check if this is a model.ErrBoardMemberIsLastAdmin
-	return errors.Is(err, ErrBoardIDMismatch)
+	// check if this is a model.ErrBoardIDMismatch
+	if errors.Is(err, ErrBoardIDMismatch) {
+		return true
+	}
+
+	// check if this is a model.ErrBlockTitleSizeLimitExceeded
+	if errors.Is(err, ErrBlockTitleSizeLimitExceeded) {
+		return true
+	}
+
+	// check if this is a model.ErrBlockTitleSizeLimitExceeded
+	return errors.Is(err, ErrBlockFieldsSizeLimitExceeded)
 }
 
 // IsErrUnauthorized returns true if `err` is or wraps one of:
