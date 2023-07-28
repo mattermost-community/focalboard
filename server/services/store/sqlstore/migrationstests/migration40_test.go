@@ -10,9 +10,11 @@ func Test40FixFileinfoSoftDeletes(t *testing.T) {
 	th, tearDown := SetupPluginTestHelper(t)
 	defer tearDown()
 
-	th.f.MigrateToStep(39).
+	// Migrations are 38 and 39 for tests not to fail, as migration 39
+	// doesn't exists for this release
+	th.f.MigrateToStep(38).
 		ExecFile("./fixtures/test40FixFileinfoSoftDeletes.sql").
-		MigrateToStep(40)
+		MigrateToStep(39)
 
 	type FileInfo struct {
 		Id       string
