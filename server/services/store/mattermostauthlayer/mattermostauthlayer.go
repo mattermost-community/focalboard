@@ -93,6 +93,7 @@ func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	user := mmUserToFbUser(mmuser)
 	return &user, nil
 }
