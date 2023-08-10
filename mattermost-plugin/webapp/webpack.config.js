@@ -112,11 +112,19 @@ const config = {
                 exclude: [/node_modules/],
             },
             {
-                test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg|gif)$/,
+                test: /\.(png|eot|tiff|svg|ttf|jpg|gif)$/,
                 type: 'asset/resource',
                 generator: {
                     filename: '[name][ext]',
                     publicPath: TARGET_IS_PRODUCT ? undefined : '/static/',
+                }
+            },
+            {
+                test: /\.(woff2|woff)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: '[name][ext]',
+                    publicPath: TARGET_IS_PRODUCT ? undefined : '/plugins/focalboard/static/',
                 }
             },
         ],
