@@ -9,6 +9,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/utils"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 func (a *API) registerUsersRoutes(r *mux.Router) {
@@ -89,6 +91,18 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	isSystemAdmin := a.permissions.HasPermissionTo(session.UserID, mmModel.PermissionManageSystem)
+
+	for _, user := range users {
+		if user.ID == session.UserID {
+			user.Sanitize(map[string]bool{})
+		} else {
+			a.app.SanitizeProfile(user, isSystemAdmin)
+		}
+	}
+
 	usersList, err := json.Marshal(users)
 	if err != nil {
 		a.errorResponse(w, r, err)
@@ -146,6 +160,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	user.Sanitize(map[string]bool{})
 	userData, err := json.Marshal(user)
 	if err != nil {
 		a.errorResponse(w, r, err)
@@ -252,6 +267,12 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	if !canSeeUser {
 		a.errorResponse(w, r, model.NewErrNotFound("user ID="+userID))
 		return
+	}
+
+	if userID == session.UserID {
+		user.Sanitize(map[string]bool{})
+	} else {
+		a.app.SanitizeProfile(user, a.permissions.HasPermissionTo(session.UserID, mmModel.PermissionManageSystem))
 	}
 
 	userData, err := json.Marshal(user)
