@@ -80,3 +80,15 @@ func (a *App) SearchUserChannels(teamID string, userID string, query string) ([]
 func (a *App) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
 	return a.store.GetChannel(teamID, channelID)
 }
+
+func (a *App) SanitizeProfile(user *model.User, isAdmin bool) {
+	options := map[string]bool{}
+	if isAdmin {
+		options["fullname"] = true
+		options["email"] = true
+	} else {
+		options["fullname"] = a.config.ShowFullName
+		options["email"] = a.config.ShowEmailAddress
+	}
+	user.Sanitize(options)
+}

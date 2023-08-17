@@ -101,3 +101,16 @@ func UserFromJSON(data io.Reader) (*User, error) {
 	}
 	return &user, nil
 }
+
+func (u *User) Sanitize(options map[string]bool) {
+	u.Password = ""
+	u.MfaSecret = ""
+
+	if len(options) != 0 && !options["email"] {
+		u.Email = ""
+	}
+	if len(options) != 0 && !options["fullname"] {
+		u.FirstName = ""
+		u.LastName = ""
+	}
+}
