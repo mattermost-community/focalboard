@@ -9,6 +9,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/utils"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 func (a *API) registerUsersRoutes(r *mux.Router) {
@@ -91,7 +93,7 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	isSystemAdmin := a.permissions.HasPermissionTo(session.UserID, model.PermissionManageSystem)
+	isSystemAdmin := a.permissions.HasPermissionTo(session.UserID, mmModel.PermissionManageSystem)
 
 	for _, user := range users {
 		if user.ID == session.UserID {
@@ -270,7 +272,7 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	if userID == session.UserID {
 		user.Sanitize(map[string]bool{})
 	} else {
-		a.app.SanitizeProfile(user, a.permissions.HasPermissionTo(session.UserID, model.PermissionManageSystem))
+		a.app.SanitizeProfile(user, a.permissions.HasPermissionTo(session.UserID, mmModel.PermissionManageSystem))
 	}
 
 	userData, err := json.Marshal(user)
