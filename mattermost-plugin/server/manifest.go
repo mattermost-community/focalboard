@@ -20,7 +20,7 @@ const manifestStr = `
   "support_url": "https://github.com/mattermost/focalboard/issues",
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
   "icon_path": "assets/starter-template-icon.svg",
-  "version": "7.8.8",
+  "version": "7.8.9",
   "min_server_version": "7.8.0",
   "server": {
     "executables": {
