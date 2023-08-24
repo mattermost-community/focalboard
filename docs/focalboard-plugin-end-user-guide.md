@@ -11,7 +11,7 @@ This user guide is for anyone looking to use Focalboard to:
 The following end user documentation is available:
 
 - [Get started with board templates](get-started-with-board-templates.md)
-- [Create a new board](create-new-board.md) - done
+- [Create a new board](create-new-board.md)
 - [Link boards to Mattermost channels](link-boards-to-mattermost-channels.md)
 - [Manage boards](manage-boards.md)
 - [Work with cards](work-with-cards.md)
