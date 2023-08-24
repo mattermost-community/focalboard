@@ -8,7 +8,7 @@ Boards can be displayed and filtered in different views such as kanban, table, c
 
 ## Start from a board template
 
-To create a new board, we strongly recommend starting from a standard template.
+To create a new board, we strongly recommend starting from a standard board template.
 
 Board templates provide you with a predefined structure so that you can get started quickly. Each template has a different function, but can be customized to suit your use case. When you create a new board from the template picker, select each template’s name to preview it and make sure it suits your requirements. Alternatively, you can create your own board templates.
 
