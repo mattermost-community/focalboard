@@ -10,9 +10,17 @@ Visit the [Mattermost Developer Documentation](https://developers.mattermost.com
 
 Once you've installed the Focalboard plugin, you can enable the plugin in the Mattermost System Console by going to **Plugins > Plugin Management**, and selecting the **Enable** option for the Focalboard plugin.
 
+## Learn what Focalboard plugin data is being collected
+
+See the [plugin data being collected documentation](plugin-data-being-collected.md) for details.
+
 ## Use the plugin
 
 See the [Focalboard plugin end user guide](focalboard-plugin-end-user-guide.md) for details on getting started with and using the plugin.
+
+## Manage plugin preferences
+
+See the [manage plugin preferences documentation](manage-plugin-preferences.md) for details.
 
 ## Contribute to the Focalboard plugin project
 
