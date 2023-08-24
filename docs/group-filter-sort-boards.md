@@ -13,7 +13,7 @@ Card grouping is only available in board and table views and you must have at le
 To apply a group, select the **Group by** option at the top of the board, then select any available **Select** or **Person** property to group your cards by.
 
 - In the boards view, cards are automatically grouped into columns by the values from the specified property.
-- In the `table view </boards/work-with-views.html#board-view>`_, grouped cards will appear in individual sections based on the values from the specified property. Select the arrow to the left of the group name to expand or collapse cards in the group.
+- In the table view, grouped cards will appear in individual sections based on the values from the specified property. Select the arrow to the left of the group name to expand or collapse cards in the group.
 
 ### Hide and unhide groups
 
