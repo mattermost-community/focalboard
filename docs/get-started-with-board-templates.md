@@ -1,4 +1,4 @@
-# Get started with templates
+# Get started with board templates
 
 ## What's a board?
 
