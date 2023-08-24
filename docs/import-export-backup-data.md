@@ -1,4 +1,4 @@
-# Import, export, and backup data
+# Import, export, and back up data
 
 ## Import data into Focalboard
 
@@ -36,7 +36,7 @@ This node app converts an Asana JSON archive into a ``.boardarchive`` file. The 
 12. Select **Upload**.
 13. Return to your board and confirm that your Asana data is now displaying.
 
-If you don't see your Asana data, an the error should be displayed. You can also check log files for errors.
+If you don't see your Asana data, an error should be displayed. You can also check log files for errors.
 
 ### Import from Notion
 

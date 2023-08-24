@@ -82,7 +82,7 @@ Remember, a board can only be linked to one channel at a time. Linking another c
 
 ## Guest accounts
 
-From version v7.4 of the Focalboard plugin, `Mattermost guest accounts <https://docs.mattermost.com/onboard/guest-accounts.html#guest-accounts>`_ are supported. If you're not able to access this functionality, you may be on an earlier version of the Focalboard plugin.
+From version v7.4 of the Focalboard plugin, [Mattermost guest accounts](https://docs.mattermost.com/onboard/guest-accounts.html#guest-accounts) are supported. If you're not able to access this functionality, you may be on an earlier version of the Focalboard plugin.
 
 Guests can:
 
