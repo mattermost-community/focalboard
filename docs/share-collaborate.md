@@ -32,27 +32,16 @@ The level of access to a board is determined by a user’s assigned board role. 
 - **Commenter**: Can add comments to cards.
 - **Viewer**: Can view the board and its contents but can't comment or edit the board.
 
-+-----------------------------+-----------+------------+---------------+------------+
-|**Board permissions**        | **Admin** | **Editor** | **Commenter** | **Viewer** |
-+=============================+===========+============+===============+============+
-| Modify permissions          |   X       |            |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Share a public board        |   X       |            |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Delete board                |   X       |            |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Rename board                |   X       |    X       |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Add, edit, and delete views |   X       |    X       |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Add, edit, and delete cards |   X       |    X       |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Comment, delete my comments |   X       |    X       |     X         |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| Delete any comment          |   X       |            |               |            |
-+-----------------------------+-----------+------------+---------------+------------+
-| View                        |   X       |    X       |     X         |    X       |
-+-----------------------------+-----------+------------+---------------+------------+
+| **Board permissions**              | **Admin** | **Editor** | **Commenter** | **Viewer** |
+|------------------------------------|-----------|------------|---------------|------------|
+| Modify permissions                 |     X     |            |               |            |
+| Delete a board                     |     X     |            |               |            |
+| Rename a board                     |     X     |     X      |               |            |
+| Add, edit, and delete views        |     X     |     X      |               |            |
+| Add, edit, and delete cards        |     X     |     X      |               |            |
+| Comment and delete my own comments |     X     |     X      |       X       |            |
+| Delete any comment                 |     X     |            |               |            |
+| View a board                       |     X     |     X      |       X       |     X      |
 
 ## System admin access
 
