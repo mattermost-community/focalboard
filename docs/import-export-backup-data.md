@@ -1,4 +1,4 @@
-# Import, export, and backup data
+# Import, export, and back up data
 
 ## Import data into Focalboard
 
