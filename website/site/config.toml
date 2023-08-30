@@ -74,11 +74,6 @@ pygmentsStyle = "manni"
       name = "Feedback"
       weight = 4
 
-    [[menu.postpend]]
-      url = "https://mattermost.com/"
-      name = "Mattermost"
-      weight = 5
-
     # postpended links
     [[menu.postpend]]
       url = "/download"
