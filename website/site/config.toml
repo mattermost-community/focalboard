@@ -65,7 +65,7 @@ pygmentsStyle = "manni"
       weight = 2
 
     [[menu.postpend]]
-      url = "https://docs.mattermost.com/guides/boards.html"
+      url = "https://github.com/mattermost/focalboard/#readme"
       name = "Help Docs"
       weight = 3
 
