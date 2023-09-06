@@ -120,17 +120,20 @@ This node app converts a Todoist ``.json`` archive into a ``.boardarchive`` file
 
 ## Export from Focalboard
 
-You can export your boards data as a CSV file:
+You can export your boards data as a CSV file.
 
 1. Select the options menu to the left of the **New** button at the top of any board.
 2. Select **Export to CSV**.
 3. Import the CSV file to your tool of choice. The CSV file contains all the cards in that board and their associated properties.
 
-If you only see a single entry the CSV export when there are multiple cards on the board, you may have a specific card in context when you exported the file because you were performing a card search. If you have searched for a card, and that card is in context, that’s the only card that will be exported into the CSV file. Clear your search and try exporting to CSV again.
+**Notes**:
+
+- If you only see a single entry in the CSV export when the board contains multiple cards, you may have a specific card in context when you exported the file because you were performing a card search. If you have searched for a card, and that card is in context, that’s the only card that will be exported into the CSV file. Clear your search and try exporting to CSV again.
+- After importing CSV Focalboard data from one Mattermost instance into another (such as during a migration from Mattermost Cloud to self-hosted), card timestamps will be updated based on the import date, and cards won't correctly identify users whose user IDs differ across Mattermost instances.
 
 ## Back up your Focalboard data
 
-If you’d like to back up a board, you can export it as an archive file. You can then import that board to your current Mattermost team. Exported and imported board archives include all card content such as properties, comments, descriptions, and image attachments.
+If you’d like to back up a board, you can export it as an archive file. You can import that board to another Mattermost team within the same Mattermost instance. Exported and imported board archives include all card content such as properties, comments, descriptions, and image attachments.
 
 1. Select the options menu Options icon to the left of the **New** button at the top of the board
 2. Select **Export board archive**.
@@ -138,4 +141,7 @@ If you’d like to back up a board, you can export it as an archive file. You ca
 4. Navigate to the team or channel workspace where you’d like to add the exported board.
 5. Select the Gear icon next to your profile picture, then choose **Import archive**. The board you exported will be added to this team or channel workspace.
 
-**Note**: If you're using a version of the Focalboard plugin older than v6.4, backing up a board results in a ``.focalboard`` file, rather than a ``.boardarchive`` file. When importing a board backup, select the **Select all files** option to select ``.focalboard`` files.
+**Notes**:
+
+- If you're using a version of the Focalboard plugin older than v6.4, backing up a board results in a ``.focalboard`` file, rather than a ``.boardarchive`` file. When importing a board backup, select the **Select all files** option to select ``.focalboard`` files.
+- After importing a Focalboard backup from one Mattermost instance into another (such as during a migration from Mattermost Cloud to self-hosted), card timestamps will be updated based on the import date, and cards won't correctly identify users whose user IDs differ across Mattermost instances.
