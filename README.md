@@ -1,5 +1,14 @@
-# :warning: Announcement: PLEASE READ :warning: 
-Focalboard will transition to being fully community supported as of **September 15th, 2023**. This Focalboard repository will remain open indefinitely; however, Mattermost won’t be adding any new enhancements, and will only address Sev-1 level bugs until September 15th, 2023.
+# :warning: Announcements 
+
+Effective September 15th, 2023, the Focalboard plugin will no longer be bundled with Mattermost and will transition to being fully community supported. 
+
+Self-hosted Mattermost instances may continue to use the Focalboard plugin without interruption; however, Mattermost developers will not be adding any new enhancements or bug fixes beyond September 15th, 2023. This Focalboard repository will remain open indefinitely for contributions from the open source community. 
+
+The reason behind these changes is to focus Mattermost developer resources on improving the platform’s performance and core features to ensure Mattermost continues being resilient, stable, and best-in-breed for critical operations.
+
+You can [learn more about these changes in our forum](https://forum.mattermost.com/t/upcoming-product-changes-to-boards-and-various-plugins/16669). 
+
+
 
 # Focalboard
 
@@ -129,7 +138,7 @@ Before checking in commits, run `make ci`, which is similar to the `.gitlab-ci.y
 
 ### Translating
 
-Help translate Focalboard! The app is already translated into several languages. We welcome corrections and new language translations! You can add new languages or improve existing translations at [Weblate](https://translate.mattermost.com/engage/focalboard/).
+Help translate Focalboard! The plugin is already translated into several languages. We welcome corrections and new language translations submitted against the [appropriate language JSON file](https://github.com/mattermost/focalboard/tree/main/webapp/i18n) in this repository. 
 
 ### Staying informed
 
