@@ -634,6 +634,26 @@ func (c *Client) GetUser(id string) (*model.User, *Response) {
 	return user, BuildResponse(r)
 }
 
+func (c *Client) GetUserList(ids []string) ([]model.User, *Response) {
+	r, err := c.DoAPIPost("/users", toJSON(ids))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var users []model.User
+	err = json.Unmarshal(requestBody, &users)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return users, BuildResponse(r)
+}
+
 func (c *Client) GetUserChangePasswordRoute(id string) string {
 	return fmt.Sprintf("/users/%s/changepassword", id)
 }
