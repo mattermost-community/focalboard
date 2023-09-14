@@ -1,6 +1,6 @@
-# Mattermost Boards Developer's Guide
+# Focalboard Plugin Developer's Guide
 
-[Mattermost Boards](https://mattermost.com/boards/) is the Focalboard (aka Boards) plugin running in Mattermost. It is pre-packaed, and runs out of the box with Mattermost 6.0 and later.
+**Important**: Effective September 15th, 2023, Mattermost Boards transitions to being fully community supported as the Focalboard Plugin. Mattermost will no longer be maintaining this plugin - this includes bug fixes and feature additions. Instead, the plugin is open-sourced and made available indefinitely for community contributions in GitHub.
 
 To build your own version of it:
 1. Build [mattermost-plugin](https://github.com/mattermost/focalboard/tree/main/mattermost-plugin) in the [Focalboard repo](https://github.com/mattermost/focalboard)
@@ -8,7 +8,7 @@ To build your own version of it:
 
 Here are the steps in more detail:
 
-### Building the Boards plugin
+### Building the Focalboard plugin
 
 Fork the [Focalboard repo](https://github.com/mattermost/focalboard), clone it locally, and follow the steps in the readme to set up your dev environment.
 
@@ -55,7 +55,7 @@ First, build and run Mattermost locally:
 5. Add an ENV var `MM_SERVICESETTINGS_SITEURL` with the same site URL used in the config
 6. Run `make run-server` in Mattermost
 
-Now, to build and deploy the Boards plugin:
+Now, to build and deploy the plugin:
 1. Clone / fork [mattermost/focalboard](https://github.com/mattermost/focalboard)
 2. Install the dependencies (see above)
 3. Run:

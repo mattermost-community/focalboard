@@ -1,6 +1,8 @@
 # Developer Tips and Tricks
 
-These tips and tricks apply to developing the standalone Personal Server of Focalboard. For most features, this is the easiest way to get started working against code that ships across editions. For working with Mattermost Boards, refer to the [Mattermost Boards developer's guide](mattermost-boards-dev-guide.md).
+These tips and tricks apply to developing the standalone Personal Server of Focalboard. For most features, this is the easiest way to get started working against code that ships across editions.
+
+For working with the Focalboard plugin, refer to the [Focalboard Plugin Developer's Guide](focalboard-dev-guide.md).
 
 ## Installation prerequisites
 
