@@ -95,9 +95,9 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 
 	sanitizedUsers := make([]*model.User, 0)
 	for _, user := range users {
-		canSeeUser, err := a.app.CanSeeUser(session.UserID, user.ID)
-		if err != nil {
-			a.errorResponse(w, r, err)
+		canSeeUser, err2 := a.app.CanSeeUser(session.UserID, user.ID)
+		if err2 != nil {
+			a.errorResponse(w, r, err2)
 			return
 		}
 		if !canSeeUser {
