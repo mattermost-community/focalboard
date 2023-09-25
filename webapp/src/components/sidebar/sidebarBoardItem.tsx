@@ -43,11 +43,11 @@ import {Archiver} from '../../archiver'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
-    case 'board': return <BoardIcon/>
-    case 'table': return <TableIcon/>
-    case 'gallery': return <GalleryIcon/>
-    case 'calendar': return <CalendarIcon/>
-    default: return <div/>
+        case 'board': return <BoardIcon />
+        case 'table': return <TableIcon />
+        case 'gallery': return <GalleryIcon />
+        case 'calendar': return <CalendarIcon />
+        default: return <div />
     }
 }
 
@@ -86,7 +86,7 @@ const SidebarBoardItem = (props: Props) => {
                 key={category.id}
                 id={category.id}
                 name={category.name}
-                icon={category.id === props.categoryBoards.id ? <Check/> : <Folder/>}
+                icon={category.id === props.categoryBoards.id ? <Check /> : <Folder />}
                 onClick={async (toCategoryID) => {
                     const fromCategoryID = props.categoryBoards.id
                     if (fromCategoryID !== toCategoryID) {
@@ -211,9 +211,10 @@ const SidebarBoardItem = (props: Props) => {
                         ref={boardItemRef}
                     >
                         <div className='octo-sidebar-icon'>
-                            {board.icon || <CompassIcon icon='product-boards'/>}
+                            {board.icon || <CompassIcon icon='product-boards' />}
                         </div>
                         <div
+                            dir='auto'
                             className='octo-sidebar-title'
                             title={title}
                         >
@@ -231,7 +232,7 @@ const SidebarBoardItem = (props: Props) => {
                                     })
                                 }}
                             >
-                                <IconButton icon={<OptionsIcon/>}/>
+                                <IconButton icon={<OptionsIcon />} />
                                 <Menu
                                     fixed={true}
                                     position='auto'
@@ -242,7 +243,7 @@ const SidebarBoardItem = (props: Props) => {
                                         id='moveBlock'
                                         className='boardMoveToCategorySubmenu'
                                         name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
-                                        icon={<CreateNewFolder/>}
+                                        icon={<CreateNewFolder />}
                                         position='auto'
                                     >
                                         {generateMoveToCategoryOptions(board.id)}
@@ -251,26 +252,26 @@ const SidebarBoardItem = (props: Props) => {
                                         <Menu.Text
                                             id='duplicateBoard'
                                             name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                                            icon={<DuplicateIcon/>}
+                                            icon={<DuplicateIcon />}
                                             onClick={() => handleDuplicateBoard(board.isTemplate)}
                                         />}
                                     {!me?.is_guest &&
                                         <Menu.Text
                                             id='templateFromBoard'
                                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                                            icon={<AddIcon/>}
+                                            icon={<AddIcon />}
                                             onClick={() => handleDuplicateBoard(true)}
                                         />}
                                     <Menu.Text
                                         id='exportBoardArchive'
                                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
-                                        icon={<CompassIcon icon='export-variant'/>}
+                                        icon={<CompassIcon icon='export-variant' />}
                                         onClick={() => Archiver.exportBoardArchive(board)}
                                     />
                                     <Menu.Text
                                         id='hideBoard'
                                         name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
-                                        icon={<CloseIcon/>}
+                                        icon={<CloseIcon />}
                                         onClick={() => handleHideBoard()}
                                     />
                                     <BoardPermissionGate
@@ -282,7 +283,7 @@ const SidebarBoardItem = (props: Props) => {
                                             id='deleteBlock'
                                             className='text-danger'
                                             name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                                            icon={<DeleteIcon/>}
+                                            icon={<DeleteIcon />}
                                             onClick={() => {
                                                 props.onDeleteRequest(board)
                                             }}
@@ -300,6 +301,7 @@ const SidebarBoardItem = (props: Props) => {
                         >
                             {iconForViewType(view.fields.viewType)}
                             <div
+                                dir='auto'
                                 className='octo-sidebar-title'
                                 title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                             >
