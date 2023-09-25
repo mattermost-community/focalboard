@@ -127,6 +127,17 @@ func (s *PluginTestStore) GetUserByID(userID string) (*model.User, error) {
 	return user, nil
 }
 
+func (s *PluginTestStore) GetUsersList(userIDs []string, showEmail, showName bool) ([]*model.User, error) {
+	var users []*model.User
+	for _, id := range userIDs {
+		user := s.users[id]
+		if user != nil {
+			users = append(users, user)
+		}
+	}
+	return users, nil
+}
+
 func (s *PluginTestStore) GetUserByEmail(email string) (*model.User, error) {
 	for _, user := range s.users {
 		if user.Email == email {
