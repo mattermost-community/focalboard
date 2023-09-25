@@ -65,7 +65,7 @@ pygmentsStyle = "manni"
       weight = 2
 
     [[menu.postpend]]
-      url = "https://docs.mattermost.com/guides/boards.html"
+      url = "https://github.com/mattermost/focalboard/#readme"
       name = "Help Docs"
       weight = 3
 
@@ -73,11 +73,6 @@ pygmentsStyle = "manni"
       url = "/feedback"
       name = "Feedback"
       weight = 4
-
-    [[menu.postpend]]
-      url = "https://mattermost.com/"
-      name = "Mattermost"
-      weight = 5
 
     # postpended links
     [[menu.postpend]]
