@@ -1,5 +1,9 @@
 /*New Footer*/
 
+footer .container {
+    padding: 4rem 0;
+}
+
 footer #footer-logo {
     grid-column: 1 / -1;
     max-width: 18.8rem;
