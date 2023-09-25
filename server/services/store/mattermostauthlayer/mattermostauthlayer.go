@@ -1297,17 +1297,16 @@ func (s *MattermostAuthLayer) CanSeeUser(seerID string, seenID string) (bool, er
 
 	query := s.getQueryBuilder().
 		Select("1").
-		From(s.tablePrefix + "board_members AS BM1").
-		Join(s.tablePrefix + "board_members AS BM2 ON BM1.BoardID=BM2.BoardID").
-		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		From(s.tablePrefix + "board_members AS bm1").
+		Join(s.tablePrefix + "board_members AS bm2 ON bm1.board_id=bm2.board_id").
 		Where(sq.Or{
 			sq.And{
-				sq.Eq{"BM1.UserID": seerID},
-				sq.Eq{"BM2.UserID": seenID},
+				sq.Eq{"bm1.user_id": seerID},
+				sq.Eq{"bm2.user_id": seenID},
 			},
 			sq.And{
-				sq.Eq{"BM1.UserID": seenID},
-				sq.Eq{"BM2.UserID": seerID},
+				sq.Eq{"bm1.user_id": seenID},
+				sq.Eq{"bm2.user_id": seerID},
 			},
 		}).Limit(1)
 
@@ -1323,17 +1322,16 @@ func (s *MattermostAuthLayer) CanSeeUser(seerID string, seenID string) (bool, er
 
 	query = s.getQueryBuilder().
 		Select("1").
-		From("ChannelMembers AS CM1").
-		Join("ChannelMembers AS CM2 ON CM1.BoardID=CM2.BoardID").
-		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		From("channelmembers AS cm1").
+		Join("channelmembers AS cm2 ON cm1.channelid=cm2.channelid").
 		Where(sq.Or{
 			sq.And{
-				sq.Eq{"CM1.UserID": seerID},
-				sq.Eq{"CM2.UserID": seenID},
+				sq.Eq{"cm1.userid": seerID},
+				sq.Eq{"cm2.userid": seenID},
 			},
 			sq.And{
-				sq.Eq{"CM1.UserID": seenID},
-				sq.Eq{"CM2.UserID": seerID},
+				sq.Eq{"cm1.userid": seenID},
+				sq.Eq{"cm2.userid": seerID},
 			},
 		}).Limit(1)
 

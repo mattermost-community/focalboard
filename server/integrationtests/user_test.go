@@ -164,6 +164,79 @@ func TestGetUser(t *testing.T) {
 	})
 }
 
+func TestGetUserList(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	clients := setupClients(th)
+	th.Client = clients.TeamMember
+	th.Client2 = clients.Editor
+
+	me, resp := th.Client.GetMe()
+	require.NoError(t, resp.Error)
+	require.NotNil(t, me)
+
+	userID1 := me.ID
+	userID2 := th.GetUser2().ID
+
+	// Admin user should return both
+	returnUsers, resp := clients.Admin.GetUserList([]string{userID1, userID2})
+	require.NoError(t, resp.Error)
+	require.NotNil(t, returnUsers)
+	require.Equal(t, 2, len(returnUsers))
+
+	// Guest user should return none
+	returnUsers2, resp := clients.Guest.GetUserList([]string{userID1, userID2})
+	require.NoError(t, resp.Error)
+	require.NotNil(t, returnUsers2)
+	require.Equal(t, 0, len(returnUsers2))
+
+	newBoard := &model.Board{
+		Title:  "title",
+		Type:   model.BoardTypeOpen,
+		TeamID: testTeamID,
+	}
+	board, err := th.Server.App().CreateBoard(newBoard, userID1, true)
+	require.NoError(t, err)
+
+	// add Guest as board member
+	newGuestMember := &model.BoardMember{
+		UserID:          userGuestID,
+		BoardID:         board.ID,
+		SchemeViewer:    true,
+		SchemeCommenter: true,
+		SchemeEditor:    true,
+		SchemeAdmin:     false,
+	}
+	guestMember, err := th.Server.App().AddMemberToBoard(newGuestMember)
+	require.NoError(t, err)
+	require.NotNil(t, guestMember)
+
+	// Guest user should now return one of members
+	guestUsers, resp := clients.Guest.GetUserList([]string{th.GetUser1().ID, th.GetUser2().ID})
+	require.NoError(t, resp.Error)
+	require.NotNil(t, guestUsers)
+	require.Equal(t, 1, len(guestUsers))
+
+	// add other user as board member
+	newBoardMember := &model.BoardMember{
+		UserID:          userID2,
+		BoardID:         board.ID,
+		SchemeViewer:    true,
+		SchemeCommenter: true,
+		SchemeEditor:    true,
+		SchemeAdmin:     false,
+	}
+	newMember, err := th.Server.App().AddMemberToBoard(newBoardMember)
+	require.NoError(t, err)
+	require.NotNil(t, newMember)
+
+	// Guest user should now return both
+	guestUsers, resp = clients.Guest.GetUserList([]string{th.GetUser1().ID, th.GetUser2().ID})
+	require.NoError(t, resp.Error)
+	require.NotNil(t, guestUsers)
+	require.Equal(t, 2, len(guestUsers))
+}
+
 func TestUserChangePassword(t *testing.T) {
 	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
