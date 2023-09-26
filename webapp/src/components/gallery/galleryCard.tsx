@@ -60,7 +60,7 @@ const GalleryCard = (props: Props) => {
         }
     }, [handleDeleteCard])
 
-    const image: ContentBlock | undefined = useMemo(() => {
+    const image: ContentBlock|undefined = useMemo(() => {
         for (let i = 0; i < contents.length; ++i) {
             if (Array.isArray(contents[i])) {
                 return (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
@@ -89,7 +89,7 @@ const GalleryCard = (props: Props) => {
                         className='optionsMenu'
                         stopPropagationOnToggle={true}
                     >
-                        <CardActionsMenuIcon />
+                        <CardActionsMenuIcon/>
                         <CardActionsMenu
                             cardId={card!.id}
                             boardId={card!.boardId}
@@ -104,7 +104,7 @@ const GalleryCard = (props: Props) => {
 
                 {image &&
                     <div className='gallery-image'>
-                        <ImageElement block={image} />
+                        <ImageElement block={image}/>
                     </div>}
                 {!image &&
                     <CardDetailProvider card={card}>
@@ -134,7 +134,7 @@ const GalleryCard = (props: Props) => {
                     </CardDetailProvider>}
                 {props.visibleTitle &&
                     <div className='gallery-title'>
-                        {card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined}
+                        { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                         <div
                             dir='auto'
                             key='__title'
@@ -171,7 +171,7 @@ const GalleryCard = (props: Props) => {
                         className='gallery-badges'
                     />}
             </div>
-            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps} />}
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </>
     )
 }
