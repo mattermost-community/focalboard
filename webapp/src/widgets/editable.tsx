@@ -16,7 +16,7 @@ export type EditableProps = {
 
     validator?: (value: string) => boolean
     onCancel?: () => void
-    onSave?: (saveType: 'onEnter'|'onEsc'|'onBlur') => void
+    onSave?: (saveType: 'onEnter' | 'onEsc' | 'onBlur') => void
     onFocus?: () => void
 }
 
@@ -29,11 +29,11 @@ export type ElementType = HTMLInputElement | HTMLTextAreaElement
 export type ElementProps = {
     className: string
     placeholder?: string
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     value?: string
     title?: string
     onBlur: () => void
-    onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement|HTMLInputElement>) => void
+    onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     readOnly?: boolean
     spellCheck?: boolean
     onFocus?: () => void
@@ -45,7 +45,7 @@ export function useEditable(
     elementRef: React.RefObject<ElementType>): ElementProps {
     const saveOnBlur = useRef<boolean>(true)
 
-    const save = (saveType: 'onEnter'|'onEsc'|'onBlur'): void => {
+    const save = (saveType: 'onEnter' | 'onEsc' | 'onBlur'): void => {
         if (props.validator && !props.validator(props.value || '')) {
             return
         }
@@ -95,7 +95,7 @@ export function useEditable(
         value,
         title: value,
         onBlur: () => save('onBlur'),
-        onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement|HTMLInputElement>): void => {
+        onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
             if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                 e.preventDefault()
                 if (props.saveOnEsc) {
@@ -131,6 +131,7 @@ const Editable = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element 
         <input
             {...elementProps}
             ref={elementRef}
+            dir='auto'
         />
     )
 }

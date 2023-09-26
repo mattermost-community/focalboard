@@ -45,6 +45,7 @@ const EditableArea = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Elem
             <textarea
                 {...elementProps}
                 {...heightProps}
+                dir='auto'
                 ref={elementRef}
                 className={'EditableArea ' + elementProps.className}
             />

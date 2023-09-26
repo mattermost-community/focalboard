@@ -88,14 +88,14 @@ const SidebarCategory = (props: Props) => {
     const [boardDraggingOver, setBoardDraggingOver] = useState<boolean>(false)
 
     const shouldViewSidebarTour = props.boards.length !== 0 &&
-                                  noCardOpen &&
-                                  (onboardingTourCategory === TOUR_SIDEBAR || onboardingTourCategory === TOUR_BOARD) &&
-                                  ((onboardingTourCategory === TOUR_SIDEBAR && onboardingTourStep === SidebarTourSteps.SIDE_BAR.toString()) || (onboardingTourCategory === TOUR_BOARD && onboardingTourStep === FINISHED.toString()))
+        noCardOpen &&
+        (onboardingTourCategory === TOUR_SIDEBAR || onboardingTourCategory === TOUR_BOARD) &&
+        ((onboardingTourCategory === TOUR_SIDEBAR && onboardingTourStep === SidebarTourSteps.SIDE_BAR.toString()) || (onboardingTourCategory === TOUR_BOARD && onboardingTourStep === FINISHED.toString()))
 
     const shouldViewManageCatergoriesTour = props.boards.length !== 0 &&
-                                            noCardOpen &&
-                                            onboardingTourCategory === TOUR_SIDEBAR &&
-                                            onboardingTourStep === SidebarTourSteps.MANAGE_CATEGORIES.toString()
+        noCardOpen &&
+        onboardingTourCategory === TOUR_SIDEBAR &&
+        onboardingTourStep === SidebarTourSteps.MANAGE_CATEGORIES.toString()
 
     useEffect(() => {
         if (shouldViewManageCatergoriesTour && props.index === 0) {
@@ -189,7 +189,7 @@ const SidebarCategory = (props: Props) => {
                 }
 
                 if (nextBoardId) {
-                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                    // This delay is needed because WSClient has a default 100 ms notification delay before updates
                     setTimeout(() => {
                         showBoard(props.boards[nextBoardId as number].id)
                     }, 120)
@@ -289,6 +289,7 @@ const SidebarCategory = (props: Props) => {
                                             className={`octo-sidebar-item category ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
                                         >
                                             <div
+                                                dir='auto'
                                                 className='octo-sidebar-title category-title'
                                                 title={props.categoryBoards.name}
                                                 onClick={toggleCollapse}
@@ -433,11 +434,11 @@ const SidebarCategory = (props: Props) => {
                         }
 
                         { deleteBoard &&
-                        <DeleteBoardDialog
-                            boardTitle={deleteBoard.title}
-                            onClose={() => setDeleteBoard(null)}
-                            onDelete={onDeleteBoard}
-                        />
+                            <DeleteBoardDialog
+                                boardTitle={deleteBoard.title}
+                                onClose={() => setDeleteBoard(null)}
+                                onDelete={onDeleteBoard}
+                            />
                         }
 
                         {

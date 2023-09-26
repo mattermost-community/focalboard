@@ -98,39 +98,40 @@ const KanbanCard = (props: Props) => {
                 onClick={handleOnClick}
             >
                 {!props.readonly &&
-                <MenuWrapper
-                    className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
-                    stopPropagationOnToggle={true}
-                >
-                    <CardActionsMenuIcon/>
-                    <CardActionsMenu
-                        cardId={card!.id}
-                        boardId={card!.boardId}
-                        onClickDelete={handleDeleteButtonOnClick}
-                        onClickDuplicate={() => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                            mutator.duplicateCard(
-                                card.id,
-                                board.id,
-                                false,
-                                'duplicate card',
-                                false,
-                                {},
-                                async (newCardId) => {
-                                    props.showCard(newCardId)
-                                },
-                                async () => {
-                                    props.showCard(undefined)
-                                },
-                            )
-                        }}
-                    />
-                </MenuWrapper>
+                    <MenuWrapper
+                        className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
+                        stopPropagationOnToggle={true}
+                    >
+                        <CardActionsMenuIcon />
+                        <CardActionsMenu
+                            cardId={card!.id}
+                            boardId={card!.boardId}
+                            onClickDelete={handleDeleteButtonOnClick}
+                            onClickDuplicate={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                mutator.duplicateCard(
+                                    card.id,
+                                    board.id,
+                                    false,
+                                    'duplicate card',
+                                    false,
+                                    {},
+                                    async (newCardId) => {
+                                        props.showCard(newCardId)
+                                    },
+                                    async () => {
+                                        props.showCard(undefined)
+                                    },
+                                )
+                            }}
+                        />
+                    </MenuWrapper>
                 }
 
                 <div className='octo-icontitle'>
-                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
+                    {card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined}
                     <div
+                        dir='auto'
                         key='__title'
                         className='octo-titletext'
                     >
@@ -151,12 +152,12 @@ const KanbanCard = (props: Props) => {
                         />
                     </Tooltip>
                 ))}
-                {props.visibleBadges && <CardBadges card={card}/>}
-                {showOnboarding && !match.params.cardId && <OpenCardTourStep/>}
-                {showOnboarding && !match.params.cardId && <CopyLinkTourStep/>}
+                {props.visibleBadges && <CardBadges card={card} />}
+                {showOnboarding && !match.params.cardId && <OpenCardTourStep />}
+                {showOnboarding && !match.params.cardId && <CopyLinkTourStep />}
             </div>
 
-            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps} />}
 
         </>
     )
