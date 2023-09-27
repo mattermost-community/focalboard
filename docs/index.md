@@ -1,10 +1,30 @@
-# Focalboard / Mattermost Boards Contributors Guide
+# Focalboard Plugin Documentation
 
-Welcome to the [Focalboard](https://www.focalboard.com) / [Mattermost Boards](https://mattermost.com/boards/?utm_source=focalboard) project!
+Welcome to the Focalboard plugin project! We're very glad you want to check it out and perhaps contribute code to this project in GitHub.
 
-We're very glad you want to check it out and perhaps contribute code our repository in GitHub.
+## Install the plugin
 
-Our goal is to make your experience as great as possible. Follow these simple steps to contribute:
+Visit the [Mattermost Developer Documentation](https://developers.mattermost.com/integrate/plugins/using-and-managing-plugins/#custom-plugins) for details on how to install and enable the Focalboard plugin in your self-hosted Mattermost instance.
+
+## Enable the plugin
+
+Once you've installed the Focalboard plugin, you can enable the plugin in the Mattermost System Console by going to **Plugins > Plugin Management**, and selecting the **Enable** option for the Focalboard plugin.
+
+## Learn what Focalboard plugin data is being collected
+
+See the [plugin data being collected documentation](plugin-data-being-collected.md) for details.
+
+## Use the plugin
+
+See the [Focalboard plugin end user guide](focalboard-plugin-end-user-guide.md) for details on getting started with and using the plugin.
+
+## Manage plugin preferences
+
+See the [manage plugin preferences documentation](manage-plugin-preferences.md) for details.
+
+## Contribute to the Focalboard plugin project
+
+Follow these simple steps to contribute:
 
 1. [Fork the Focalboard repo](https://github.com/mattermost/focalboard), clone it locally, and follow the steps in the README to build. Read the [developer tips & tricks](dev-tips.md) to get started.
 
