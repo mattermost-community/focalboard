@@ -22,10 +22,7 @@ $tooltop-vertical-offset: 2px;
     text-shadow: rgba(0, 0, 0, 0.098) 1px 1px 1px;
     box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 2px 0;
     min-width: 2em;
-    max-width: 21em;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     display: block;
 }
 
@@ -102,8 +99,6 @@ $tooltop-vertical-offset: 2px;
     }
     // Bottom tooltip body style
     &.tooltip-bottom:hover::after {
-        left: 50%;
         top: calc(100% + 4px);
-        transform: translate(-50%, -#{$tooltop-horizontal-offset});
     }
 }
