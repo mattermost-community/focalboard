@@ -60,6 +60,7 @@ const selectStyles = {
         position: 'static',
         top: 'unset',
         transform: 'unset',
+        color: 'rgb(var(--center-channel-color-rgb))',
     }),
     menu: (provided: CSSObject): CSSObject => ({
         ...provided,
