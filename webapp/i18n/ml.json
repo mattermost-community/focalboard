@@ -1,4 +1,8 @@
 {
+  "AdminBadge.SystemAdmin": "അഡ്മിൻ",
+  "AdminBadge.TeamAdmin": "ടീം അഡ്മിൻ",
+  "AttachmentBlock.failed": "ഫയൽ വലുപ്പ പരിധി എത്തിയതിനാൽ ഈ ഫയൽ അപ്‌ലോഡ് ചെയ്യാനായില്ല.",
+  "AttachmentElement.download": "ഡൗൺലോഡ്",
   "BoardComponent.add-a-group": "+ ഒരു ഗ്രൂപ്പ് ചേർക്കുക",
   "BoardComponent.delete": "നീക്കം ചെയ്യുക",
   "BoardComponent.hidden-columns": "മറഞ്ഞിരിക്കുന്ന നിരകൾ",
