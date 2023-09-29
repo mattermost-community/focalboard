@@ -96,6 +96,11 @@ class Constants {
             displayName: '日本語',
         },
         {
+            code: 'ko',
+            name: 'korean',
+            displayName: '한국어',
+        },
+        {
             code: 'fr',
             name: 'french',
             displayName: 'Français',
