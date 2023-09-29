@@ -10,9 +10,11 @@ import messages_fr from '../i18n/fr.json'
 import messages_id from '../i18n/id.json'
 import messages_it from '../i18n/it.json'
 import messages_ja from '../i18n/ja.json'
+import messages_ko from '../i18n/ko.json'
 import messages_nl from '../i18n/nl.json'
 import messages_oc from '../i18n/oc.json'
 import messages_ptBr from '../i18n/pt_BR.json'
+import messages_pl from '../i18n/pl.json'
 import messages_ru from '../i18n/ru.json'
 import messages_sv from '../i18n/sv.json'
 import messages_tr from '../i18n/tr.json'
@@ -21,7 +23,7 @@ import messages_zhHant from '../i18n/zh_Hant.json'
 
 import {UserSettings} from './userSettings'
 
-const supportedLanguages = ['ca', 'de', 'el', 'en', 'es', 'fr', 'id', 'it', 'ja', 'nl', 'oc', 'pt-br', 'ru', 'sv', 'tr', 'zh-cn', 'zh-tw']
+const supportedLanguages = ['ca', 'de', 'el', 'en', 'es', 'fr', 'id', 'it', 'ja', 'ko', 'nl', 'oc', 'pt-br', 'pl', 'ru', 'sv', 'tr', 'zh-cn', 'zh-tw']
 
 export function getMessages(lang: string): {[key: string]: string} {
     switch (lang) {
@@ -41,12 +43,16 @@ export function getMessages(lang: string): {[key: string]: string} {
         return messages_it
     case 'ja':
         return messages_ja
+    case 'ko':
+        return messages_ko
     case 'nl':
         return messages_nl
     case 'oc':
         return messages_oc
     case 'pt-br':
         return messages_ptBr
+    case 'pl':
+        return messages_pl
     case 'ru':
         return messages_ru
     case 'sv':
