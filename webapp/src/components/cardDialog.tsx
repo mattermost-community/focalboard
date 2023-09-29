@@ -9,6 +9,7 @@ import {Card} from '../blocks/card'
 import octoClient from '../octoClient'
 import mutator from '../mutator'
 import {getCard} from '../store/cards'
+import {useIsCardEmpty} from '../hooks/useIsCardEmpty'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -62,6 +63,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
+    const isCardEmpty = useIsCardEmpty(card)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -109,7 +111,7 @@ const CardDialog = (props: Props): JSX.Element => {
         // use may be renaming a card title
         // and accidently delete the card
         // so adding des
-        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }
@@ -151,7 +153,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 Utils.selectLocalFile(async (attachment) => {
                     const uploadingBlock = createBlock()
                     uploadingBlock.title = attachment.name
-                    uploadingBlock.fields.fileId = attachment.name
+                    uploadingBlock.fields.attachmentId = attachment.name
                     uploadingBlock.boardId = boardId
                     if (card) {
                         uploadingBlock.parentId = card.id
@@ -177,11 +179,11 @@ const CardDialog = (props: Props): JSX.Element => {
                             xhr.onload = () => {
                                 if (xhr.status === 200 && xhr.readyState === 4) {
                                     const json = JSON.parse(xhr.response)
-                                    const fileId = json.fileId
-                                    if (fileId) {
+                                    const attachmentId = json.fileId
+                                    if (attachmentId) {
                                         removeUploadingAttachment(uploadingBlock)
                                         const block = createAttachmentBlock()
-                                        block.fields.fileId = fileId || ''
+                                        block.fields.attachmentId = attachmentId || ''
                                         block.title = attachment.name
                                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
                                         resolve(block)
