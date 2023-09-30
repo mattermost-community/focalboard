@@ -81,16 +81,6 @@ class Constants {
             displayName: 'English',
         },
         {
-            code: 'es',
-            name: 'spanish',
-            displayName: 'Español',
-        },
-        {
-            code: 'de',
-            name: 'german',
-            displayName: 'Deutsch',
-        },
-        {
             code: 'ja',
             name: 'japanese',
             displayName: '日本語',
@@ -101,69 +91,9 @@ class Constants {
             displayName: '한국어',
         },
         {
-            code: 'fr',
-            name: 'french',
-            displayName: 'Français',
-        },
-        {
-            code: 'nl',
-            name: 'dutch',
-            displayName: 'Nederlands',
-        },
-        {
-            code: 'ru',
-            name: 'russian',
-            displayName: 'Pусский',
-        },
-        {
-            code: 'zh-tw',
-            name: 'traditional-chinese',
-            displayName: '中文 (繁體)',
-        },
-        {
-            code: 'zh-cn',
-            name: 'simplified-chinese',
-            displayName: '中文 (简体)',
-        },
-        {
-            code: 'tr',
-            name: 'turkish',
-            displayName: 'Türkçe',
-        },
-        {
-            code: 'oc',
-            name: 'occitan',
-            displayName: 'Occitan',
-        },
-        {
-            code: 'pt-br',
-            name: 'portuguese',
-            displayName: 'Português (Brasil)',
-        },
-        {
-            code: 'ca',
-            name: 'catalan',
-            displayName: 'Català',
-        },
-        {
-            code: 'el',
-            name: 'greek',
-            displayName: 'Ελληνικά',
-        },
-        {
-            code: 'id',
-            name: 'indonesian',
-            displayName: 'bahasa Indonesia',
-        },
-        {
             code: 'it',
             name: 'italian',
             displayName: 'Italiano',
-        },
-        {
-            code: 'sv',
-            name: 'swedish',
-            displayName: 'Svenska',
         },
     ]
 
