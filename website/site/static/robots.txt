@@ -1,8 +1,0 @@
-User-Agent: *
-Disallow: /cgi-bin/
-Disallow: /&utm_source
-Disallow: /&utm_medium
-Disallow: /&utm_campaign
-Disallow: /?utm_
-
-Sitemap: https://www.focalboard.com/sitemap.xml
