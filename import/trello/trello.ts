@@ -70,6 +70,7 @@ export interface Icon {
 }
 
 export interface Data {
+    attachment: any;
     old?:             Old;
     customField?:     DataCustomField;
     customFieldItem?: CustomFieldItem;
@@ -306,6 +307,7 @@ export interface CardElement {
     due:                   null | string;
     email:                 string;
     idChecklists:          string[];
+    checklists:            ChecklistElement[];
     idMembers:             IDMemberCreator[];
     labels:                Label[];
     limits:                CardLimits;
