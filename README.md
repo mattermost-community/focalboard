@@ -1,14 +1,12 @@
-# :warning: Announcements 
-
-Effective September 15th, 2023, the Focalboard plugin is no longer bundled with Mattermost and has transitioned to being fully community supported. 
+# :warning: Disclaimer
 
 **This repository is community supported and not maintained by Mattermost. Mattermost disclaims any and all liability for integrations, including Third Party Integrations and Mattermost Integrations. All integrations are provided "AS IS", and may be used at your own risk. Integrations may be modified or discontinued at any time.**
 
-Self-hosted Mattermost instances may continue to use the Focalboard plugin without interruption; however, Mattermost developers will not be adding any new enhancements or bug fixes beyond September 15th, 2023. This Focalboard repository will remain open indefinitely for contributions from the open source community. 
+Effective September 15th, 2023, the Focalboard plugin is no longer bundled with Mattermost and has transitioned to being fully community supported. Self-hosted Mattermost instances may continue to use the Focalboard plugin without interruption; however, Mattermost developers will not be adding any new enhancements or bug fixes beyond September 15th, 2023. This Focalboard repository will remain open indefinitely for contributions from the open source community.
 
 The reason behind these changes is to focus Mattermost developer resources on improving the platform’s performance and core features to ensure Mattermost continues being resilient, stable, and best-in-breed for critical operations.
 
-You can [learn more about these changes in our forum](https://forum.mattermost.com/t/upcoming-product-changes-to-boards-and-various-plugins/16669). 
+You can [learn more about these changes in our forum](https://forum.mattermost.com/t/upcoming-product-changes-to-boards-and-various-plugins/16669).
 
 # Focalboard
 
@@ -28,7 +26,7 @@ Focalboard is an open source, multilingual, self-hosted project management tool 
 
 It helps define, organize, track and manage work across individuals and teams. Focalboard comes in three editions:
 
-* **[Focalboard plugin](https://github.com/mattermost/focalboard/releases)**: The Focalboard plugin integrates into an exsting Mattermost instance to combine project management tools with messaging and collaboration for teams of all sizes. 
+* **[Focalboard plugin](https://github.com/mattermost/focalboard/releases)**: The Focalboard plugin integrates into an exsting Mattermost instance to combine project management tools with messaging and collaboration for teams of all sizes.
 
 * **[Personal Desktop](https://www.focalboard.com/docs/personal-edition/desktop/)**: A standalone, single-user [macOS](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8), [Windows](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website), or [Linux](https://www.focalboard.com/download/personal-edition/desktop/#linux-desktop) desktop app for your own todos and personal projects.
 
@@ -138,7 +136,7 @@ Before checking in commits, run `make ci`, which is similar to the `.gitlab-ci.y
 
 ### Translating
 
-Help translate Focalboard! The plugin is already translated into several languages. We welcome corrections and new language translations submitted against the [appropriate language JSON file](https://github.com/mattermost/focalboard/tree/main/webapp/i18n) in this repository. 
+Help translate Focalboard! The plugin is already translated into several languages. We welcome corrections and new language translations submitted against the [appropriate language JSON file](https://github.com/mattermost/focalboard/tree/main/webapp/i18n) in this repository.
 
 ### Staying informed
 
