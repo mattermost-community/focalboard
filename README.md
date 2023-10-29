@@ -140,7 +140,7 @@ Before checking in commits, run `make ci`, which is similar to the `.gitlab-ci.y
 
 Help translate Focalboard! The plugin is already translated into several languages. We welcome corrections and new language translations submitted against the [appropriate language JSON file](https://github.com/mattermost/focalboard/tree/main/webapp/i18n) in this repository. To add a new language, follow the steps below:
 
-- Create a new file with the language code (I.E. `en.json`)
+- Create a new file with the language code (I.E. `en.json`) inside `webapp/i18n` directory
 - Copy the contents of the en.json file into your newly created file
 - Leave the keys in this file as they are and replace all the values with the translated strings
 - Go to `webapp/src/constants.ts` and add an entry for the language you are translating into under the **languages** array
