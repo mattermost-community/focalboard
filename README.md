@@ -149,6 +149,7 @@ Help translate Focalboard! The plugin is already translated into several languag
     - import the json of the language translation you have just added
     - Add the language code to the `supportedLanguages` array
     - Add another case to the switch case matching the language you added inside `getMessages`
+- Once you are done, you need to update the snapshot by using this command `npm run updatesnapshot`
 
 
 ### Staying informed
