@@ -138,7 +138,19 @@ Before checking in commits, run `make ci`, which is similar to the `.gitlab-ci.y
 
 ### Translating
 
-Help translate Focalboard! The plugin is already translated into several languages. We welcome corrections and new language translations submitted against the [appropriate language JSON file](https://github.com/mattermost/focalboard/tree/main/webapp/i18n) in this repository. 
+Help translate Focalboard! The plugin is already translated into several languages. We welcome corrections and new language translations submitted against the [appropriate language JSON file](https://github.com/mattermost/focalboard/tree/main/webapp/i18n) in this repository. To add a new language, follow the steps below:
+
+- Create a new file with the language code (I.E. `en.json`) inside `webapp/i18n` directory
+- Copy the contents of the en.json file into your newly created file
+- Leave the keys in this file as they are and replace all the values with the translated strings
+- Go to `webapp/src/constants.ts` and add an entry for the language you are translating into under the **languages** array
+- This array needs to consist of three keys: the language code, the name of the language and the display name of the language
+- Go to `webapp/src/i18n.tsx`:
+    - import the json of the language translation you have just added
+    - Add the language code to the `supportedLanguages` array
+    - Add another case to the switch case matching the language you added inside `getMessages`
+- Once you are done, you need to update the snapshot by using this command `npm run updatesnapshot`
+
 
 ### Staying informed
 
