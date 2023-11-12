@@ -887,6 +887,31 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           class="noicon"
                         />
                       </div>
+                      <div
+                        aria-label="한국어"
+                        class="MenuOption TextOption menu-option"
+                        role="button"
+                      >
+                        <div
+                          class="d-flex"
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
+                        <div
+                          class="menu-option__content"
+                        >
+                          <div
+                            class="menu-name"
+                          >
+                            한국어
+                          </div>
+                        </div>
+                        <div
+                          class="noicon"
+                        />
+                      </div>
                     </div>
                     <div
                       class="menu-spacer hideOnWidescreen"

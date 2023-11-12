@@ -160,6 +160,11 @@ class Constants {
             name: 'swedish',
             displayName: 'Svenska',
         },
+        {
+            code: 'ko',
+            name: 'korean',
+            displayName: '한국어',
+        },
     ]
 
     static readonly keyCodes: {[key: string]: [string, number]} = {
