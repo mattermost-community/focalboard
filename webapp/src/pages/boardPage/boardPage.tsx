@@ -73,7 +73,6 @@ const BoardPage = (props: Props): JSX.Element => {
     const activeViewId = useAppSelector(getCurrentViewId)
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
-    const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
@@ -300,25 +299,6 @@ const BoardPage = (props: Props): JSX.Element => {
                     <UndoRedoHotKeys/>
                     <WebsocketConnection/>
                     <VersionMessage/>
-
-                    {!mobileWarningClosed &&
-                        <div className='mobileWarning'>
-                            <div>
-                                <FormattedMessage
-                                    id='Error.mobileweb'
-                                    defaultMessage='Mobile web support is currently in early beta. Not all functionality may be present.'
-                                />
-                            </div>
-                            <IconButton
-                                onClick={() => {
-                                    UserSettings.mobileWarningClosed = true
-                                    setMobileWarningClosed(true)
-                                }}
-                                icon={<CloseIcon/>}
-                                title='Close'
-                                className='margin-right'
-                            />
-                        </div>}
 
                     {props.readonly && activeBoardId === undefined &&
                         <div className='error'>
