@@ -19,14 +19,17 @@
         min-height: 0;
         height: 50px;
         width: 45px;
-        background: none;
+        background: rgb(var(--sidebar-bg-rgb));
         padding: 0;
-        padding-left: 10px;
         display: block !important;
 
         > div {
             padding: 0;
             margin: auto;
+        }
+
+        .octo-sidebar-list {
+            padding-left: 10px !important;
         }
     }
 
