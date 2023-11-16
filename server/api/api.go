@@ -107,7 +107,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v2/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+	// r.HandleFunc("/api/v2/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
 }
 
 func getUserID(r *http.Request) string {

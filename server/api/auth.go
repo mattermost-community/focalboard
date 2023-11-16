@@ -6,7 +6,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
@@ -22,8 +21,6 @@ func (a *API) registerAuthRoutes(r *mux.Router) {
 	if !a.isPlugin {
 		r.HandleFunc("/login", a.handleLogin).Methods("POST")
 		r.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
-		r.HandleFunc("/register", a.handleRegister).Methods("POST")
-		r.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
 		r.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 	}
 }
@@ -147,100 +144,6 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auditRec.AddMeta("sessionID", session.ID)
-
-	jsonStringResponse(w, http.StatusOK, "{}")
-	auditRec.Success()
-}
-
-func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /register register
-	//
-	// Register new user
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: body
-	//   in: body
-	//   description: Register request
-	//   required: true
-	//   schema:
-	//     "$ref": "#/definitions/RegisterRequest"
-	// responses:
-	//   '200':
-	//     description: success
-	//   '401':
-	//     description: invalid registration token
-	//   '500':
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-	if a.MattermostAuth {
-		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
-		return
-	}
-
-	if len(a.singleUserToken) > 0 {
-		// Not permitted in single-user mode
-		a.errorResponse(w, r, model.NewErrUnauthorized("not permitted in single-user mode"))
-		return
-	}
-
-	requestBody, err := io.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r, err)
-		return
-	}
-
-	var registerData model.RegisterRequest
-	err = json.Unmarshal(requestBody, &registerData)
-	if err != nil {
-		a.errorResponse(w, r, err)
-		return
-	}
-	registerData.Email = strings.TrimSpace(registerData.Email)
-	registerData.Username = strings.TrimSpace(registerData.Username)
-
-	// Validate token
-	if len(registerData.Token) > 0 {
-		team, err2 := a.app.GetRootTeam()
-		if err2 != nil {
-			a.errorResponse(w, r, err2)
-			return
-		}
-
-		if registerData.Token != team.SignupToken {
-			a.errorResponse(w, r, model.NewErrUnauthorized("invalid token"))
-			return
-		}
-	} else {
-		// No signup token, check if no active users
-		userCount, err2 := a.app.GetRegisteredUserCount()
-		if err2 != nil {
-			a.errorResponse(w, r, err2)
-			return
-		}
-		if userCount > 0 {
-			a.errorResponse(w, r, model.NewErrUnauthorized("no sign-up token and user(s) already exist"))
-			return
-		}
-	}
-
-	if err = registerData.IsValid(); err != nil {
-		a.errorResponse(w, r, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "register", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
-	auditRec.AddMeta("username", registerData.Username)
-
-	err = a.app.RegisterUser(registerData.Username, registerData.Email, registerData.Password)
-	if err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
-		return
-	}
 
 	jsonStringResponse(w, http.StatusOK, "{}")
 	auditRec.Success()
