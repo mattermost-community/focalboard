@@ -14,11 +14,11 @@
     &.hidden {
         @include z-index(sidebar-hidden);
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         min-height: 0;
         height: 50px;
-        width: 50px;
+        width: 45px;
         background: none;
         padding: 0;
         padding-left: 10px;

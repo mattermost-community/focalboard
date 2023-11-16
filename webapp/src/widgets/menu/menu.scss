@@ -162,7 +162,7 @@
         flex: 0 0 auto;
     }
 
-    @media not screen and (max-width: 430px) {
+    @media not screen and (max-width: 1080px) {
         &.top {
             bottom: 0%;
         }
@@ -175,7 +175,7 @@
 
 .Menu.noselect,
 .SubMenuOption .SubMenu {
-    @media screen and (max-width: 430px) {
+    @media screen and (max-width: 1080px) {
         position: fixed;
         top: 0;
         left: 0;
@@ -192,6 +192,7 @@
         .menu-contents {
             justify-content: flex-end;
             min-height: 100%;
+            background: rgb(var(--center-channel-bg-rgb));
         }
 
         .menu-options {
@@ -225,7 +226,7 @@
         }
     }
 
-    @media not screen and (max-width: 430px) {
+    @media not screen and (max-width: 1080px) {
         .hideOnWidescreen {
             /* Hide controls (e.g. close button) on larger screens */
             display: none !important;
