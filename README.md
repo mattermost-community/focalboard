@@ -54,6 +54,12 @@ After downloading and installing the plugin in the System Console, select the me
 
 Boards API docs can be found over at https://htmlpreview.github.io/?https://github.com/mattermost/focalboard/blob/main/server/swagger/docs/html/index.html
 
+### One Click Self Host
+
+Deploy Focalboard with one click on Zeabur.
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/SU7RTR)
+
 ## Contribute to Focalboard
 
 For anyone interested in being an official maintainer of the Focalboard repository, please reach out to us on our [Focalboard Community Channel](https://community.mattermost.com/core/channels/focalboard). If there are no maintainers, and you’re still interested in adding your own improvements to the Focalboard Personal Editions, we encourage you to fork and maintain the repository.
