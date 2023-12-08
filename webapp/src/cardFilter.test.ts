@@ -10,7 +10,7 @@ import {TestBlockFactory} from './test/testBlockFactory'
 import {Utils} from './utils'
 
 import {IPropertyTemplate} from './blocks/board'
-import {blockTypes} from "./blocks/block";
+import {blockTypes} from './blocks/block'
 
 jest.mock('./utils')
 const mockedUtils = mocked(Utils, true)
