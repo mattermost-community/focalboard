@@ -1,6 +1,6 @@
 # :warning: Disclaimer
 
-**This repository is community supported and not maintained by Mattermost. Mattermost disclaims any and all liability for integrations, including Third Party Integrations and Mattermost Integrations. All integrations are provided "AS IS", and may be used at your own risk. Integrations may be modified or discontinued at any time.**
+**This repository is community supported and not maintained by Mattermost. Mattermost disclaims liability for integrations, including Third Party Integrations and Mattermost Integrations. Integrations may be modified or discontinued at any time.**
 
 Effective September 15th, 2023, the Focalboard plugin is no longer bundled with Mattermost and has transitioned to being fully community supported. Self-hosted Mattermost instances may continue to use the Focalboard plugin without interruption; however, Mattermost developers will not be adding any new enhancements or bug fixes beyond September 15th, 2023. This Focalboard repository will remain open indefinitely for contributions from the open source community.
 
