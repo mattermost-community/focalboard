@@ -10,7 +10,7 @@ import {TestBlockFactory} from './test/testBlockFactory'
 import {Utils} from './utils'
 
 import {IPropertyTemplate} from './blocks/board'
-import {BlockTypes, createBlock} from "./blocks/block";
+import {blockTypes} from "./blocks/block";
 
 jest.mock('./utils')
 const mockedUtils = mocked(Utils, true)
@@ -21,28 +21,26 @@ const board = TestBlockFactory.createBoard()
 board.id = '1'
 
 const block = {
-  id: 'id',
-  boardId: 'boardId',
-  parentId: 'parnetId',
-  createdBy: 'createdBy',
-  modifiedBy: 'modifiedBy',
-  schema: 1,
-  type: 'card',
-  title: 'title',
-  fields: {
-    properties: {
-      propertyId: 'Status'
-    }
-  },
-  createAt: new Date('December 7, 2023').getTime(),
-  updateAt: new Date('December 7, 2023').getTime(),
-  deleteAt: new Date('December 7, 2023').getTime()
+    id: 'id',
+    boardId: 'boardId',
+    parentId: 'parnetId',
+    createdBy: 'createdBy',
+    modifiedBy: 'modifiedBy',
+    schema: 1,
+    type: blockTypes[13],
+    title: 'title',
+    fields: {
+        properties: {
+            propertyId: 'Status',
+        },
+    },
+    createAt: new Date('December 7, 2023').getTime(),
+    updateAt: new Date('December 7, 2023').getTime(),
+    deleteAt: new Date('December 7, 2023').getTime(),
 }
 const card = TestBlockFactory.createCardWithBlock(board, block)
 
-
 describe('src/cardFilter', () => {
-
     const filterClause = createFilterClause({propertyId: 'propertyId', condition: 'isNotEmpty', values: ['Status']})
 
     describe('verify isClauseMet method', () => {
