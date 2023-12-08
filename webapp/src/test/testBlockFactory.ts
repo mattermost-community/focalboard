@@ -121,6 +121,15 @@ class TestBlockFactory {
         return card
     }
 
+    static createCardWithBlock(board?: Board, block?: Block): Card {
+      const card = createCard(block)
+      card.boardId = board ? board.id : 'board'
+      card.title = 'title'
+      card.fields.icon = 'i'
+      card.fields.properties.property1 = 'value1'
+      return card
+    }
+
     private static addToCard<BlockType extends Block>(block: BlockType, card: Card, isContent = true): BlockType {
         block.parentId = card.id
         block.boardId = card.boardId
