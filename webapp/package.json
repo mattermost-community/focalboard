@@ -9,7 +9,7 @@
 		"watchdev": "cross-env NODE_ENV=dev webpack --watch --progress --config webpack.dev.js",
 		"deveditor": "cross-env NODE_ENV=dev webpack server --config webpack.editor.js",
 		"test": "jest",
-        "test:watch": "jest --watch",
+    "test:watch": "jest --watch",
 		"updatesnapshot": "jest --updateSnapshot",
 		"check": "eslint --ext .tsx,.ts . --quiet --cache && stylelint **/*.scss",
 		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache && stylelint --fix **/*.scss",
