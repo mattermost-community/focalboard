@@ -153,7 +153,7 @@ describe('utils', () => {
         it('should show month, day and time for current year', () => {
             const currentYear = new Date().getFullYear()
             const date = new Date(currentYear, 6, 9, 15, 20)
-            const actual = Utils.displayDateTime(date, intl);
+            const actual = Utils.displayDateTime(date, intl)
             expect(actual).toBe('July 09 at 3:20 PM')
         })
 
