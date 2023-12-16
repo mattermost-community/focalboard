@@ -30,7 +30,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-        ref: ${{ github.head_ref }}
+        ref: ${{ env.BRANCH_NAME }}
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
@@ -46,7 +46,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-        ref: ${{ github.head_ref }}s
+        ref: ${{ env.BRANCH_NAME }}
     - name: npm ci
       run: |
         cd focalboard/webapp && npm ci && cd -
@@ -90,7 +90,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-        ref: ${{ github.head_ref }}
+        ref: ${{ env.BRANCH_NAME }}
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -113,7 +113,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-        ref: ${{ github.head_ref }}
+        ref: ${{ env.BRANCH_NAME }}
 
     - name: Set up Go
       uses: actions/setup-go@v3
