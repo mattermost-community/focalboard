@@ -29,7 +29,7 @@ const RHSChannelBoardsHeader = () => {
                     className='boards-rhs-header-logo'
                     src={Utils.buildURL(appBarIcon, true)}
                 />
-                <span>
+                <span dir='auto'>
                     <FormattedMessage
                         id='rhs-channel-boards-header.title'
                         defaultMessage='Boards'

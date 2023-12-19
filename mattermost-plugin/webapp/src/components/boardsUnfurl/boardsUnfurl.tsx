@@ -196,8 +196,8 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
                     <div className='header'>
                         <span className='icon'>{card.fields?.icon}</span>
                         <div className='information'>
-                            <span className='card_title'>{card.title}</span>
-                            <span className='board_title'>{board.title}</span>
+                            <span dir='auto' className='card_title'>{card.title}</span>
+                            <span dir='auto' className='board_title'>{board.title}</span>
                         </div>
                     </div>
 

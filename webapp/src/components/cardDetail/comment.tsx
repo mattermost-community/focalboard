@@ -66,6 +66,7 @@ const Comment: FC<Props> = (props: Props) => {
                 )}
             </div>
             <div
+                dir='auto'
                 className='comment-text'
                 dangerouslySetInnerHTML={{__html: html}}
             />

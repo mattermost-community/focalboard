@@ -24,6 +24,7 @@ const ListItem: ContentType = {
             <ul>
                 <li>
                     <input
+                        dir='auto'
                         ref={ref}
                         className='ListItem'
                         data-testid='list-item'

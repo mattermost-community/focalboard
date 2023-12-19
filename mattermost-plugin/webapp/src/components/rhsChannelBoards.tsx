@@ -139,7 +139,7 @@ const RHSChannelBoards = () => {
         <div className='focalboard-body'>
             <div className='RHSChannelBoards'>
                 <div className='rhs-boards-header'>
-                    <span className='linked-boards'>
+                    <span dir='auto' className='linked-boards'>
                         <FormattedMessage
                             id='rhs-boards.linked-boards'
                             defaultMessage='Linked boards'

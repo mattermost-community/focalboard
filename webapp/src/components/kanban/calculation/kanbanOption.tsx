@@ -61,7 +61,7 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
                 })
             }}
         >
-            <span>
+            <span dir='auto'>
                 {props.data.label} {props.data.value !== 'count' && <ChevronRight/>}
             </span>
 
@@ -85,7 +85,7 @@ const Option = (props: {data: OptionProps}): JSX.Element => {
                                         })
                                     }}
                                 >
-                                    <span>{property.name}</span>
+                                    <span dir='auto'>{property.name}</span>
                                 </div>
                             ))
                         }

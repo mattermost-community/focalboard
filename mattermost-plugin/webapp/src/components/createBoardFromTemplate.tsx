@@ -114,7 +114,7 @@ const CreateBoardFromTemplate = (props: Props) => {
         const descriptionLabel = description ? getSubstringWithCompleteWords(description, TEMPLATE_DESCRIPTION_LENGTH) : 'ㅤ'
 
         const templateDescription = (
-            <span className={`${cssPrefix}__description`}>
+            <span dir='auto' className={`${cssPrefix}__description`}>
                 {descriptionLabel}
             </span>
         )
@@ -126,7 +126,7 @@ const CreateBoardFromTemplate = (props: Props) => {
                 <span className={`${cssPrefix}__icon`}>
                     {icon || <CompassIcon icon='product-boards'/>}
                 </span>
-                <span className={`${cssPrefix}__title`}>
+                <span dir='auto' className={`${cssPrefix}__title`}>
                     {title}
                 </span>
                 {!selectedOption && templateDescription}
@@ -215,13 +215,14 @@ const CreateBoardFromTemplate = (props: Props) => {
             <div className='add-board-to-channel'>
                 <label>
                     <input
+                        dir='auto'
                         type='checkbox'
                         onChange={showNewBoardTemplateSelector}
                         checked={addBoard}
                         id={'add-board-to-channel'}
                         data-testid='add-board-to-channel-check'
                     />
-                    <span>
+                    <span dir='auto'>
                         {formatMessage({id: 'new_channel_modal.create_board.title', defaultMessage: 'Create a board for this channel'})}
                     </span>
                     {props.newBoardInfoIcon}

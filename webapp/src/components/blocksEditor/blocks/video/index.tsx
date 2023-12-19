@@ -59,6 +59,7 @@ const Video: ContentType<FileInfo> = {
 
         return (
             <input
+                dir='auto'
                 ref={ref}
                 className='Video'
                 data-testid='video-input'

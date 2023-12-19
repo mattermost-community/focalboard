@@ -61,7 +61,7 @@ const RHSChannelBoardItem = (props: Props) => {
         >
             <div className='board-info'>
                 {board.icon && <span className='icon'>{board.icon}</span>}
-                <span className='title'>{board.title || untitledBoardTitle}</span>
+                <span dir='auto' className='title'>{board.title || untitledBoardTitle}</span>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu

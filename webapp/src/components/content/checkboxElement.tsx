@@ -44,6 +44,7 @@ const CheckboxElement = (props: Props) => {
     return (
         <div className='CheckboxElement'>
             <input
+                dir='auto'
                 type='checkbox'
                 id={`checkbox-${block.id}`}
                 disabled={readonly}

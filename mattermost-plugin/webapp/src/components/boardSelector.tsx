@@ -186,6 +186,7 @@ const BoardSelector = () => {
                         <div className='queryWrapper'>
                             <SearchIcon/>
                             <input
+                                dir='auto'
                                 className='searchQuery'
                                 placeholder={intl.formatMessage({id: 'boardSelector.search-for-boards', defaultMessage:'Search for boards'})}
                                 type='text'
@@ -195,7 +196,7 @@ const BoardSelector = () => {
                             />
                         </div>
                     </div>
-                    <div className='searchResults'>
+                    <div dir='auto' className='searchResults'>
                         {/*When there are results to show*/}
                         {searchQuery && results.length > 0 &&
                             results.map((result) => (<BoardSelectorItem

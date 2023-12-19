@@ -85,6 +85,7 @@ const CreateCategory = (props: Props): JSX.Element => {
             <div className='CreateCategory'>
                 <div className='inputWrapper'>
                     <input
+                        dir='auto'
                         className='categoryNameInput'
                         type='text'
                         placeholder={placeholder}

@@ -30,6 +30,7 @@ const H3: ContentType = {
         }, [])
         return (
             <input
+                dir='auto'
                 ref={ref}
                 className='H3'
                 data-testid='h3'

@@ -26,6 +26,7 @@ const Checkbox: ContentType<ValueType> = {
         return (
             <div className='CheckboxView'>
                 <input
+                    dir='auto'
                     data-testid='checkbox-check'
                     type='checkbox'
                     onChange={(e) => {
@@ -49,6 +50,7 @@ const Checkbox: ContentType<ValueType> = {
         return (
             <div className='Checkbox'>
                 <input
+                    dir='auto'
                     type='checkbox'
                     data-testid='checkbox-check'
                     className='inputCheck'
@@ -63,6 +65,7 @@ const Checkbox: ContentType<ValueType> = {
                     checked={props.value.checked || false}
                 />
                 <input
+                    dir='auto'
                     ref={ref}
                     data-testid='checkbox-input'
                     className='inputText'
