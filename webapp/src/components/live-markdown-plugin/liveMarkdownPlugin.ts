@@ -180,7 +180,7 @@ const maintainInlineStyles = (
 
     // If enter was pressed (or the block was otherwise split) we must maintain
     // styles in the previous block as well
-    if (lastChangeType === 'split-block') {
+    if (lastChangeType === 'split-block' && contentState.getBlockBefore(blockKey) !== undefined) {
         const newPrevBlock = mapInlineStyles(
             contentState.getBlockBefore(blockKey)!,
             inlineStyleStrategies,
