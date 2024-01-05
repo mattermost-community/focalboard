@@ -1,0 +1,22 @@
+{
+  "name": "Focalboard",
+  "short_name": "Board",
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/static/favicon.svg?v=1",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/favicon.svg?v=1",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#333333",
+  "background_color": "white"
+}

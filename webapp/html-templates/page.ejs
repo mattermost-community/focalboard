@@ -8,6 +8,11 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
 
     <script>window.baseURL = '{{.BaseURL}}'</script>
+
+    <meta name="theme-color" content="#333333" />
+    <meta name="msapplication-TileColor" content="#333333" />
+    <link rel="manifest" href="{{.BaseURL}}/static/app.webmanifest" />
+    <link rel="mask-icon" href="{{.BaseURL}}/static/favicon.svg" color="#5bbad5">
     <link rel="icon" href="{{.BaseURL}}/static/favicon.svg?v=1" />
 </head>
 
