@@ -26,7 +26,7 @@ Focalboard is an open source, multilingual, self-hosted project management tool 
 
 It helps define, organize, track and manage work across individuals and teams. Focalboard comes in three editions:
 
-* **[Focalboard plugin](https://github.com/mattermost/focalboard/releases)**: The Focalboard plugin integrates into an exsting Mattermost instance to combine project management tools with messaging and collaboration for teams of all sizes.
+* **[Focalboard plugin](https://github.com/mattermost/focalboard/releases)**: The Focalboard plugin integrates into an existing Mattermost instance to combine project management tools with messaging and collaboration for teams of all sizes.
 
 * **[Personal Desktop](https://www.focalboard.com/docs/personal-edition/desktop/)**: A standalone, single-user [macOS](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8), [Windows](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website), or [Linux](https://www.focalboard.com/download/personal-edition/desktop/#linux-desktop) desktop app for your own todos and personal projects.
 
