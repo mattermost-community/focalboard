@@ -420,7 +420,7 @@
   "person.add-user-to-board-confirm-button": "Добавить доску",
   "person.add-user-to-board-permissions": "Разрешения",
   "person.add-user-to-board-question": "Вы хотите добавить {username} на доску?",
-  "person.add-user-to-board-warning": "{username} не является членом правления и не будет получать никаких уведомлений об этом.",
+  "person.add-user-to-board-warning": "{username} не является участником команды и не будет получать никаких уведомлений об этом.",
   "PersonProperty.me": "Я",
   "register.login-button": "или войти в систему, если у вас уже есть аккаунт",
   "register.signup-title": "Зарегистрируйте свой аккаунт",
