@@ -1,5 +1,3 @@
-# Disclaimer
-
 > [!WARNING]
 > **Effective September 15th, 2023, Mattermost, Inc. staff are no longer reviewing or merging pull requests for either Focalboard or the Mattermost Boards plugin in this repository (`mattermost/focalboard`). We encourage the community to fork this repository for continued development and contributions.**
 >
