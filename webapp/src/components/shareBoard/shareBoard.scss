@@ -1,5 +1,4 @@
-
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .ShareBoardDialog {
     .dialog {
@@ -34,7 +33,7 @@
             margin-right: 12px;
             display: flex;
             font-family: Metropolis, sans-serif;
-            font-size: 16px;
+            font-size: 1.125rem;
             background-color: transparent;
             border: 0;
             padding: 0 8px;
@@ -86,12 +85,12 @@
 
             .icon-refresh {
                 margin: 4px;
-                font-size: 18px;
+                font-size: 1.25rem;
             }
 
             .icon-content-copy {
                 margin-right: 4px;
-                font-size: 18px;
+                font-size: 1.25rem;
             }
 
             .IconButton {
@@ -101,12 +100,12 @@
 
             .icon-refresh {
                 margin: 4px;
-                font-size: 18px;
+                font-size: 1.25rem;
             }
 
             .icon-content-copy {
                 margin-right: 4px;
-                font-size: 18px;
+                font-size: 1.25rem;
             }
 
             .shareUrl {
@@ -155,7 +154,7 @@
             @include z-index(share-board-element);
             color: rgba(var(--center-channel-color-rgb), 0.64);
             position: relative;
-            font-size: 18px;
+            font-size: 1.25rem;
         }
 
         .userSearchInput {
@@ -167,7 +166,7 @@
             border-radius: 4px;
             border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
             padding-left: 35px;
-            font-size: 16px;
+            font-size: 1.125rem;
 
             &:focus {
                 border: 2px solid var(--button-bg);
@@ -249,5 +248,4 @@
             margin-right: 6px;
         }
     }
-
 }

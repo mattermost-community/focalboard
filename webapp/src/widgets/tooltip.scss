@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import "../styles/z-index";
 
 // Tooltip arrow width
 $tooltip-arrow-width: 6px;
@@ -31,7 +31,7 @@ $tooltop-vertical-offset: 2px;
 
 %hover-tooltip-arrow {
     @include z-index(hover-tooltip-arrow);
-    content: '';
+    content: "";
     position: absolute;
     width: 0;
     height: 0;
@@ -47,10 +47,12 @@ $tooltop-vertical-offset: 2px;
     position: relative;
     // Arrow gets added before content
     &:hover::before {
-        @extend %hover-tooltip-arrow; }
+        @extend %hover-tooltip-arrow;
+    }
     // Tooltip message gets added after content
     &:hover::after {
-        @extend %hover-tooltip-body; }
+        @extend %hover-tooltip-body;
+    }
 
     // Top tooltip arrow style
     &.tooltip-top:hover::before {

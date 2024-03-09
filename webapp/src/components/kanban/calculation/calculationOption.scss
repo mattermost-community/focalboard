@@ -1,4 +1,4 @@
-@import '../../../styles/z-index';
+@import "../../../styles/z-index";
 
 .KanbanCalculationOptions_CustomOption {
     color: rgba(var(--center-channel-color-rgb), 1);
@@ -48,14 +48,15 @@
         overflow: auto;
         background: rgb(var(--center-channel-bg-rgb));
         border: 0;
-        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),
+            0 4px 11px hsla(0, 0%, 0%, 0.1);
         padding: 8px 0;
         border-radius: 4px;
     }
 
     .CompassIcon.icon-chevron-right {
         float: right;
-        font-size: 18px;
+        font-size: 1.25rem;
         color: rgba(var(--center-channel-color-rgb), 0.56);
     }
 

@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import "../styles/z-index";
 
 .ValueSelector {
     width: 100%;
@@ -34,7 +34,7 @@
             flex: 0 0 auto;
 
             i {
-                font-size: 16px;
+                font-size: 1.125rem;
             }
         }
     }
@@ -78,7 +78,10 @@
                 background-color: unset;
 
                 &:hover {
-                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
+                    background-color: rgba(
+                        var(--center-channel-color-rgb),
+                        0.1
+                    );
                 }
             }
         }
@@ -95,8 +98,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-block;
-
-
 }
 
 .octo-property-value > .Label {

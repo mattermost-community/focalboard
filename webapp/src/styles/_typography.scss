@@ -2,8 +2,10 @@ h1,
 h2,
 h3,
 .title {
-    font-family: Metropolis, sans-serif;
-    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system,
+        BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+        "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
 .font-semibold {
@@ -11,97 +13,55 @@ h3,
 }
 
 .text-heading8 {
-    font-size: 32px;
-    font-weight: 600;
+    font-size: 2rem; /* 32px / 16px = 2rem */
 }
 
 .text-heading7 {
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 1.75rem; /* 28px / 16px = 1.75rem */
 }
 
 .text-heading6 {
-    font-size: 25px;
-    font-weight: 600;
+    font-size: 1.5625rem; /* 25px / 16px = 1.5625rem */
 }
 
 .text-heading5 {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 1.375rem; /* 22px / 16px = 1.375rem */
 }
 
 .text-heading4 {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 1.25rem; /* 20px / 16px = 1.25rem */
 }
 
 .text-heading3 {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 1.125rem; /* 18px / 16px = 1.125rem */
 }
 
 .text-heading2 {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 1rem; /* 16px / 16px = 1rem */
 }
 
 .text-heading1 {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 0.875rem; /* 14px / 16px = 0.875rem */
 }
 
 .text-base {
-    font-size: 16px;
+    font-size: 1rem; /* 16px / 16px = 1rem */
 }
 
 .text-75 {
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem; /* 12px / 16px = 0.75rem */
+    line-height: 1rem; /* 16px / 16px = 1rem */
 }
 
 .text-danger {
     color: var(--error-text);
 }
 
-// Metropolis font definitions
 @font-face {
-    font-family: 'Metropolis';
+    font-family: "Pretendard Variable";
+    font-weight: 45 920;
     font-style: normal;
-    font-weight: 600;
-    src: url('../fonts/metropolis/Metropolis-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Metropolis';
-    font-style: italic;
-    font-weight: 600;
-    src: url('../fonts/metropolis/Metropolis-SemiBoldItalic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Metropolis';
-    font-style: normal;
-    font-weight: 400;
-    src: url('../fonts/metropolis/Metropolis-Regular.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Metropolis';
-    font-style: italic;
-    font-weight: 400;
-    src: url('../fonts/metropolis/Metropolis-RegularItalic.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Metropolis';
-    font-style: normal;
-    font-weight: 300;
-    src: url('../fonts/metropolis/Metropolis-Light.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Metropolis';
-    font-style: italic;
-    font-weight: 300;
-    src: url('../fonts/metropolis/Metropolis-LightItalic.woff2') format('woff2');
+    font-display: swap;
+    src: url("../fonts/pretendard/PretendardVariable.woff2")
+        format("woff2-variations");
 }

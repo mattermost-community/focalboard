@@ -1,10 +1,10 @@
 .MarkdownEditorInput {
-    div[role=option] {
+    div[role="option"] {
         display: flex;
         align-items: center;
     }
 
-    span[data-testid='mentionText'] {
+    span[data-testid="mentionText"] {
         background: rgba(var(--button-bg-rgb), 0.16);
         border-radius: 4px;
         color: inherit;
@@ -22,7 +22,7 @@
             height: 40px;
             padding: 0 20px;
 
-            &[aria-selected='true'] {
+            &[aria-selected="true"] {
                 background: rgba(var(--center-channel-color-rgb), 0.08);
             }
 

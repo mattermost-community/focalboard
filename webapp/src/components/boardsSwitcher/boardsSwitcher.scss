@@ -15,7 +15,7 @@
         cursor: pointer;
         height: 28px;
         align-items: center;
-        font-size: 12px;
+        font-size: 0.875rem;
 
         &:hover {
             background: rgba(var(--sidebar-text-rgb), 0.16);
@@ -24,7 +24,7 @@
     }
 
     .CompassIcon.icon-magnify.CompassIcon {
-        font-size: 16px;
+        font-size: 1.125rem;
     }
 
     .add-board-icon {

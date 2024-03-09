@@ -41,13 +41,15 @@
             height: 100%;
 
             i {
-                font-size: 16px;
+                font-size: 1.125rem;
             }
         }
     }
 
-    @media screen and (max-width: 768px) { 
-        .mobileWarning {display: flex;}
+    @media screen and (max-width: 768px) {
+        .mobileWarning {
+            display: flex;
+        }
     }
 }
 

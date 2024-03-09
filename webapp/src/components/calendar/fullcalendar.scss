@@ -1,4 +1,4 @@
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .CalendarContainer {
     margin-right: 80px;
@@ -50,7 +50,7 @@
         white-space: nowrap;
         text-overflow: ellipsis;
 
-        input[value=''] {
+        input[value=""] {
             display: none;
         }
 
@@ -68,7 +68,7 @@
         margin: 4px 0;
 
         .octo-icon {
-            font-size: 16px;
+            font-size: 1.125rem;
             margin-right: 2px;
             display: flex;
             align-items: center;
@@ -104,7 +104,7 @@
                 align-items: center;
                 justify-content: center;
                 display: none;
-                font-size: 20px;
+                font-size: 1.375rem;
                 box-shadow: var(--elevation-1);
                 background: rgb(var(--center-channel-bg-rgb), 1);
                 border: 1px solid rgb(var(--center-channel-color-rgb), 0.12);
@@ -148,7 +148,7 @@
             color: rgb(var(--button-bg-rgb));
             margin: 2px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 1rem;
             height: 32px;
             display: inline-flex;
             align-items: center;
@@ -204,7 +204,7 @@
         padding: 4px 6px;
 
         &:hover::before {
-            content: '';
+            content: "";
             position: absolute;
             left: 0;
             top: 0;
@@ -215,7 +215,7 @@
     }
 
     .Label {
-        font-size: 12px;
+        font-size: 0.875rem;
         padding: 2px 6px;
     }
 
@@ -225,7 +225,7 @@
 
     .fc-event-title {
         display: -webkit-box; // stylelint-disable-line
-        font-size: 14px;
+        font-size: 1rem;
         white-space: normal;
         overflow: hidden;
         text-overflow: ellipsis;

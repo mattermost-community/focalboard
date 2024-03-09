@@ -48,11 +48,11 @@
     .Editable {
         margin-bottom: 0;
         flex-grow: 1;
-        font-size: 25px;
+        font-size: 1.5625rem;
         line-height: 30px;
     }
 
-    >.description>* {
+    > .description > * {
         flex-grow: 1;
     }
 }

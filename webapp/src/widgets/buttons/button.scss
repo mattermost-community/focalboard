@@ -1,6 +1,9 @@
 .Button {
     --danger-button-bg-rgb: 247, 67, 67;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Pretendard Variable", Pretendard, -apple-system,
+        BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+        "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -29,7 +32,7 @@
         justify-content: center;
         margin-right: 0;
         width: 18px;
-        font-size: 18px;
+        font-size: 1.25rem;
 
         &:first-child {
             margin-right: 8px;
@@ -51,14 +54,31 @@
         }
 
         &.danger {
-            background: linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+            background: linear-gradient(
+                rgb(var(--danger-button-bg-rgb)),
+                rgb(var(--danger-button-bg-rgb))
+            );
 
             &:hover {
-                background: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+                background: linear-gradient(
+                        rgba(0, 0, 0, 0.08),
+                        rgba(0, 0, 0, 0.08)
+                    ),
+                    linear-gradient(
+                        rgb(var(--danger-button-bg-rgb)),
+                        rgb(var(--danger-button-bg-rgb))
+                    );
             }
 
             &:active {
-                background: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+                background: linear-gradient(
+                        rgba(0, 0, 0, 0.16),
+                        rgba(0, 0, 0, 0.16)
+                    ),
+                    linear-gradient(
+                        rgb(var(--danger-button-bg-rgb)),
+                        rgb(var(--danger-button-bg-rgb))
+                    );
             }
         }
     }
@@ -142,12 +162,12 @@
     }
 
     &.size--xsmall {
-        font-size: 12px;
+        font-size: 0.875rem;
         padding: 0 10px;
         height: 24px;
 
         .CompassIcon {
-            font-size: 14.4px;
+            font-size: 0.875rem;
             width: 12px;
             height: 12px;
 
@@ -162,12 +182,12 @@
     }
 
     &.size--small {
-        font-size: 12px;
+        font-size: 0.875rem;
         padding: 0 16px;
         height: 32px;
 
         .CompassIcon {
-            font-size: 14.4px;
+            font-size: 0.875rem;
             width: 12px;
             height: 12px;
 
@@ -182,19 +202,19 @@
     }
 
     &.size--medium {
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 600;
         padding: 0 20px;
         height: 40px;
     }
 
     &.size--large {
-        font-size: 16px;
+        font-size: 1.125rem;
         height: 48px;
         padding: 0 24px;
 
         .CompassIcon {
-            font-size: 24px;
+            font-size: 1.62rem;
             width: 20px;
             height: 20px;
 

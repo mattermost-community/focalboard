@@ -39,7 +39,7 @@
 
         &:not(.subitem) {
             &::before {
-                content: '';
+                content: "";
                 background: rgb(var(--sidebar-text-active-border-rgb));
                 width: 2px;
                 height: 100%;
@@ -140,7 +140,7 @@
 
     .octo-sidebar-icon {
         .CompassIcon {
-            font-size: 18px;
+            font-size: 1.25rem;
             margin: 0 -2px 0 -1px;
 
             &::before {

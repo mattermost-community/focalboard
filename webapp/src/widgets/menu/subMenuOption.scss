@@ -1,4 +1,4 @@
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .Menu .menu-options .SubMenuOption {
     &.menu-option {
@@ -43,7 +43,10 @@
 
     @media screen and (max-width: 430px) {
         .SubMenu {
-            background-color: rgba(var(--center-channel-color-rgb), 0.8) !important;
+            background-color: rgba(
+                var(--center-channel-color-rgb),
+                0.8
+            ) !important;
         }
     }
 }

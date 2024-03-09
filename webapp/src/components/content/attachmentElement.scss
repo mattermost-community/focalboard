@@ -9,21 +9,21 @@
     position: relative;
 
     .fileElement-file-name {
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 600;
     }
 
     .fileElement-file-ext-and-size {
         text-transform: uppercase;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 0.875rem;
         line-height: 16px;
         color: rgb(var(--center-channel-color-rgb));
     }
 
     .fileElement-file-uploading {
         font-weight: 400;
-        font-size: 12px;
+        font-size: 0.875rem;
         line-height: 16px;
         color: rgb(var(--center-channel-color-rgb));
     }
@@ -39,7 +39,7 @@
 
     .fileElement-download-btn {
         display: none;
-        font-size: 20px;
+        font-size: 1.375rem;
         color: rgba(var(--center-channel-color-rgb), 0.56);
         padding: 8px;
 

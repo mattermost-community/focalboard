@@ -8,7 +8,7 @@
             font-family: Metropolis, sans-serif;
             display: flex;
             align-items: center;
-            font-size: 16px;
+            font-size: 1.125rem;
             margin-right: 5px;
             cursor: pointer;
 
@@ -42,7 +42,7 @@
         }
 
         .versionBadge {
-            font-size: 10px;
+            font-size: 0.75rem;
             line-height: 11px;
             font-weight: 500;
             color: rgba(var(--sidebar-text-rgb), 0.8);

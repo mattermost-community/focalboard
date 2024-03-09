@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import "../styles/z-index";
 
 .CenterPanel {
     flex: 1 1 auto;
@@ -12,7 +12,6 @@
         flex-direction: column;
     }
 }
-
 
 .BoardComponent {
     flex: 1 1 auto;
@@ -67,7 +66,6 @@
         }
     }
 
-
     > div:nth-child(2) {
         padding: 0 0 0 1px;
         margin-left: 32px;
@@ -87,7 +85,7 @@
     .NotificationBox {
         .AlertIcon {
             color: #ffbc1f;
-            font-size: 24px;
+            font-size: 1.62rem;
         }
     }
 }

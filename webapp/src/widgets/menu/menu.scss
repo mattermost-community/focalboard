@@ -1,4 +1,4 @@
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .Menu.noselect {
     @include z-index(menu);
@@ -43,7 +43,7 @@
         color: rgb(var(--center-channel-color-rgb));
 
         .CompassIcon {
-            font-size: 18px;
+            font-size: 1.25rem;
             opacity: 0.56;
             width: 18px;
 
@@ -63,7 +63,7 @@
             align-items: center;
             justify-content: flex-start;
             position: relative;
-            font-size: 14px;
+            font-size: 1rem;
             line-height: 24px;
             font-weight: 400;
             height: 32px;
@@ -117,7 +117,7 @@
             }
 
             > .menu-subtext {
-                font-size: 10px;
+                font-size: 0.75rem;
                 text-align: left;
             }
 
@@ -218,7 +218,7 @@
                 }
 
                 > .menu-name {
-                    font-size: 16px;
+                    font-size: 1.125rem;
                     justify-content: center;
                 }
             }

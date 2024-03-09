@@ -44,7 +44,7 @@
 
             &:not(.subitem) {
                 &::before {
-                    content: '';
+                    content: "";
                     background: rgb(var(--sidebar-text-active-border-rgb));
                     width: 2px;
                     height: 100%;
@@ -159,7 +159,7 @@
         color: rgba(var(--sidebar-text-rgb), 0.72);
 
         &.category-title {
-            font-size: 12px;
+            font-size: 0.875rem;
             text-transform: uppercase;
             font-weight: 600;
         }
@@ -190,7 +190,6 @@
     }
 
     .badge.newCategoryBadge {
-
         background-color: rgba(var(--sidebar-text-rgb));
         color: rgb(var(--sidebar-bg-rgb));
         display: flex;
@@ -199,7 +198,7 @@
         align-items: center;
         padding: 0 4px;
         border-radius: 4px;
-        font-size: 10px;
+        font-size: 0.75rem;
         font-weight: 600;
         letter-spacing: 0.01em;
         line-height: 16px;
@@ -219,7 +218,7 @@
         border-radius: 4px;
         opacity: 1;
         color: rgba(var(--sidebar-text-rgb), 0.72);
-        font-size: 12px;
+        font-size: 0.875rem;
         line-height: 16px;
         gap: 12px;
 
@@ -227,7 +226,7 @@
             height: 18px;
         }
     }
-    
+
     &.draggingOver {
         border: 1px solid rgba(var(--sidebar-text-rgb), 1);
         border-radius: 4px;

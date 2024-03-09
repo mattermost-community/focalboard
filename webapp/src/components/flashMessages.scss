@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import "../styles/z-index";
 
 .FlashMessages {
     @include z-index(flash-messages);
@@ -14,7 +14,7 @@
     min-height: 48px;
     color: rgba(var(--center-channel-bg-rgb), 1);
     background-color: rgba(var(--center-channel-color-rgb), 0.8);
-    font-size: 16px;
+    font-size: 1.125rem;
     font-weight: 600;
     vertical-align: middle;
     border-radius: 4px;

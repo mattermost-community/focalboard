@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import "../styles/z-index";
 
 .ConfirmAddUserForNotifications {
     display: flex;
@@ -18,7 +18,7 @@
         left: 6px;
         height: 0;
         text-align: left;
-        font-size: 12px;
+        font-size: 0.875rem;
 
         label {
             @include z-index(modal-permissions-label);

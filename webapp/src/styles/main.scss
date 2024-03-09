@@ -1,6 +1,6 @@
-@import 'typography';
-@import 'modifiers';
-@import 'z-index';
+@import "typography";
+@import "modifiers";
+@import "z-index";
 
 html {
     height: 100%;
@@ -29,9 +29,12 @@ html {
 
     padding: 0;
     margin: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Pretendard Variable", Pretendard, -apple-system,
+        BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+        "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     /* -webkit-font-smoothing: auto; */
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 24px;
 
     * {
@@ -118,8 +121,8 @@ html {
     /* Icons */
 
     .octo-icon {
-        font-family: 'Apple Color Emoji', 'Segoe UI Emoji', NotoColorEmoji,
-            'Noto Color Emoji', 'Segoe UI Symbol', 'Android Emoji', EmojiSymbols;
+        font-family: "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji,
+            "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols;
         line-height: 1.2;
         align-self: baseline;
         overflow: visible;
@@ -142,7 +145,7 @@ html {
 
     .octo-propertyvalue {
         max-width: 100%;
-        font-size: 12px;
+        font-size: 0.875rem;
         color: rgb(var(--center-channel-color-rgb));
 
         &.empty {
@@ -155,7 +158,7 @@ html {
             height: 16px;
 
             i {
-                font-size: 16px;
+                font-size: 1.125rem;
             }
         }
     }
@@ -174,11 +177,11 @@ html {
         color: rgba(var(--center-channel-color-rgb), 0.4);
     }
 
-    [contentEditable='true'] {
+    [contentEditable="true"] {
         user-select: text;
     }
 
-    [contentEditable='true']:empty::before {
+    [contentEditable="true"]:empty::before {
         content: attr(placeholder);
         display: block;
         color: rgba(var(--center-channel-color-rgb), 0.4);

@@ -45,7 +45,7 @@
     }
 
     .octo-propertyvalue {
-        input[value=''] {
+        input[value=""] {
             display: none;
         }
 
@@ -63,7 +63,7 @@
         margin-bottom: 8px;
 
         .octo-icon {
-            font-size: 16px;
+            font-size: 1.125rem;
             margin-right: 4px;
             display: flex;
             align-items: center;

@@ -1,4 +1,4 @@
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .NotificationBox {
     @include z-index(notification-box);
@@ -18,11 +18,11 @@
     }
 
     .content {
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 400;
 
         .title {
-            font-size: 14px;
+            font-size: 1rem;
             font-weight: 600;
             margin-bottom: 0;
             line-height: 25px;
@@ -34,11 +34,11 @@
     }
 
     .octo-tooltip {
-        font-size: 12px;
+        font-size: 0.875rem;
         font-weight: 600;
 
         .IconButton {
-            font-size: 14px;
+            font-size: 1rem;
             font-weight: 400;
         }
     }

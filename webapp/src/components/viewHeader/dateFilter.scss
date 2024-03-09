@@ -63,7 +63,7 @@
         flex-direction: row;
         align-items: center;
 
-        font-size: 14px;
+        font-size: 1rem;
         line-height: 24px;
         font-weight: 400;
         height: 32px;
@@ -74,32 +74,32 @@
             background: rgba(var(--button-bg-rgb), 0.08);
         }
 
-        >* {
+        > * {
             margin-left: 6px;
         }
 
-        >*:first-child {
+        > *:first-child {
             margin-left: 0;
         }
 
-        >.menu-name {
+        > .menu-name {
             display: flex;
             flex-grow: 1;
             white-space: nowrap;
         }
 
-        >.SubmenuTriangleIcon {
+        > .SubmenuTriangleIcon {
             fill: rgba(var(--body-color), 0.7);
         }
 
-        >.Icon {
+        > .Icon {
             opacity: 0.56;
             width: 16px;
             height: 16px;
             line-height: 16px;
         }
 
-        >.IconButton .Icon {
+        > .IconButton .Icon {
             margin-right: 0;
         }
     }
@@ -110,7 +110,8 @@
 
     .DayPickerInput-Overlay {
         background-color: rgba(var(--center-channel-bg-rgb));
-        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
+        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1),
+            0 4px 11px hsla(0, 0%, 0%, 0.1);
         line-height: 100%;
     }
 
@@ -216,7 +217,8 @@
         }
     }
 
-    .DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+    .DayPicker:not(.DayPicker--interactionDisabled)
+        .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
         background-color: rgba(var(--body-color), 0.2);
     }
 }

@@ -29,7 +29,7 @@
 
             .CloseCircle {
                 cursor: pointer;
-                font-size: 18px;
+                font-size: 1.25rem;
                 color: rgba(var(--center-channel-color-rgb), 0.64);
 
                 &:hover {
@@ -44,7 +44,7 @@
 
         input {
             height: 48px;
-            font-size: 16px;
+            font-size: 1.125rem;
             border-radius: 4px;
             border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
             background: var(--center-channel-bg);

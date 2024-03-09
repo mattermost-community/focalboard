@@ -1,4 +1,4 @@
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .BoardTemplateSelector__container {
     @include z-index(modal-permissions-label);
@@ -71,7 +71,7 @@
         border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
 
         .title {
-            font-size: 22px;
+            font-size: 1.42rem;
             margin: 0;
         }
 
@@ -117,7 +117,7 @@
         gap: 10px;
 
         i {
-            font-size: 16px;
+            font-size: 1.125rem;
         }
     }
 

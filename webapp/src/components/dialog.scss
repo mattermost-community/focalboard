@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import "../styles/z-index";
 
 .Dialog {
     &.dialog-back {
@@ -21,12 +21,12 @@
     .dialog-title {
         margin: 0;
         font-weight: 600;
-        font-size: 22px;
+        font-size: 1.42rem;
         line-height: 28px;
     }
 
     .dialog-subtitle {
-        font-size: 12px;
+        font-size: 0.875rem;
         margin-top: 8px;
     }
 

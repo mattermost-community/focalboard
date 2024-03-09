@@ -8,7 +8,7 @@
             height: calc(100% - 144px);
         }
 
-        >.CardDetail {
+        > .CardDetail {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -22,7 +22,7 @@
             }
         }
 
-        >.CardDetail--fullwidth {
+        > .CardDetail--fullwidth {
             padding-left: 78px;
         }
     }

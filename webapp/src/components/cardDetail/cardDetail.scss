@@ -1,4 +1,4 @@
-@import '../../styles/z-index';
+@import "../../styles/z-index";
 
 .CardDetail {
     .title {
@@ -32,10 +32,8 @@
         width: 100%;
     }
 
-
-
     .octo-propertyvalue {
-        font-size: 14px;
+        font-size: 1rem;
         padding: 4px 8px;
         min-height: 32px;
         display: flex;
@@ -186,7 +184,7 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        font-size: 14px;
+        font-size: 1rem;
         position: relative;
 
         > :not(.CardDetail__limited-bg) {
@@ -214,7 +212,7 @@
 
     &__limited-title {
         font-weight: bold;
-        font-size: 22px;
+        font-size: 1.42rem;
         line-height: 28px;
     }
 
