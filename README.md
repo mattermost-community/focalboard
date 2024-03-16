@@ -113,6 +113,10 @@ You can build standalone apps that package the server to run locally against SQL
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (`build-mac.yml`, `build-win.yml`, `build-ubuntu.yml`) for the detailed list of steps on each platform.
 
+### One Click Deployment Options (Third-Party)
+
+[![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploy.png)](https://repocloud.io/details/?app_id=33)
+
 ### Unit testing
 
 Before checking in commits, run `make ci`, which is similar to the `.gitlab-ci.yml` workflow and includes:
