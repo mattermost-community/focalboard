@@ -28,12 +28,22 @@ const KanbanColumn = (props: Props) => {
     if (isOver) {
         className += ' dragover'
     }
+    // return (
+    //     <div
+    //         ref={drop}
+    //         className={className}
+    //     >
+    //         {props.children}
+    //     </div>
+    // )
     return (
         <div
             ref={drop}
             className={className}
         >
-            {props.children}
+            <div className='octo-board-column-single'>
+                {props.children}
+            </div>
         </div>
     )
 }

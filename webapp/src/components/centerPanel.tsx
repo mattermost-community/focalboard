@@ -417,7 +417,6 @@ const CenterPanel = (props: Props) => {
                 </RootPortal>}
 
             <div className='top-head'>
-                <TopBar/>
                 <div className='mid-head'>
                     <ViewTitle
                         key={board.id + board.title}
@@ -436,7 +435,7 @@ const CenterPanel = (props: Props) => {
                         <ShareBoardTourStep/>
                     </div>
                 </div>
-                <ViewHeader
+                {/* <ViewHeader
                     board={props.board}
                     activeView={props.activeView}
                     cards={props.cards}
@@ -448,7 +447,7 @@ const CenterPanel = (props: Props) => {
                     addCardTemplate={addCardTemplate}
                     editCardTemplate={editCardTemplate}
                     readonly={props.readonly}
-                />
+                /> */}
             </div>
 
             {activeView.fields.viewType === 'board' &&

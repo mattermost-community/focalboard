@@ -94,7 +94,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                 <Search/>
                 <div>
                     <span>
-                        {intl.formatMessage({id: 'BoardsSwitcher.Title', defaultMessage: 'Find Boards'})}
+                        {intl.formatMessage({id: 'BoardsSwitcher.Title', defaultMessage: 'Find board...'})}
                     </span>
                 </div>
             </div>

@@ -6,16 +6,17 @@
     .BoardsSwitcher {
         display: flex;
         flex-direction: row;
-        background-color: rgba(var(--sidebar-text-rgb), 0.08);
+        background-color: transparent;
         color: rgba(var(--sidebar-text-rgb), 0.56);
         flex: 1;
-        padding: 6px 8px 6px 4px;
+        padding: 12px 8px 12px 4px;
         gap: 4px;
-        border-radius: 4px;
+        border-radius: 11px;
         cursor: pointer;
-        height: 28px;
+        height: 40px;
         align-items: center;
         font-size: 12px;
+        border: 1px solid #22272C;
 
         &:hover {
             background: rgba(var(--sidebar-text-rgb), 0.16);

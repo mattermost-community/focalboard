@@ -3,6 +3,7 @@
 .Kanban {
     overflow: auto;
     flex: 1;
+    margin-top: 17px;
 
     .octo-board-header {
         @include z-index(kanban-board-header);
@@ -10,7 +11,7 @@
         flex-direction: row;
         width: max-content;
         min-height: 30px;
-        padding: 16px 0;
+        // padding: 16px 0;
         color: #909090;
         position: sticky;
         top: 0;
@@ -24,9 +25,15 @@
         width: 260px;
         margin-right: 15px;
         vertical-align: middle;
+        background-color: #101204;
+        padding: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
 
         &.narrow {
             width: 220px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
 
         > div {
@@ -71,7 +78,7 @@
         display: flex;
         flex-direction: row;
         flex: 0 1 auto;
-        margin-top: 2px;
+        // margin-top: 2px;
     }
 
     .octo-board-column {

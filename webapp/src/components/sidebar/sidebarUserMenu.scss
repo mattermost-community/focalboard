@@ -2,12 +2,12 @@
     .logo {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: center !important;
 
         .logo-title {
             font-family: Metropolis, sans-serif;
             display: flex;
-            align-items: center;
+            align-items: center !important;
             font-size: 16px;
             margin-right: 5px;
             cursor: pointer;
@@ -38,7 +38,7 @@
             font-size: 11px;
             line-height: 11px;
             font-weight: 500;
-            color: rgba(var(--sidebar-text-rgb), 0.8);
+            color: rgba(201, 30, 30, 0.8);
         }
 
         .versionBadge {

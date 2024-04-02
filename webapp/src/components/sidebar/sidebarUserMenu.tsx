@@ -9,6 +9,7 @@ import {Constants} from '../../constants'
 import octoClient from '../../octoClient'
 import {IUser} from '../../user'
 import FocalboardLogoIcon from '../../widgets/icons/focalboard_logo'
+import SquadAvatar from '../../widgets/icons/adminAvatar'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import {getMe, setMe} from '../../store/users'
@@ -41,16 +42,17 @@ const SidebarUserMenu = () => {
                 <MenuWrapper>
                     <div className='logo'>
                         <div className='logo-title'>
-                            <FocalboardLogoIcon/>
-                            <span>{'Focalboard'}</span>
-                            <div className='versionFrame'>
+                            <SquadAvatar imageUrl='https://squad.midnight.works/assets/avatars/U05Q0AGNAKA_s.jpg' />
+                            {/* <FocalboardLogoIcon/> */}
+                            {/* <span>{'Focalboard'}</span> */}
+                            {/* <div className='versionFrame'>
                                 <div
                                     className='version'
                                     title={`v${Constants.versionString}`}
                                 >
                                     {`v${Constants.versionString}`}
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <Menu>

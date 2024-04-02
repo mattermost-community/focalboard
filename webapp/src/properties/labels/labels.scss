@@ -1,0 +1,72 @@
+.LabelPicker {
+    position: relative;
+   
+    .selectedColors {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .colorSelector {
+        width: 100px;
+        height: 32px;   
+        background-color: transparent; 
+        border: none; 
+        border-radius: 4px; 
+        padding: 0;
+        cursor: pointer;
+        outline: none; 
+        position: relative; 
+    }
+
+    .addLabel {
+        height: 32px;   
+        width: 32px;   
+        background-color: rgb(148 187 255 / 25%);
+        cursor: pointer;
+        outline: none; 
+        border: none; 
+    }
+
+    .labels {
+        position: relative;
+        height: 32px;   
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+    }
+
+    .labels {
+     
+        .colorsDropdown {
+            position: absolute;
+            padding: 15px;
+            border-radius: 10px;
+            top: 100%;
+            left: 0;
+            min-width: 100%; 
+            box-shadow: 0 2px 5px rgba(0,0,0,.2); 
+            z-index: 1000;
+            background-color: #7d7d7d;
+
+            .labelOption {
+                margin: 5px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+
+                .label {
+                    border-radius: 5px;
+                    cursor: pointer;
+                    width: 120px;
+                    height: 22px;   
+                }
+            }
+        }
+            
+    }
+  
+  }
+  

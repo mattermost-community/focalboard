@@ -7,6 +7,7 @@ import CreatedByProperty from './createdBy/property'
 import UpdatedTimeProperty from './updatedTime/property'
 import UpdatedByProperty from './updatedBy/property'
 import TextProperty from './text/property'
+import LabelsProperty from './labels/property'
 import EmailProperty from './email/property'
 import PhoneProperty from './phone/property'
 import NumberProperty from './number/property'
@@ -47,6 +48,7 @@ class PropertiesRegistry {
 
 const registry = new PropertiesRegistry()
 registry.register(new TextProperty())
+registry.register(new LabelsProperty())
 registry.register(new NumberProperty())
 registry.register(new EmailProperty())
 registry.register(new PhoneProperty())

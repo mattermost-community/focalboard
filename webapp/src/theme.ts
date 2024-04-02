@@ -70,11 +70,11 @@ export const darkThemeName = 'dark-theme'
 export const darkTheme = {
     ...defaultTheme,
 
-    mainBg: '55, 53, 47',
+    mainBg: '90, 90, 90',
     mainFg: '220, 220, 220',
     buttonBg: '80, 170, 221',
     buttonFg: '255, 255, 255',
-    sidebarBg: '75, 73, 67',
+    sidebarBg: '0, 0, 0',
     sidebarFg: '255, 255, 255',
     sidebarTextActiveBorder: '102, 185, 167',
     sidebarWhiteLogo: 'true',

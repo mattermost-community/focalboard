@@ -50,6 +50,7 @@ import {Board} from '../../blocks/board'
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
+import FocalboardLogoIcon from '../../widgets/icons/focalboard_logo'
 
 type Props = {
     activeBoardId?: string
@@ -347,11 +348,6 @@ const Sidebar = (props: Props) => {
         <div className='Sidebar octo-sidebar'>
             {!Utils.isFocalboardPlugin() &&
                 <div className='octo-sidebar-header'>
-                    <div className='heading'>
-                        <SidebarUserMenu/>
-                    </div>
-
-                    <div className='octo-spacer'/>
                     <div className='sidebarSwitcher'>
                         <IconButton
                             onClick={() => {
@@ -361,6 +357,17 @@ const Sidebar = (props: Props) => {
                             icon={<HideSidebarIcon/>}
                         />
                     </div>
+                    <div className='logo'>
+                        <div className='logo-title'>
+                            <FocalboardLogoIcon/>
+                        </div>
+                    </div>
+                    <div className='heading'>
+                        <SidebarUserMenu/>
+                    </div>
+
+                    {/* <div className='octo-spacer'/> */}
+                    
                 </div>}
 
             {team && team.id !== Constants.globalTeamId &&

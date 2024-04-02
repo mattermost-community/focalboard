@@ -1,0 +1,22 @@
+.avatar-container {
+    display: inline-block;
+    vertical-align: middle;
+  
+    .user-avatar, .default-avatar {
+      width: 20px; 
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover; 
+      
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px; 
+    }
+  
+    .default-avatar {
+      background-color: grey;
+      color: white; 
+    }
+  }
+  

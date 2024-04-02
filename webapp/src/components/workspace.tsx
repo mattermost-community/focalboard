@@ -186,13 +186,13 @@ const Workspace = (props: Props) => {
             <div className='mainFrame'>
                 {boardTemplateSelectorOpen &&
                     <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
-                {(board?.isTemplate) &&
+                {/* {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage
                         id='Workspace.editing-board-template'
                         defaultMessage="You're editing a board template."
                     />
-                </div>}
+                </div>} */}
                 <CenterContent
                     readonly={props.readonly}
                 />

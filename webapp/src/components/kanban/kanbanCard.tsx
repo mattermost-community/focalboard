@@ -87,6 +87,7 @@ const KanbanCard = (props: Props) => {
 
     const isOnboardingCard = card.title === 'Create a new card'
     const showOnboarding = isOnboardingCard && !match.params.cardId && !board.isTemplate && Utils.isFocalboardPlugin()
+    const labelColor = Array.isArray(card.fields.properties.label) ? card.fields.properties.label[0] : card.fields.properties.label;
 
     return (
         <>
@@ -128,6 +129,7 @@ const KanbanCard = (props: Props) => {
                 </MenuWrapper>
                 }
 
+                { card.fields.properties.label ? <div className='label' style={{ backgroundColor: labelColor}}></div> : undefined }
                 <div className='octo-icontitle'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                     <div
