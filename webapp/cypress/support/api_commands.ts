@@ -133,7 +133,7 @@ Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
 
 Cypress.Commands.add('uiAddNewGroup', (name?: string) => {
     cy.log('**Add a new group**')
-    cy.findByRole('button', {name: '+ Add a group'}).click()
+    cy.findByRole('button', {name: '+ Add list'}).click()
     cy.findByRole('textbox', {name: 'New group'}).should('exist')
 
     if (name) {

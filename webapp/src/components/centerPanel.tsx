@@ -51,6 +51,10 @@ import ViewHeader from './viewHeader/viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
 
+import ModalWrapper from './modalWrapper'
+import Button from './../widgets/buttons/button'
+
+
 import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
@@ -60,6 +64,7 @@ import CardLimitNotification from './cardLimitNotification'
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
+import ViewHeaderNew from './viewHeader/viewHeaderNew'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -421,6 +426,18 @@ const CenterPanel = (props: Props) => {
                     <ViewTitle
                         key={board.id + board.title}
                         board={board}
+                        readonly={props.readonly}
+                    />
+                    <ViewHeaderNew
+                        board={props.board}
+                        activeView={props.activeView}
+                        cards={props.cards}
+                        views={props.views}
+                        dateDisplayProperty={props.dateDisplayProperty}
+                        addCard={addEmptyCardAndShow}
+                        addCardFromTemplate={addCardFromTemplate}
+                        addCardTemplate={addCardTemplate}
+                        editCardTemplate={editCardTemplate}
                         readonly={props.readonly}
                     />
                     <div className='shareButtonWrapper'>

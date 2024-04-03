@@ -156,7 +156,7 @@ describe('Create and delete board / card', () => {
         // Create 10 empty groups
         cy.log('**Create new empty groups**')
         for (let i = 0; i < 10; i++) {
-            cy.contains('+ Add a group').scrollIntoView().should('be.visible').click()
+            cy.contains('+ Add list').scrollIntoView().should('be.visible').click()
             cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('have.length', i + 1)
         }
 

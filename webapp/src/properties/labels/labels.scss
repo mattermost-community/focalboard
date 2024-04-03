@@ -29,8 +29,7 @@
     }
 
     .labels {
-        position: relative;
-        height: 32px;   
+        height: 12px;   
         display: flex;
         align-items: center;
         justify-content: center;
@@ -45,8 +44,8 @@
             border-radius: 10px;
             top: 100%;
             left: 0;
-            min-width: 100%; 
-            box-shadow: 0 2px 5px rgba(0,0,0,.2); 
+            max-width: 200px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             background-color: #7d7d7d;
 

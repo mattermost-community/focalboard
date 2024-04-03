@@ -48,7 +48,7 @@ describe('Group board by different properties', () => {
 
         // Add another new group
         cy.log('**Add another new group**')
-        cy.findByRole('button', {name: '+ Add a group'}).click()
+        cy.findByRole('button', {name: '+ Add list'}).click()
         cy.findByRole('textbox', {name: 'New group'}).should('exist')
 
         // Add a new card to another group

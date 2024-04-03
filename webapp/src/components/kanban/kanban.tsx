@@ -266,7 +266,7 @@ const Kanban = (props: Props) => {
                             >
                                 <FormattedMessage
                                     id='BoardComponent.add-a-group'
-                                    defaultMessage='+ Add a group'
+                                    defaultMessage='+ Add list'
                                 />
                             </Button>
                         </div>

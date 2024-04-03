@@ -40,10 +40,10 @@ type Props = {
     onCalculationMenuClose: () => void
 }
 
-const defaultCalculation = 'count'
-const defaultProperty: IPropertyTemplate = {
-    id: Constants.titleColumnId,
-} as IPropertyTemplate
+// const defaultCalculation = 'count'
+// const defaultProperty: IPropertyTemplate = {
+//     id: Constants.titleColumnId,
+// } as IPropertyTemplate
 
 export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
@@ -83,9 +83,9 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
         className += ' dragover'
     }
 
-    const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
-    const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
-    const calculationProperty = groupCalculation ? props.board.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
+    // const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
+    // const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
+    // const calculationProperty = groupCalculation ? props.board.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
     return (
         <div
             key={group.option.id || 'empty'}
@@ -114,7 +114,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                     {groupTitle}
                 </Label>}
             {canEditOption &&
-                <Label color={group.option.color}>
+                <Label color={'black'}>
                     <Editable
                         value={groupTitle}
                         placeholderText='New Select'
@@ -132,7 +132,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         spellCheck={true}
                     />
                 </Label>}
-            <KanbanCalculation
+            {/* <KanbanCalculation
                 cards={group.cards}
                 menuOpen={props.calculationMenuOpen}
                 value={calculationValue}
@@ -156,7 +156,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
 
                     mutator.changeViewKanbanCalculations(board.id, props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
                 }}
-            />
+            /> */}
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>
@@ -191,14 +191,14 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                             </Menu>
                         </MenuWrapper>
                     </BoardPermissionGate>
-                    <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                    {/* <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                         <IconButton
                             icon={<AddIcon/>}
                             onClick={() => {
                                 props.addCard(group.option.id, true)
                             }}
                         />
-                    </BoardPermissionGate>
+                    </BoardPermissionGate> */}
                 </>
             }
         </div>

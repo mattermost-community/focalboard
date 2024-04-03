@@ -87,8 +87,7 @@ const KanbanCard = (props: Props) => {
 
     const isOnboardingCard = card.title === 'Create a new card'
     const showOnboarding = isOnboardingCard && !match.params.cardId && !board.isTemplate && Utils.isFocalboardPlugin()
-    const labelColor = Array.isArray(card.fields.properties.label) ? card.fields.properties.label[0] : card.fields.properties.label;
-
+    // const labelColors = card.fields.properties.label;
     return (
         <>
             <div
@@ -129,7 +128,21 @@ const KanbanCard = (props: Props) => {
                 </MenuWrapper>
                 }
 
-                { card.fields.properties.label ? <div className='label' style={{ backgroundColor: labelColor}}></div> : undefined }
+                {
+                    Array.isArray(card.fields.properties.label) ? 
+                        <div className='card-labels'>
+                            {card.fields.properties.label.map((labelColor: string) => (
+                                <div key={labelColor} className='label' style={{ backgroundColor: labelColor }}></div>
+                            ))}
+                        </div> 
+                    : card.fields.properties.label ?
+                        <div className='card-labels'>
+                            <div className='label' style={{ backgroundColor: card.fields.properties.label }}></div>
+                        </div>
+                    : undefined 
+                }
+
+
                 <div className='octo-icontitle'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                     <div

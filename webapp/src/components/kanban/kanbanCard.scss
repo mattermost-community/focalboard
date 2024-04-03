@@ -57,12 +57,18 @@
         }
     }
 
-    .label {
-        height: 7px;
-        width: 40px;
-        background-color: transparent; 
-        border-radius: 4px;
-        margin-bottom: 5px;
+    .card-labels {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    
+        .label {
+            height: 7px;
+            width: 40px;
+            background-color: transparent; 
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
     }
 
     .octo-icontitle {

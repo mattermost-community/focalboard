@@ -15,7 +15,7 @@ describe('Manage groups', () => {
         cy.visit('/')
         cy.uiCreateEmptyBoard()
 
-        cy.contains('+ Add a group').click({force: true})
+        cy.contains('+ Add list').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
 
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').
@@ -30,7 +30,7 @@ describe('Manage groups', () => {
         cy.visit('/')
         cy.uiCreateEmptyBoard()
 
-        cy.contains('+ Add a group').click({force: true})
+        cy.contains('+ Add list').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
 
         cy.get('.KanbanColumnHeader').last().within(() => {
@@ -59,7 +59,7 @@ describe('Manage groups', () => {
         cy.visit('/')
         cy.uiCreateEmptyBoard()
 
-        cy.contains('+ Add a group').click({force: true})
+        cy.contains('+ Add list').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
 
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').
