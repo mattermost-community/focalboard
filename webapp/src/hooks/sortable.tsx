@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useRef} from 'react'
-import {useDrag, useDrop, DragElementWrapper, DragSourceOptions, DragPreviewOptions, useDragLayer} from 'react-dnd'
+import {useDrag, useDrop, DragElementWrapper, DragSourceOptions, DragPreviewOptions} from 'react-dnd'
 
 import {IContentBlockWithCords} from '../blocks/contentBlock'
 import {Block} from '../blocks/block'

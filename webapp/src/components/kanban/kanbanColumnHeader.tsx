@@ -34,7 +34,7 @@ type Props = {
     readonly: boolean
     addCard: (groupByOptionId?: string, show?: boolean) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
-    onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
+    // onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
     calculationMenuOpen: boolean
     onCalculationMenuOpen: () => void
     onCalculationMenuClose: () => void
@@ -60,28 +60,28 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             isDragging: monitor.isDragging(),
         }),
     }))
-    const [{isOver}, drop] = useDrop(() => ({
-        accept: 'column',
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-        drop: (item: IPropertyOption) => {
-            props.onDropToColumn(item, undefined, group.option)
-        },
-    }), [props.onDropToColumn])
+    // const [{isOver}, drop] = useDrop(() => ({
+    //     accept: 'column',
+    //     collect: (monitor) => ({
+    //         isOver: monitor.isOver(),
+    //     }),
+    //     drop: (item: IPropertyOption) => {
+    //         props.onDropToColumn(item, undefined, group.option)
+    //     },
+    // }), [props.onDropToColumn])
 
     useEffect(() => {
         setGroupTitle(group.option.value)
     }, [group.option.value])
 
-    if (canEditBoardProperties) {
-        drop(drag(headerRef))
-    }
+    // if (canEditBoardProperties) {
+    //     drop(drag(headerRef))
+    // }
 
     let className = 'octo-board-header-cell KanbanColumnHeader'
-    if (isOver) {
-        className += ' dragover'
-    }
+    // if (isOver) {
+    //     className += ' dragover'
+    // }
 
     // const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
     // const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation

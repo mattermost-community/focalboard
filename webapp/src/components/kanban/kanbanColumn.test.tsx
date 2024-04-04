@@ -10,7 +10,8 @@ describe('src/components/kanban/kanbanColumn', () => {
     test('should match snapshot', () => {
         const {container} = render(wrapDNDIntl(
             <KanbanColumn
-                onDrop={jest.fn()}
+                // onDrop={jest.fn()}
+                columnId='1'
             >
                 {}
             </KanbanColumn>,

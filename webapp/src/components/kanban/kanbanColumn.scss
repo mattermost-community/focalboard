@@ -5,8 +5,21 @@
 // }
 
 .octo-board-column-single {
+    position: relative;
     background-color: #101204;
     padding: 10px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+
+    .buttonWrapper {
+        height: 30px; 
+        display: flex;
+        align-items: center;
+        
+        .Button {
+            position: absolute;
+            left: 3px;
+            bottom: 10px;
+        }
+    }
 }

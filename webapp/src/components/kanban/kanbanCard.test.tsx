@@ -88,6 +88,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     onDrop={jest.fn()}
                     showCard={jest.fn()}
                     isManualSort={false}
+                    index={0}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -106,6 +107,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     onDrop={jest.fn()}
                     showCard={jest.fn()}
                     isManualSort={false}
+                    index={0}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -124,6 +126,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     onDrop={jest.fn()}
                     showCard={jest.fn()}
                     isManualSort={false}
+                    index={0}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -160,6 +163,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     onDrop={jest.fn()}
                     showCard={jest.fn()}
                     isManualSort={false}
+                    index={0}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -186,6 +190,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     onDrop={jest.fn()}
                     showCard={jest.fn()}
                     isManualSort={false}
+                    index={0}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
