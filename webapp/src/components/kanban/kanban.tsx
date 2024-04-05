@@ -29,10 +29,11 @@ import KanbanColumn from './kanbanColumn'
 import KanbanColumnHeader from './kanbanColumnHeader'
 import KanbanHiddenColumnItem from './kanbanHiddenColumnItem'
 
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import './kanban.scss'
-import { first } from 'lodash'
+import { divide, first } from 'lodash'
+import Group from 'react-select/dist/declarations/src/components/Group'
 
 type Props = {
     board: Board
@@ -220,225 +221,269 @@ const Kanban = (props: Props) => {
         return <div/>
     }
 
+
+    const [localCards, setLocalCards] = useState(cards);
+
     const onDragEnd = useCallback(async (result) => {
-        // const { draggableId, destination, source } = result;
-        // console.log(cards)
-        // if (!destination || !groupByProperty) {
-        //     return; 
-        // }
+        const { draggableId, destination, source } = result;
 
-        // const srcCard = cards.find(card => card.id === draggableId);
-        // if (!srcCard) {
-        //     return; 
-        // }
+        console.log(draggableId)
+        console.log(destination)
+        console.log(source)
 
-        // let newCardsOrder = [...cards];
-        // newCardsOrder = newCardsOrder.filter(card => card.id !== draggableId);
+        if (!destination || !source || !groupByProperty) {
+            return;
+        }
+    
+        // No movement happened
+        if (destination.droppableId === source.droppableId && destination.index === source.index) {
+            return;
+        }
+    
+        let newCardsOrder = Array.from(localCards);
+        const movedCardIndex = newCardsOrder.findIndex(card => card.id === draggableId);
+        const movedCard = newCardsOrder[movedCardIndex];
+    
+        if (destination.droppableId === source.droppableId) {
+            newCardsOrder.splice(movedCardIndex, 1); 
+            newCardsOrder.splice(destination.index, 0, movedCard);
+        } else {
+            const updatedCard = { ...movedCard, fields: { ...movedCard.fields, properties: { ...movedCard.fields.properties, [groupByProperty.id]: destination.droppableId } } };
+            newCardsOrder.splice(movedCardIndex, 1);
+            newCardsOrder.splice(destination.index, 0, updatedCard); 
+        }
+    
+        setLocalCards(newCardsOrder);
+    
+        if (destination.droppableId === source.droppableId && destination.droppableId !== 'columns') {
+            const newCardsOrder = [...localCards];
+            const [reorderedCard] = newCardsOrder.splice(source.index, 1);
+            newCardsOrder.splice(destination.index, 0, reorderedCard);
+            setLocalCards(newCardsOrder);
 
-        // const matchingCards = newCardsOrder.filter(card =>
-        //     Object.values(card.fields.properties).includes(destination.droppableId)
-        // );
-
-        // if (source.droppableId === destination.droppableId) {
-        //     const startIndex = Math.min(source.index, destination.index);
-        //     const endIndex = Math.max(source.index, destination.index);
-        //     const columnCards = newCardsOrder.filter(card =>
-        //         Object.values(card.fields.properties).includes(destination.droppableId)
-        //     ).slice(startIndex, endIndex + 1);
-
-        //     if (destination.index > source.index) {
-        //         columnCards.push(srcCard);
-        //     } else {
-        //         columnCards.unshift(srcCard);
-        //     }
-        //     newCardsOrder = [
-        //         ...newCardsOrder.filter(card => card.boardId !== destination.droppableId),
-        //         ...columnCards
-        //     ];
-        // } else {
-        //     const destinationIndex = newCardsOrder.findIndex(card => card.boardId === destination.droppableId && card.id !== draggableId);
-        //     newCardsOrder.splice(destinationIndex + destination.index, 0, { ...srcCard, boardId: destination.droppableId });
-        // }
-
-        // console.log(newCardsOrder);
-
-        // const dstCardIndex = newCardsOrder.findIndex(card => card.boardId === destination.droppableId);
-        // const dstCard = newCardsOrder[dstCardIndex];
-
-        // if (!srcCard || !dstCard || srcCard.id === dstCard.id) {
-        //     return;
-        // }
-
-        // Utils.log(`onDropToCard: ${dstCard.title}`);
-        // const { selectedCardIds } = props;
-        // console.log(selectedCardIds);  
-
-        // const optionId = dstCard.fields.properties[groupByProperty.id];
-        // const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id));
-        // console.log(draggedCardIds);  
-
-        // const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card';
         
-        // const draggedCards = draggedCardIds
-        //     .map(id => newCardsOrder.find(card => card.id === id))
-        //     .filter((card): card is Card => card !== undefined); 
+            const optionId = source.droppableId;
+            const description = newCardsOrder.length > 1 ? `drag ${newCardsOrder.length} cards` : 'drag card';
+            let oldCardOrder = newCardsOrder.map(card => card.id);
+            let cardOrder = newCardsOrder.map(card => card.id);
+            
+            await mutator.performAsUndoGroup(async () => {
+                const awaits = newCardsOrder.map(draggedCard => {
+                    if (draggedCard.fields.properties[groupByProperty.id] !== optionId) {
+                        return mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty.id, optionId, description);
+                    }
+                }).filter(Boolean);
+            
+                await Promise.all(awaits);
+                await mutator.changeViewCardOrder(props.board.id, activeView.id, oldCardOrder, cardOrder, description);
+            }); 
+            
+        } else if (destination.droppableId !== source.droppableId) {
 
-        // let cardOrder = newCardsOrder.map(card => card.id);
-        // const isDraggingDown = cardOrder.indexOf(srcCard.id) < cardOrder.indexOf(dstCard.id);
-        // cardOrder = cardOrder.filter(id => !draggedCardIds.includes(id));
-        // let destIndex = cardOrder.indexOf(dstCard.id) + (isDraggingDown ? 1 : 0);
-        // cardOrder.splice(destIndex, 0, ...draggedCardIds);
-        
+            const {selectedCardIds} = props
+            const optionId = destination.droppableId;
+            let draggedCardIds = selectedCardIds;
+            
+            if (selectedCardIds.length === 0) {
+                draggedCardIds = [draggableId]; 
+            } else {
+                draggedCardIds = selectedCardIds; 
+            }
 
-        // await mutator.performAsUndoGroup(async () => {
-        //     const awaits = draggedCards.map(draggedCard => {
-        //         if (draggedCard?.fields.properties[groupByProperty.id] !== optionId) {
-        //             return mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty.id, optionId, description);
-        //         }
-        //     }).filter(Boolean);
-        
-        //     await Promise.all(awaits);
-        //     await mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description);
-        // });
-    }, [cards, groupByProperty, props.selectedCardIds, props.board.id, activeView.id, activeView.fields.cardOrder, mutator]);    
+
+            console.log(draggedCardIds)
+            await mutator.performAsUndoGroup(async () => {
+                const cardsById: { [key: string]: Card } = cards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
+                    acc[c.id] = c
+                    return acc
+                }, {})
+                const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o]).filter((c) => c)
+                const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
+                const awaits = []
+                for (const draggedCard of draggedCards) {
+                    Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
+                    const oldValue = draggedCard.fields.properties[groupByProperty!.id]
+                    if (optionId !== oldValue) {
+                        awaits.push(mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty!.id, optionId, description))
+                    }
+                }
+                const newOrder = orderAfterMoveToColumn(draggedCardIds, optionId)
+                awaits.push(mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, newOrder, description))
+                await Promise.all(awaits)
+            })
+        } else {
+            const visibleOptionIds = visibleGroups.map((o) => o.option.id)
+            const srcBlockX = source.index
+            const dstBlockX = destination.index
+
+            // Here aboveRow means to the left while belowRow means to the right
+            const moveTo = (srcBlockX > dstBlockX ? 'aboveRow' : 'belowRow') as Position
+
+            const visibleOptionIdsRearranged = dragAndDropRearrange({
+                contentOrder: visibleOptionIds,
+                srcBlockX,
+                srcBlockY: -1,
+                dstBlockX,
+                dstBlockY: -1,
+                srcBlockId: source.draggableId,
+                dstBlockId: destination.draggableId,
+                moveTo,
+            }) as string[]
+
+            await mutator.changeViewVisibleOptionIds(props.board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIdsRearranged)
+        }   
+    
+        console.log(`Moved item ${draggableId} from ${source.droppableId} to ${destination.droppableId}`);
+    }, [cards, groupByProperty, props.selectedCardIds, props.board.id, activeView.id, activeView.fields.cardOrder, mutator]);       
       
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <ScrollingComponent
-                className='Kanban'
-                horizontalStrength={hStrength}
-                verticalStrength={vStrength}
-            >
-                    <div
-                        className='octo-board-header'
-                        id='mainBoardHeader'
+            <Droppable droppableId="columns" direction="horizontal" type="column">
+                {(provided) => (
+                    <div 
+                        {...provided.droppableProps} 
+                        ref={provided.innerRef}
+                        className='Kanban'
                     >
-                        {/* Column headers */}
+                        <div
+                            className='octo-board-header'
+                            id='mainBoardHeader'
+                        >
+                            {visibleGroups.map((group, index) => (
+                                <Draggable key={group.option.id} draggableId={group.option.id} index={index}>
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                        >
+                                            {/* Column headers */}
 
-                        {visibleGroups.map((group) => (
-                            <KanbanColumnHeader
-                                key={group.option.id}
-                                group={group}
-                                board={board}
-                                activeView={activeView}
-                                intl={props.intl}
-                                groupByProperty={groupByProperty}
-                                addCard={props.addCard}
-                                readonly={props.readonly}
-                                propertyNameChanged={propertyNameChanged}
-                                // onDropToColumn={onDropToColumn}
-                                calculationMenuOpen={showCalculationsMenu.get(group.option.id) || false}
-                                onCalculationMenuOpen={() => toggleOptions(group.option.id, true)}
-                                onCalculationMenuClose={() => toggleOptions(group.option.id, false)}
-                            />
-                        ))}
-
-                        {/* Hidden column header */}
-
-                        {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
-                            <div className='octo-board-header-cell narrow'>
-                                <FormattedMessage
-                                    id='BoardComponent.hidden-columns'
-                                    defaultMessage='Hidden columns'
-                                />
-                            </div>
-                        }
-
-                        {!props.readonly &&
-                            <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                                <div className='octo-board-header-cell narrow'>
-                                    <Button
-                                        onClick={addGroupClicked}
-                                    >
-                                        <FormattedMessage
-                                            id='BoardComponent.add-a-group'
-                                            defaultMessage='+ Add list'
-                                        />
-                                    </Button>
-                                </div>
-                            </BoardPermissionGate>
-                        }
-                    </div>
-
-                    {/* Main content */}
-
-                    <div
-                        className='octo-board-body'
-                        id='mainBoardBody'
-                    >
-                        {/* Columns */}
-
-                        {visibleGroups.map((group) => (
-                            <KanbanColumn
-                                key={group.option.id || 'empty'}
-                                // onDrop={(card: Card) => onDropToColumn(group.option, card)}
-                                columnId={group.option.id || 'empty'}
-                            >
-                                {group.cards.map((card, index) => (
-                                    <KanbanCard
-                                        card={card}
-                                        board={board}
-                                        visiblePropertyTemplates={visiblePropertyTemplates}
-                                        visibleBadges={visibleBadges}
-                                        key={card.id}
-                                        readonly={props.readonly}
-                                        isSelected={props.selectedCardIds.includes(card.id)}
-                                        onClick={props.onCardClicked}
-                                        onDrop={onDropToCard}
-                                        showCard={props.showCard}
-                                        isManualSort={isManualSort}
-                                        index={index}
-                                    />
-                                ))}
-                                {!props.readonly &&
-                                    <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                                        <div className='buttonWrapper'>
-                                            <Button
-                                                onClick={() => {
-                                                    if (defaultTemplateID) {
-                                                        props.addCardFromTemplate(defaultTemplateID, group.option.id)
-                                                    } else {
-                                                        props.addCard(group.option.id, true)
-                                                    }
-                                                }}
-                                            >
-                                                <FormattedMessage
-                                                    id='BoardComponent.new'
-                                                    defaultMessage='+ Add card'
+                                                <KanbanColumnHeader
+                                                    key={group.option.id}
+                                                    group={group}
+                                                    board={board}
+                                                    activeView={activeView}
+                                                    intl={props.intl}
+                                                    groupByProperty={groupByProperty}
+                                                    addCard={props.addCard}
+                                                    readonly={props.readonly}
+                                                    propertyNameChanged={propertyNameChanged}
+                                                    calculationMenuOpen={showCalculationsMenu.get(group.option.id) || false}
+                                                    onCalculationMenuOpen={() => toggleOptions(group.option.id, true)}
+                                                    onCalculationMenuClose={() => toggleOptions(group.option.id, false)}
                                                 />
-                                            </Button>
+
+                                            {/* Main content */}
+
+                                            <div
+                                                className='octo-board-body'
+                                                id='mainBoardBody'
+                                            >
+                                            {/* Columns */}                    
+                                                    <KanbanColumn
+                                                        key={group.option.id || 'empty'}
+                                                        columnId={group.option.id || 'empty'}
+                                                    >
+                                                        {group.cards.map((card, index) => (
+                                                            <KanbanCard
+                                                                card={card}
+                                                                board={board}
+                                                                visiblePropertyTemplates={visiblePropertyTemplates}
+                                                                visibleBadges={visibleBadges}
+                                                                key={card.id}
+                                                                readonly={props.readonly}
+                                                                isSelected={props.selectedCardIds.includes(card.id)}
+                                                                onClick={props.onCardClicked}
+                                                                onDrop={onDropToCard}
+                                                                showCard={props.showCard}
+                                                                isManualSort={isManualSort}
+                                                                index={index}
+                                                            />
+                                                        ))}
+                                                        {!props.readonly &&
+                                                            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                                                                <div className='buttonWrapper'>
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            if (defaultTemplateID) {
+                                                                                props.addCardFromTemplate(defaultTemplateID, group.option.id)
+                                                                            } else {
+                                                                                props.addCard(group.option.id, true)
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        <FormattedMessage
+                                                                            id='BoardComponent.new'
+                                                                            defaultMessage='+ Add card'
+                                                                        />
+                                                                    </Button>
+                                                                </div>
+                                                                        
+                                                            </BoardPermissionGate>
+                                                        }
+                                                    </KanbanColumn>
+                                                {/* ))} */}
+                                            </div>
                                         </div>
+                                    )}
+                                </Draggable>                                                           
+                            ))}
+                            {provided.placeholder}
+                                {/* Hidden column header */}
+
+                                    {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
+                                    <div style={{display: 'blocks'}}>
+                                        <div className='octo-board-header-cell narrow'>
+                                            <FormattedMessage
+                                                id='BoardComponent.hidden-columns'
+                                                defaultMessage='Hidden columns'
+                                            />
+                                        </div>
+                                        <div className='octo-board-column narrow'>
+                                            {hiddenGroups.map((group) => (
+                                                <KanbanHiddenColumnItem
+                                                    key={group.option.id}
+                                                    group={group}
+                                                    activeView={activeView}
+                                                    intl={props.intl}
+                                                    readonly={props.readonly}
+                                                    onDrop={(card: Card) => onDropToColumn(group.option, card)}
+                                                />
+                                            ))}
+                                            {hiddenCardsCount > 0 &&
+                                                <div className='ml-1'>
+                                                    <HiddenCardCount
+                                                        hiddenCardsCount={hiddenCardsCount}
+                                                        showHiddenCardNotification={props.showHiddenCardCountNotification}
+                                                /></div>}
+                                        </div>
+                                    </div>
                                         
-                                    </BoardPermissionGate>
-                                }
-                            </KanbanColumn>
-                        ))}
+                                    }
+                                    {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
+                                        <div></div> }
 
-                        {/* Hidden columns */}
-
-                        {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
-                            <div className='octo-board-column narrow'>
-                                {hiddenGroups.map((group) => (
-                                    <KanbanHiddenColumnItem
-                                        key={group.option.id}
-                                        group={group}
-                                        activeView={activeView}
-                                        intl={props.intl}
-                                        readonly={props.readonly}
-                                        onDrop={(card: Card) => onDropToColumn(group.option, card)}
-                                    />
-                                ))}
-                                {hiddenCardsCount > 0 &&
-                                <div className='ml-1'>
-                                    <HiddenCardCount
-                                        hiddenCardsCount={hiddenCardsCount}
-                                        showHiddenCardNotification={props.showHiddenCardCountNotification}
-                                    />
-                                </div>}
-                            </div>}
-                    </div>
-            </ScrollingComponent>
+                                        {!props.readonly &&
+                                            <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                                                <div className='octo-board-header-cell narrow'>
+                                                    <Button
+                                                        onClick={addGroupClicked}
+                                                    >
+                                                        <FormattedMessage
+                                                            id='BoardComponent.add-a-group'
+                                                            defaultMessage='+ Add list'
+                                                        />
+                                                    </Button>
+                                                </div>
+                                            </BoardPermissionGate>
+                                        }                       
+                                    </div>                       
+                                </div>
+                            )}
+            </Droppable>                    
+            {/* </ScrollingComponent> */}
         </DragDropContext>
     )
 }

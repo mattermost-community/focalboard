@@ -12,6 +12,8 @@ type Props = {
     children: React.ReactNode
     columnId: string; 
 }
+
+
 const KanbanColumn: React.FC<Props> = ({ children, columnId }) => {
     return (
         <Droppable droppableId={columnId}>
@@ -30,34 +32,5 @@ const KanbanColumn: React.FC<Props> = ({ children, columnId }) => {
         </Droppable>
     );
 };
-
-// const KanbanColumn = (props: Props) => {
-//     const [{isOver}, drop] = useDrop(() => ({
-//         accept: 'card',
-//         collect: (monitor) => ({
-//             isOver: monitor.isOver(),
-//         }),
-//         drop: (item: Card, monitor) => {
-//             if (monitor.isOver({shallow: true})) {
-//                 props.onDrop(item)
-//             }
-//         },
-//     }), [props.onDrop])
-
-//     let className = 'octo-board-column'
-//     if (isOver) {
-//         className += ' dragover'
-//     }
-//     return (
-//         <div
-//             ref={drop}
-//             className={className}
-//         >
-//             <div className='octo-board-column-single'>
-//                 {props.children}
-//             </div>
-//         </div>
-//     )
-// }
 
 export default React.memo(KanbanColumn)
