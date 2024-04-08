@@ -66,6 +66,9 @@ import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 import ViewHeaderNew from './viewHeader/viewHeaderNew'
 
+
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+
 type Props = {
     clientConfig?: ClientConfig
     board: Board
@@ -385,7 +388,7 @@ const CenterPanel = (props: Props) => {
         }
         return intl.formatMessage({id: 'centerPanel.unknown-user', defaultMessage: 'Unknown user'})
     }
-
+    
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {
         const {visible: vg, hidden: hg} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
         if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
@@ -400,6 +403,81 @@ const CenterPanel = (props: Props) => {
         }
         return {visible: vg, hidden: hg}
     }, [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty, boardUsers])
+
+    // const [visibleGroups, setVisibleGroups] = useState(() => {
+    //     const {visible} = getVisibleAndHiddenGroups(
+    //         cards,
+    //         activeView.fields.visibleOptionIds,
+    //         activeView.fields.hiddenOptionIds,
+    //         groupByProperty
+    //     );
+
+    //     if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+    //         if (boardUsers) {
+    //             visible.forEach((value) => {
+    //                 value.option.value = getUserDisplayName(value)
+    //             })
+    //         }
+    //     }
+        
+    //     return visible;
+    // });
+
+    // useEffect(() => {
+    //     const updateGroups = () => {
+    //         const { visible } = getVisibleAndHiddenGroups(
+    //             cards,
+    //             activeView.fields.visibleOptionIds,
+    //             activeView.fields.hiddenOptionIds,
+    //             groupByProperty
+    //         );
+    
+    //         if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+    //             if (boardUsers) {
+    //                 visible.forEach((value) => {
+    //                     value.option.value = getUserDisplayName(value)
+    //                 })
+    //             }
+    //         }
+    
+    //         setVisibleGroups(visible);
+    //     };
+    
+    //     updateGroups();
+    // }, [cards, activeView, groupByProperty, boardUsers]);
+
+
+    // const onDragEnd = (result: DropResult) => {
+    //     const {source, destination, draggableId} = result;
+
+    //     if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
+    //         return;
+    //     }
+    //     setVisibleGroups(prevVisibleGroups => {
+    //         const newVisibleGroups = [...prevVisibleGroups];
+    //         const sourceGroupIndex = newVisibleGroups.findIndex(group => group.option.id === source.droppableId);
+    //         const destinationGroupIndex = source.droppableId === destination.droppableId ? sourceGroupIndex : newVisibleGroups.findIndex(group => group.option.id === destination.droppableId);
+    
+    //         if (sourceGroupIndex === -1 || destinationGroupIndex === -1) return prevVisibleGroups;
+    
+    //         const sourceGroup = { ...newVisibleGroups[sourceGroupIndex] };
+    //         const destinationGroup = sourceGroupIndex === destinationGroupIndex ? sourceGroup : { ...newVisibleGroups[destinationGroupIndex] };
+    
+    //         const cardBeingMovedIndex = sourceGroup.cards.findIndex(card => card.id === draggableId);
+    //         if (cardBeingMovedIndex === -1) return prevVisibleGroups;
+    
+    //         const [cardBeingMoved] = sourceGroup.cards.splice(cardBeingMovedIndex, 1);
+    
+    //         destinationGroup.cards.splice(destination.index, 0, cardBeingMoved);
+    
+    //         newVisibleGroups[sourceGroupIndex] = sourceGroup;
+    //         if (sourceGroupIndex !== destinationGroupIndex) {
+    //             newVisibleGroups[destinationGroupIndex] = destinationGroup;
+    //         }
+    
+    //         return newVisibleGroups;
+    //     });
+    // };
 
     return (
         <div
@@ -467,23 +545,25 @@ const CenterPanel = (props: Props) => {
                 /> */}
             </div>
 
-            {activeView.fields.viewType === 'board' &&
-            <Kanban
-                board={props.board}
-                activeView={props.activeView}
-                cards={props.cards}
-                groupByProperty={props.groupByProperty}
-                visibleGroups={visibleGroups}
-                hiddenGroups={hiddenGroups}
-                selectedCardIds={selectedCardIds}
-                readonly={props.readonly}
-                onCardClicked={cardClicked}
-                addCard={addCard}
-                addCardFromTemplate={addCardFromTemplate}
-                showCard={showCard}
-                hiddenCardsCount={props.hiddenCardsCount}
-                showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
-            />}
+            {/* <DragDropContext onDragEnd={onDragEnd}> */}
+                {activeView.fields.viewType === 'board' &&
+                <Kanban
+                    board={props.board}
+                    activeView={props.activeView}
+                    cards={props.cards}
+                    groupByProperty={props.groupByProperty}
+                    visibleGroups={visibleGroups}
+                    hiddenGroups={hiddenGroups}
+                    selectedCardIds={selectedCardIds}
+                    readonly={props.readonly}
+                    onCardClicked={cardClicked}
+                    addCard={addCard}
+                    addCardFromTemplate={addCardFromTemplate}
+                    showCard={showCard}
+                    hiddenCardsCount={props.hiddenCardsCount}
+                    showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
+                />}
+            {/* </DragDropContext> */}
             {activeView.fields.viewType === 'table' &&
                 <Table
                     board={props.board}

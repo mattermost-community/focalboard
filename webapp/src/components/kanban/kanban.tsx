@@ -29,7 +29,8 @@ import KanbanColumn from './kanbanColumn'
 import KanbanColumnHeader from './kanbanColumnHeader'
 import KanbanHiddenColumnItem from './kanbanHiddenColumnItem'
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import {getVisibleAndHiddenGroups} from '../../boardUtils'
 
 import './kanban.scss'
 import { divide, first } from 'lodash'
@@ -59,7 +60,7 @@ const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
-    const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
+    const {board, activeView, cards, groupByProperty, hiddenGroups, hiddenCardsCount} = props
     const [defaultTemplateID, setDefaultTemplateID] = useState<string>()
 
     useEffect(() => {
@@ -96,6 +97,26 @@ const Kanban = (props: Props) => {
 
         await mutator.insertPropertyOption(board.id, board.cardProperties, groupByProperty!, option, 'add group')
     }, [board, groupByProperty])
+
+
+    const [visibleGroups, setVisibleGroups] = useState(() => {
+        const {visible} = getVisibleAndHiddenGroups(
+            cards,
+            activeView.fields.visibleOptionIds,
+            activeView.fields.hiddenOptionIds,
+            groupByProperty
+        );
+
+        if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+            // if (boardUsers) {
+            //     visible.forEach((value) => {
+            //         value.option.value = getUserDisplayName(value)
+            //     })
+            // }
+        }
+        
+        return visible;
+    });
 
     const orderAfterMoveToColumn = useCallback((cardIds: string[], columnId?: string): string[] => {
         let cardOrder = activeView.fields.cardOrder.slice()
@@ -222,125 +243,68 @@ const Kanban = (props: Props) => {
     }
 
 
-    const [localCards, setLocalCards] = useState(cards);
-
-    const onDragEnd = useCallback(async (result) => {
-        const { draggableId, destination, source } = result;
-
-        console.log(draggableId)
-        console.log(destination)
-        console.log(source)
-
-        if (!destination || !source || !groupByProperty) {
-            return;
-        }
+    useEffect(() => {
+        const updateGroups = () => {
+            const { visible } = getVisibleAndHiddenGroups(
+                cards,
+                activeView.fields.visibleOptionIds,
+                activeView.fields.hiddenOptionIds,
+                groupByProperty
+            );
     
-        // No movement happened
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            return;
-        }
-    
-        let newCardsOrder = Array.from(localCards);
-        const movedCardIndex = newCardsOrder.findIndex(card => card.id === draggableId);
-        const movedCard = newCardsOrder[movedCardIndex];
-    
-        if (destination.droppableId === source.droppableId) {
-            newCardsOrder.splice(movedCardIndex, 1); 
-            newCardsOrder.splice(destination.index, 0, movedCard);
-        } else {
-            const updatedCard = { ...movedCard, fields: { ...movedCard.fields, properties: { ...movedCard.fields.properties, [groupByProperty.id]: destination.droppableId } } };
-            newCardsOrder.splice(movedCardIndex, 1);
-            newCardsOrder.splice(destination.index, 0, updatedCard); 
-        }
-    
-        setLocalCards(newCardsOrder);
-    
-        if (destination.droppableId === source.droppableId && destination.droppableId !== 'columns') {
-            const newCardsOrder = [...localCards];
-            const [reorderedCard] = newCardsOrder.splice(source.index, 1);
-            newCardsOrder.splice(destination.index, 0, reorderedCard);
-            setLocalCards(newCardsOrder);
-
-        
-            const optionId = source.droppableId;
-            const description = newCardsOrder.length > 1 ? `drag ${newCardsOrder.length} cards` : 'drag card';
-            let oldCardOrder = newCardsOrder.map(card => card.id);
-            let cardOrder = newCardsOrder.map(card => card.id);
-            
-            await mutator.performAsUndoGroup(async () => {
-                const awaits = newCardsOrder.map(draggedCard => {
-                    if (draggedCard.fields.properties[groupByProperty.id] !== optionId) {
-                        return mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty.id, optionId, description);
-                    }
-                }).filter(Boolean);
-            
-                await Promise.all(awaits);
-                await mutator.changeViewCardOrder(props.board.id, activeView.id, oldCardOrder, cardOrder, description);
-            }); 
-            
-        } else if (destination.droppableId !== source.droppableId) {
-
-            const {selectedCardIds} = props
-            const optionId = destination.droppableId;
-            let draggedCardIds = selectedCardIds;
-            
-            if (selectedCardIds.length === 0) {
-                draggedCardIds = [draggableId]; 
-            } else {
-                draggedCardIds = selectedCardIds; 
+            if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+                // if (boardUsers) {
+                //     visible.forEach((value) => {
+                //         value.option.value = getUserDisplayName(value)
+                //     })
+                // }
             }
-
-
-            console.log(draggedCardIds)
-            await mutator.performAsUndoGroup(async () => {
-                const cardsById: { [key: string]: Card } = cards.reduce((acc: { [key: string]: Card }, c: Card): { [key: string]: Card } => {
-                    acc[c.id] = c
-                    return acc
-                }, {})
-                const draggedCards: Card[] = draggedCardIds.map((o: string) => cardsById[o]).filter((c) => c)
-                const description = draggedCards.length > 1 ? `drag ${draggedCards.length} cards` : 'drag card'
-                const awaits = []
-                for (const draggedCard of draggedCards) {
-                    Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
-                    const oldValue = draggedCard.fields.properties[groupByProperty!.id]
-                    if (optionId !== oldValue) {
-                        awaits.push(mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty!.id, optionId, description))
-                    }
-                }
-                const newOrder = orderAfterMoveToColumn(draggedCardIds, optionId)
-                awaits.push(mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, newOrder, description))
-                await Promise.all(awaits)
-            })
-        } else {
-            const visibleOptionIds = visibleGroups.map((o) => o.option.id)
-            const srcBlockX = source.index
-            const dstBlockX = destination.index
-
-            // Here aboveRow means to the left while belowRow means to the right
-            const moveTo = (srcBlockX > dstBlockX ? 'aboveRow' : 'belowRow') as Position
-
-            const visibleOptionIdsRearranged = dragAndDropRearrange({
-                contentOrder: visibleOptionIds,
-                srcBlockX,
-                srcBlockY: -1,
-                dstBlockX,
-                dstBlockY: -1,
-                srcBlockId: source.draggableId,
-                dstBlockId: destination.draggableId,
-                moveTo,
-            }) as string[]
-
-            await mutator.changeViewVisibleOptionIds(props.board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIdsRearranged)
-        }   
     
-        console.log(`Moved item ${draggableId} from ${source.droppableId} to ${destination.droppableId}`);
-    }, [cards, groupByProperty, props.selectedCardIds, props.board.id, activeView.id, activeView.fields.cardOrder, mutator]);       
-      
+            setVisibleGroups(visible);
+        };
+    
+        updateGroups();
+    }, [cards, activeView, groupByProperty]);
 
+
+    const onDragEnd = (result: DropResult) => {
+        const {source, destination, draggableId} = result;
+
+        if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
+            return;
+        }
+        setVisibleGroups(prevVisibleGroups => {
+            const newVisibleGroups = [...prevVisibleGroups];
+            const sourceGroupIndex = newVisibleGroups.findIndex(group => group.option.id === source.droppableId);
+            const destinationGroupIndex = source.droppableId === destination.droppableId ? sourceGroupIndex : newVisibleGroups.findIndex(group => group.option.id === destination.droppableId);
+    
+            if (sourceGroupIndex === -1 || destinationGroupIndex === -1) return prevVisibleGroups;
+    
+            const sourceGroup = { ...newVisibleGroups[sourceGroupIndex] };
+            const destinationGroup = sourceGroupIndex === destinationGroupIndex ? sourceGroup : { ...newVisibleGroups[destinationGroupIndex] };
+    
+            const cardBeingMovedIndex = sourceGroup.cards.findIndex(card => card.id === draggableId);
+            if (cardBeingMovedIndex === -1) return prevVisibleGroups;
+    
+            const [cardBeingMoved] = sourceGroup.cards.splice(cardBeingMovedIndex, 1);
+    
+            destinationGroup.cards.splice(destination.index, 0, cardBeingMoved);
+    
+            newVisibleGroups[sourceGroupIndex] = sourceGroup;
+            if (sourceGroupIndex !== destinationGroupIndex) {
+                newVisibleGroups[destinationGroupIndex] = destinationGroup;
+            }
+    
+            return newVisibleGroups;
+        });
+    };
+    
+    const [draggedOverColumnId, setDraggedOverColumnId] = useState<string | null>(null);
+    
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="columns" direction="horizontal" type="column">
-                {(provided) => (
+                {(provided, snapshot) => (
                     <div 
                         {...provided.droppableProps} 
                         ref={provided.innerRef}
@@ -358,33 +322,37 @@ const Kanban = (props: Props) => {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                         >
-                                            {/* Column headers */}
+                                            <div 
+                                                className={`drag-column ${draggedOverColumnId === group.option.id ? 'drag-over-active' : ''}`}
+                                                >
+                                                {/* Column headers */}
 
-                                                <KanbanColumnHeader
-                                                    key={group.option.id}
-                                                    group={group}
-                                                    board={board}
-                                                    activeView={activeView}
-                                                    intl={props.intl}
-                                                    groupByProperty={groupByProperty}
-                                                    addCard={props.addCard}
-                                                    readonly={props.readonly}
-                                                    propertyNameChanged={propertyNameChanged}
-                                                    calculationMenuOpen={showCalculationsMenu.get(group.option.id) || false}
-                                                    onCalculationMenuOpen={() => toggleOptions(group.option.id, true)}
-                                                    onCalculationMenuClose={() => toggleOptions(group.option.id, false)}
-                                                />
+                                                    <KanbanColumnHeader
+                                                        key={group.option.id}
+                                                        group={group}
+                                                        board={board}
+                                                        activeView={activeView}
+                                                        intl={props.intl}
+                                                        groupByProperty={groupByProperty}
+                                                        addCard={props.addCard}
+                                                        readonly={props.readonly}
+                                                        propertyNameChanged={propertyNameChanged}
+                                                        calculationMenuOpen={showCalculationsMenu.get(group.option.id) || false}
+                                                        onCalculationMenuOpen={() => toggleOptions(group.option.id, true)}
+                                                        onCalculationMenuClose={() => toggleOptions(group.option.id, false)}
+                                                    />
 
-                                            {/* Main content */}
-
-                                            <div
-                                                className='octo-board-body'
-                                                id='mainBoardBody'
-                                            >
-                                            {/* Columns */}                    
+                                                {/* Main content */}
+                                            
+                                                <div
+                                                    className='octo-board-body'
+                                                    id='mainBoardBody'
+                                                >
+                                                {/* Columns */}                    
                                                     <KanbanColumn
                                                         key={group.option.id || 'empty'}
                                                         columnId={group.option.id || 'empty'}
+                                                        setDraggedOverColumnId={setDraggedOverColumnId}
                                                     >
                                                         {group.cards.map((card, index) => (
                                                             <KanbanCard
@@ -424,7 +392,7 @@ const Kanban = (props: Props) => {
                                                             </BoardPermissionGate>
                                                         }
                                                     </KanbanColumn>
-                                                {/* ))} */}
+                                                </div>
                                             </div>
                                         </div>
                                     )}

@@ -53,46 +53,17 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
 
     const headerRef = useRef<HTMLDivElement>(null)
 
-    const [{isDragging}, drag] = useDrag(() => ({
-        type: 'column',
-        item: group.option,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }))
-    // const [{isOver}, drop] = useDrop(() => ({
-    //     accept: 'column',
-    //     collect: (monitor) => ({
-    //         isOver: monitor.isOver(),
-    //     }),
-    //     drop: (item: IPropertyOption) => {
-    //         props.onDropToColumn(item, undefined, group.option)
-    //     },
-    // }), [props.onDropToColumn])
-
     useEffect(() => {
         setGroupTitle(group.option.value)
     }, [group.option.value])
 
-    // if (canEditBoardProperties) {
-    //     drop(drag(headerRef))
-    // }
-
     let className = 'octo-board-header-cell KanbanColumnHeader'
-    // if (isOver) {
-    //     className += ' dragover'
-    // }
-
-    // const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
-    // const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
-    // const calculationProperty = groupCalculation ? props.board.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
+    
     return (
         <div
             key={group.option.id || 'empty'}
             ref={headerRef}
-            style={{opacity: isDragging ? 0.5 : 1}}
-            className={className}
-            draggable={!props.readonly && canEditBoardProperties}
+            className={className} 
         >
             {!group.option.id &&
                 <Label
@@ -132,31 +103,6 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         spellCheck={true}
                     />
                 </Label>}
-            {/* <KanbanCalculation
-                cards={group.cards}
-                menuOpen={props.calculationMenuOpen}
-                value={calculationValue}
-                property={calculationProperty}
-                onMenuClose={props.onCalculationMenuClose}
-                onMenuOpen={props.onCalculationMenuOpen}
-                cardProperties={board.cardProperties}
-                readonly={props.readonly || !canEditBoardProperties}
-                onChange={(data: {calculation: string, propertyId: string}) => {
-                    if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
-                        return
-                    }
-
-                    const newCalculations = {
-                        ...props.activeView.fields.kanbanCalculations,
-                    }
-                    newCalculations[props.group.option.id] = {
-                        calculation: data.calculation,
-                        propertyId: data.propertyId,
-                    }
-
-                    mutator.changeViewKanbanCalculations(board.id, props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
-                }}
-            /> */}
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>

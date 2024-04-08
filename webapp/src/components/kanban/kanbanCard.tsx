@@ -47,9 +47,6 @@ const KanbanCard = (props: Props) => {
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
-    // if (props.isManualSort && isOver) {
-    //     className += ' dragover'
-    // }
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const handleDeleteCard = useCallback(() => {
@@ -104,7 +101,7 @@ const KanbanCard = (props: Props) => {
                         className={`${props.isSelected ? 'KanbanCard selected' : 'KanbanCard'} ${snapshot.isDragging ? 'dragging' : ''}`}
                         style={{
                             ...provided.draggableProps.style,
-                            transform: `${provided.draggableProps.style?.transform ?? ''} ${snapshot.isDragging ? 'rotate(10deg)' : ''}`
+                            // transform: `${provided.draggableProps.style?.transform ?? ''} ${snapshot.isDragging ? 'rotate(10deg)' : ''}`
                         }}
                         onClick={(e) => props.onClick && props.onClick(e, card)}
                     >

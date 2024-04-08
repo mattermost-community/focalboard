@@ -18,11 +18,15 @@
     transition: background 100ms ease-out 0s;
 
     &:hover {
-        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+        outline: -webkit-focus-ring-color auto 1px;
 
         .optionsMenu {
             display: block;
         }
+    }
+
+    &:focus-visible {
+        outline: -webkit-focus-ring-color auto 1px;
     }
 
     &.selected {
