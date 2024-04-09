@@ -93,6 +93,7 @@ const KanbanCard = (props: Props) => {
     return (
         <>
              <Draggable draggableId={card.id} index={index}>
+                
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
@@ -101,7 +102,11 @@ const KanbanCard = (props: Props) => {
                         className={`${props.isSelected ? 'KanbanCard selected' : 'KanbanCard'} ${snapshot.isDragging ? 'dragging' : ''}`}
                         style={{
                             ...provided.draggableProps.style,
-                            // transform: `${provided.draggableProps.style?.transform ?? ''} ${snapshot.isDragging ? 'rotate(10deg)' : ''}`
+                            transform: snapshot.isDragging
+                            ? `${provided.draggableProps.style?.transform} rotate(8deg)`
+                            : provided.draggableProps.style?.transform,
+                            transition: snapshot.isDragging ? 'transform 0.05s linear' : 'none',
+                            opacity: 0.9
                         }}
                         onClick={(e) => props.onClick && props.onClick(e, card)}
                     >

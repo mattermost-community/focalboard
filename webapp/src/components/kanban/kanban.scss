@@ -11,7 +11,6 @@
         flex-direction: row;
         width: max-content;
         min-height: 30px;
-        // padding: 16px 0;
         color: #909090;
         position: sticky;
         top: 2px;
@@ -33,7 +32,6 @@
         flex-shrink: 0;
         align-items: center;
         width: 260px;
-        // margin-right: 15px;
         vertical-align: middle;
         background-color: #101204;
         padding: 10px;
@@ -44,9 +42,13 @@
             width: 220px;
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
-            background-color: #FFFFFF;
-            opacity: 20%;
+            background-color: rgba($color: #ffffff, $alpha: 0.2);
             max-height: 44px;
+            margin-right: 15px;
+
+            > .Button {
+                color: rgba(182, 194, 207, 1);                
+            }
         }
 
         > div {
@@ -91,7 +93,6 @@
         display: flex;
         flex-direction: row;
         flex: 0 1 auto;
-        // margin-top: 2px;
     }
 
     .octo-board-column {
@@ -101,10 +102,10 @@
         flex-direction: column;
 
         width: 260px;
-        // margin-right: 15px;
 
         &.narrow {
             width: 220px;
+            margin-right: 15px;
         }
     }
 

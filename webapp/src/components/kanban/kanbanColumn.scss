@@ -1,9 +1,8 @@
-// .octo-board-column {
-//     &.dragover {
-//         outline: -webkit-focus-ring-color auto 1px;
-//         border-radius: 10px;
-//     }
-// }
+.octo-board-column {
+    &.dragover {
+        background-color: #e0e0e0; /* Example light grey background to indicate dragging over */
+    }
+}
 
 .octo-board-column-single {
     position: relative;
@@ -19,7 +18,7 @@
         
         .Button {
             position: absolute;
-            left: 3px;
+            left: 10px;
             bottom: 10px;
         }
     }

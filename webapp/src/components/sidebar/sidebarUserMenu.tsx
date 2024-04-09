@@ -82,10 +82,10 @@ const SidebarUserMenu = () => {
                                 }}
                             />
 
-                            <Menu.Separator/>
+                            {/* <Menu.Separator/> */}
                         </>}
 
-                        <Menu.Text
+                        {/* <Menu.Text
                             id='about'
                             name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
                             onClick={async () => {
@@ -96,7 +96,7 @@ const SidebarUserMenu = () => {
                                     window.openInNewBrowser('https://www.focalboard.com?utm_source=webapp')
                                 }
                             }}
-                        />
+                        /> */}
                     </Menu>
                 </MenuWrapper>
 

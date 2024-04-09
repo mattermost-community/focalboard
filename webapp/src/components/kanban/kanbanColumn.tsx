@@ -8,43 +8,50 @@ import {Card} from '../../blocks/card'
 import './kanbanColumn.scss'
 
 type Props = {
-    // onDrop: (card: Card) => void
     children: React.ReactNode
     columnId: string; 
     setDraggedOverColumnId: (columnId: string | null) => void; 
+    placeholderProps?: {
+        clientHeight?: number;
+        clientWidth?: number;
+        clientY?: number;
+        clientX?: number;
+    };
+    activeDragColumnId: string | null
 }
 
 
-const KanbanColumn: React.FC<Props> = ({ children, columnId, setDraggedOverColumnId }) => {
-    // Correctly using useEffect hook here
-    useEffect(() => {
-        // Since you might want to clear the dragged over columnId when no longer dragging over,
-        // You might need to return a cleanup function from useEffect or manage it differently.
-    }, [columnId, setDraggedOverColumnId]); // Removed snapshot.isDraggingOver from dependencies
-
+const KanbanColumn: React.FC<Props> = ({ children, columnId, setDraggedOverColumnId, placeholderProps, activeDragColumnId }) => {
     return (
         <Droppable droppableId={columnId}>
             {(provided, snapshot) => {
-                // This is where you would use snapshot.isDraggingOver
-                // Moved the useEffect call outside of this callback function but you can act on snapshot.isDraggingOver here for other purposes.
-
-                // Conditionally apply a class based on whether this Droppable is being dragged over
-                const className = `octo-board-column ${snapshot.isDraggingOver ? 'dragover' : ''}`;
-                
-                // Effectively use the isDraggingOver state to communicate with the parent component
+                const isDraggingOver = snapshot.isDraggingOver;
+                const className = `octo-board-column ${isDraggingOver ? 'dragover' : ''}`;
                 useEffect(() => {
-                    if (snapshot.isDraggingOver) {
+                    if (isDraggingOver) {
                         setDraggedOverColumnId(columnId);
                     } else {
-                        setDraggedOverColumnId(null); // Optionally reset when not dragging over
+                        setDraggedOverColumnId(null);
                     }
-                }, [snapshot.isDraggingOver, columnId, setDraggedOverColumnId]);
+                }, [isDraggingOver, columnId, setDraggedOverColumnId]);
                 
                 return (
                     <div ref={provided.innerRef} {...provided.droppableProps} className={className}>
                         <div className='octo-board-column-single'>
                             {children}
                             {provided.placeholder}
+
+                            {placeholderProps && columnId === activeDragColumnId && (
+                                <div style={{
+                                    position: "absolute",
+                                    top: placeholderProps.clientY ?? 0,
+                                    left: placeholderProps.clientX ?? 0,
+                                    height: placeholderProps.clientHeight ?? 0,
+                                    background: "#22272ca8",
+                                    width: placeholderProps.clientWidth ?? 0,
+                                    borderRadius: '8px'
+                                }} />
+                            )}
                         </div>
                     </div>
                 );

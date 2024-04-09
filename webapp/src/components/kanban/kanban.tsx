@@ -1,5 +1,5 @@
-// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
-// See LICENSE.txt for license information.
+// Copyright (c) 2024-present Midnight.Works in association with Sergiu Corjan. All Rights Reserved.
+
 /* eslint-disable max-lines */
 import React, {useCallback, useState, useMemo, useEffect} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
@@ -266,43 +266,118 @@ const Kanban = (props: Props) => {
         updateGroups();
     }, [cards, activeView, groupByProperty]);
 
-
-    const onDragEnd = (result: DropResult) => {
-        const {source, destination, draggableId} = result;
-
+    const onDragEnd = async (result: DropResult) => {
+        const { source, destination, draggableId } = result;
+    
         if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
-            return;
+            return; 
         }
+
+        // Update the visible groups state optimistically
         setVisibleGroups(prevVisibleGroups => {
-            const newVisibleGroups = [...prevVisibleGroups];
-            const sourceGroupIndex = newVisibleGroups.findIndex(group => group.option.id === source.droppableId);
-            const destinationGroupIndex = source.droppableId === destination.droppableId ? sourceGroupIndex : newVisibleGroups.findIndex(group => group.option.id === destination.droppableId);
-    
-            if (sourceGroupIndex === -1 || destinationGroupIndex === -1) return prevVisibleGroups;
-    
-            const sourceGroup = { ...newVisibleGroups[sourceGroupIndex] };
-            const destinationGroup = sourceGroupIndex === destinationGroupIndex ? sourceGroup : { ...newVisibleGroups[destinationGroupIndex] };
-    
-            const cardBeingMovedIndex = sourceGroup.cards.findIndex(card => card.id === draggableId);
-            if (cardBeingMovedIndex === -1) return prevVisibleGroups;
-    
-            const [cardBeingMoved] = sourceGroup.cards.splice(cardBeingMovedIndex, 1);
-    
-            destinationGroup.cards.splice(destination.index, 0, cardBeingMoved);
-    
-            newVisibleGroups[sourceGroupIndex] = sourceGroup;
-            if (sourceGroupIndex !== destinationGroupIndex) {
-                newVisibleGroups[destinationGroupIndex] = destinationGroup;
+            const sourceIndex = prevVisibleGroups.findIndex(group => group.option.id === source.droppableId);
+            const destinationIndex = prevVisibleGroups.findIndex(group => group.option.id === destination.droppableId);
+            if ((source.droppableId !== 'columns' && sourceIndex === -1 ) || (destination.droppableId !== 'columns' && destinationIndex === -1)) return prevVisibleGroups;
+
+            // Clone the groups to avoid direct mutation
+            const updatedGroups = prevVisibleGroups.map(group => ({ ...group, cards: [...group.cards] }));
+
+            // Prepare for persistence
+            const draggedCardIds = props.selectedCardIds.includes(draggableId) ? [...props.selectedCardIds] : [...props.selectedCardIds, draggableId];
+            const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card';
+
+            if (destination.droppableId !== 'columns' && source.droppableId !== 'columns') {
+                
+                // Move the card from source to destination
+                const cardBeingMoved = updatedGroups[sourceIndex].cards.find(card => card.id === draggableId);
+                if (!cardBeingMoved) return prevVisibleGroups; 
+
+                // Remove card from the source group
+                updatedGroups[sourceIndex].cards = updatedGroups[sourceIndex].cards.filter(card => card.id !== draggableId);
+
+                // Add card to the destination group
+                updatedGroups[destinationIndex].cards.splice(destination.index, 0, cardBeingMoved);
+
+                let cardOrder = updatedGroups.flatMap(group => group.cards.map(card => card.id));
+                try {
+                    const draggedCards: Card[] = draggedCardIds
+                        .map(id => props.cards.find(card => card.id === id))
+                        .filter((card): card is Card => card !== undefined);
+                    const propertyUpdates = draggedCards.map(card =>
+                        // TypeScript now understands `card` cannot be undefined
+                        mutator.changePropertyValue(props.board.id, card, groupByProperty.id, destination.droppableId, description)
+                    );
+            
+                    // Execute property updates and order change in one batch
+                    mutator.performAsUndoGroup(async () => {
+                        await Promise.all(propertyUpdates);
+                        await mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
+                    });
+        
+                } catch (error) {
+                    console.error('Failed to persist changes:', error);
+                }
+                return updatedGroups;
+            } else {
+                const reorderedColumns = Array.from(prevVisibleGroups);
+                const [reorderedColumn] = reorderedColumns.splice(source.index, 1);
+                reorderedColumns.splice(destination.index, 0, reorderedColumn);
+                
+                // Async update for backend (not affecting UI reactivity)
+                const newVisibleOptionIds = reorderedColumns.map(group => group.option.id);
+                mutator.changeViewVisibleOptionIds(props.board.id, activeView.id, activeView.fields.visibleOptionIds, newVisibleOptionIds);
+                
+                return reorderedColumns;
             }
-    
-            return newVisibleGroups;
         });
+    
+        // Clear placeholder properties
+        setPlaceholderProps({});
     };
     
+    
     const [draggedOverColumnId, setDraggedOverColumnId] = useState<string | null>(null);
+	const [placeholderProps, setPlaceholderProps] = useState({});
+    const queryAttr = "data-rbd-drag-handle-draggable-id";
+
+    const onDragUpdate = (update: DropResult) => {
+        if(!update.destination){
+          return;
+        }
+            const draggableId = update.draggableId;
+            const destinationIndex = update.destination.index;
+    
+            const domQuery = `[${queryAttr}='${draggableId}']`;
+            const draggedDOM = document.querySelector(domQuery);
+    
+            if (!draggedDOM) {
+                return;
+            }
+            const { clientHeight, clientWidth } = draggedDOM;
+
+            const destinationColumnId = update.destination.droppableId;
+            setDraggedOverColumnId(destinationColumnId);
+
+            if (draggedDOM && draggedDOM.parentNode && draggedDOM.parentNode instanceof Element) {    
+                const clientY = parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) + [...draggedDOM.parentNode.children]
+                .slice(0, destinationIndex)
+                .reduce((total, curr) => {
+                    const style = window.getComputedStyle(curr);
+                    const marginBottom = parseFloat(style.marginBottom);
+                    return total + curr.clientHeight + marginBottom;
+                }, 0);
+    
+                setPlaceholderProps({
+                    clientHeight,
+                    clientWidth,
+                    clientY,
+                    clientX: parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingLeft)
+                });
+            }
+        };
     
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
             <Droppable droppableId="columns" direction="horizontal" type="column">
                 {(provided, snapshot) => (
                     <div 
@@ -353,6 +428,8 @@ const Kanban = (props: Props) => {
                                                         key={group.option.id || 'empty'}
                                                         columnId={group.option.id || 'empty'}
                                                         setDraggedOverColumnId={setDraggedOverColumnId}
+                                                        placeholderProps={placeholderProps}
+                                                        activeDragColumnId={draggedOverColumnId}
                                                     >
                                                         {group.cards.map((card, index) => (
                                                             <KanbanCard
@@ -383,7 +460,7 @@ const Kanban = (props: Props) => {
                                                                         }}
                                                                     >
                                                                         <FormattedMessage
-                                                                            id='BoardComponent.new'
+                                                                            id='BoardComponentButton.new'
                                                                             defaultMessage='+ Add card'
                                                                         />
                                                                     </Button>
@@ -393,12 +470,14 @@ const Kanban = (props: Props) => {
                                                         }
                                                     </KanbanColumn>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     )}
                                 </Draggable>                                                           
                             ))}
                             {provided.placeholder}
+                            
                                 {/* Hidden column header */}
 
                                     {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
@@ -440,7 +519,7 @@ const Kanban = (props: Props) => {
                                                         onClick={addGroupClicked}
                                                     >
                                                         <FormattedMessage
-                                                            id='BoardComponent.add-a-group'
+                                                            id='BoardComponentButton.add-a-group'
                                                             defaultMessage='+ Add list'
                                                         />
                                                     </Button>
