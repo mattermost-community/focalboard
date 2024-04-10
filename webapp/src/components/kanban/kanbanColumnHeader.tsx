@@ -58,7 +58,6 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     }, [group.option.value])
 
     let className = 'octo-board-header-cell KanbanColumnHeader'
-    
     return (
         <div
             key={group.option.id || 'empty'}
@@ -110,12 +109,12 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         <MenuWrapper>
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu>
-                                <Menu.Text
+                                {/* <Menu.Text
                                     id='hide'
                                     icon={<HideIcon/>}
                                     name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                                     onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
-                                />
+                                /> */}
                                 {canEditOption &&
                                     <>
                                         <Menu.Text
@@ -124,7 +123,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                             name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                                             onClick={() => mutator.deletePropertyOption(board.id, board.cardProperties, groupByProperty!, group.option)}
                                         />
-                                        <Menu.Separator/>
+                                        {/* <Menu.Separator/>
                                         {Object.entries(Constants.menuColors).map(([key, color]) => (
                                             <Menu.Color
                                                 key={key}
@@ -132,7 +131,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                                 name={color}
                                                 onClick={() => mutator.changePropertyOptionColor(board.id, board.cardProperties, groupByProperty!, group.option, key)}
                                             />
-                                        ))}
+                                        ))} */}
                                     </>}
                             </Menu>
                         </MenuWrapper>

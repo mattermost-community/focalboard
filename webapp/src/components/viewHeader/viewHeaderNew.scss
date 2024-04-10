@@ -49,4 +49,15 @@
             align-items: center;
         }
     }
+
+    .Button {
+
+        .filter-button {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            font-size: 14px;
+            color: rgba(182, 194, 207, 1);            
+        }
+    }
 }

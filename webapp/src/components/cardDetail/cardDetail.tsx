@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
-import {Board} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
@@ -57,6 +57,7 @@ type Props = {
     attachments: AttachmentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
+    column: IPropertyTemplate | undefined
     onClose: () => void
     onDelete: (block: Block) => void
     addAttachment: () => void
@@ -193,16 +194,18 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }), [props.contents])
 
+    console.log(props)
+
     return (
         <>
             <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
                 <div>
                     <div>
-                        <BlockIconSelector
+                        {/* <BlockIconSelector
                         block={card}
                         size='l'
                         readonly={props.readonly || !canEditBoardCards || limited}
-                        />
+                        /> */}
                         {!props.readonly && canEditBoardCards && !card.fields.icon &&
                             <div className='add-buttons'>
                                 <Button
@@ -234,6 +237,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             readonly={props.readonly || !canEditBoardCards || limited}
                             spellCheck={true}
                         />
+
+                        <div>in list </div>
                         
                         {/* Hidden (limited) card copy + CTA */}
 

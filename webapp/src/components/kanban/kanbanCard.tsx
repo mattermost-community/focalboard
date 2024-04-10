@@ -22,7 +22,6 @@ import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
 
-import { DragDropContext } from 'react-beautiful-dnd';
 
 export const OnboardingCardClassName = 'onboardingCard'
 
@@ -34,7 +33,6 @@ type Props = {
     visibleBadges: boolean
     onClick?: (e: React.MouseEvent, card: Card) => void
     readonly: boolean
-    onDrop: (srcCard: Card, dstCard: Card) => void
     showCard: (cardId?: string) => void
     isManualSort: boolean
     index: number
@@ -99,89 +97,98 @@ const KanbanCard = (props: Props) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`${props.isSelected ? 'KanbanCard selected' : 'KanbanCard'} ${snapshot.isDragging ? 'dragging' : ''}`}
                         style={{
                             ...provided.draggableProps.style,
-                            transform: snapshot.isDragging
-                            ? `${provided.draggableProps.style?.transform} rotate(8deg)`
-                            : provided.draggableProps.style?.transform,
                             transition: snapshot.isDragging ? 'transform 0.05s linear' : 'none',
                             opacity: 0.9
                         }}
                         onClick={(e) => props.onClick && props.onClick(e, card)}
                     >
-                        {!props.readonly &&
-                    <MenuWrapper
-                        className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
-                        stopPropagationOnToggle={true}
-                    >
-                        <CardActionsMenuIcon/>
-                        <CardActionsMenu
-                            cardId={card!.id}
-                            boardId={card!.boardId}
-                            onClickDelete={handleDeleteButtonOnClick}
-                            onClickDuplicate={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                mutator.duplicateCard(
-                                    card.id,
-                                    board.id,
-                                    false,
-                                    'duplicate card',
-                                    false,
-                                    {},
-                                    async (newCardId) => {
-                                        props.showCard(newCardId)
-                                    },
-                                    async () => {
-                                        props.showCard(undefined)
-                                    },
-                                )
+                        <div 
+                            className={`${props.isSelected ? 'KanbanCard selected' : 'KanbanCard'} ${snapshot.isDragging ? 'dragging' : ''}`}
+                            style={{
+                                transform: snapshot.isDragging ? 'rotate(8deg)' : 'none',
                             }}
-                        />
-                    </MenuWrapper>
-                    }
+                        >
+                            {!props.readonly &&
+                            <MenuWrapper
+                                className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
+                                stopPropagationOnToggle={true}
+                            >
+                                <CardActionsMenuIcon/>
+                                <CardActionsMenu
+                                    cardId={card!.id}
+                                    boardId={card!.boardId}
+                                    onClickDelete={handleDeleteButtonOnClick}
+                                    onClickDuplicate={() => {
+                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                        mutator.duplicateCard(
+                                            card.id,
+                                            board.id,
+                                            false,
+                                            'duplicate card',
+                                            false,
+                                            {},
+                                            async (newCardId) => {
+                                                props.showCard(newCardId)
+                                            },
+                                            async () => {
+                                                props.showCard(undefined)
+                                            },
+                                        )
+                                    }}
+                                />
+                            </MenuWrapper>
+                            }
 
-                    {
-                        Array.isArray(card.fields.properties.label) ? 
-                            <div className='card-labels'>
-                                {card.fields.properties.label.map((labelColor: string) => (
-                                    <div key={labelColor} className='label' style={{ backgroundColor: labelColor }}></div>
-                                ))}
-                            </div> 
-                        : card.fields.properties.label ?
-                            <div className='card-labels'>
-                                <div className='label' style={{ backgroundColor: card.fields.properties.label }}></div>
+                            {
+                                Array.isArray(card.fields.properties.label) ? 
+                                    <div className='card-labels'>
+                                        {card.fields.properties.label.map((labelColor: string) => (
+                                            <div key={labelColor} className='label' style={{ backgroundColor: labelColor }}></div>
+                                        ))}
+                                    </div> 
+                                : card.fields.properties.label ?
+                                    <div className='card-labels'>
+                                        <div className='label' style={{ backgroundColor: card.fields.properties.label }}></div>
+                                    </div>
+                                : undefined 
+                            }
+
+                            {
+                                <div className='date'>
+
+                                </div>
+                            }
+
+
+                            <div className='octo-icontitle'>
+                                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
+                                <div
+                                    key='__title'
+                                    className='octo-titletext'
+                                >
+                                    {card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}
+                                </div>
                             </div>
-                        : undefined 
-                    }
-
-
-                    <div className='octo-icontitle'>
-                        { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                        <div
-                            key='__title'
-                            className='octo-titletext'
-                        >
-                            {card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}
+                            {visiblePropertyTemplates.map((template) => (
+                                <Tooltip
+                                    key={template.id}
+                                    title={template.name}
+                                >
+                                    <PropertyValueElement
+                                        board={board}
+                                        readOnly={true}
+                                        card={card}
+                                        propertyTemplate={template}
+                                        showEmptyPlaceholder={false}
+                                    />
+                                </Tooltip>
+                            ))}
+                            {props.visibleBadges && <CardBadges card={card}/>}
+                            {showOnboarding && !match.params.cardId && <OpenCardTourStep/>}
+                            {showOnboarding && !match.params.cardId && <CopyLinkTourStep/>}
                         </div>
-                    </div>
-                    {visiblePropertyTemplates.map((template) => (
-                        <Tooltip
-                            key={template.id}
-                            title={template.name}
-                        >
-                            <PropertyValueElement
-                                board={board}
-                                readOnly={true}
-                                card={card}
-                                propertyTemplate={template}
-                                showEmptyPlaceholder={false}
-                            />
-                        </Tooltip>
-                    ))}
-                    {props.visibleBadges && <CardBadges card={card}/>}
-                    {showOnboarding && !match.params.cardId && <OpenCardTourStep/>}
-                    {showOnboarding && !match.params.cardId && <CopyLinkTourStep/>}
                     </div>
                 )}
             </Draggable>

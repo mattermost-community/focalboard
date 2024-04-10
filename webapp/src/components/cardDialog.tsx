@@ -3,7 +3,7 @@
 import React, {useState, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Board} from '../blocks/board'
+import {Board, IPropertyOption, IPropertyTemplate} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
 import octoClient from '../octoClient'
@@ -44,6 +44,7 @@ type Props = {
     board: Board
     activeView: BoardView
     views: BoardView[]
+    column: IPropertyTemplate | undefined
     cards: Card[]
     cardId: string
     onClose: () => void
@@ -52,7 +53,7 @@ type Props = {
 }
 
 const CardDialog = (props: Props): JSX.Element => {
-    const {board, activeView, cards, views} = props
+    const {board, activeView, cards, views, column} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
     const comments = useAppSelector(getCardComments(props.cardId))
@@ -297,6 +298,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         views={views}
                         cards={cards}
                         card={card}
+                        column={column}
                         contents={contents}
                         comments={comments}
                         attachments={attachments}

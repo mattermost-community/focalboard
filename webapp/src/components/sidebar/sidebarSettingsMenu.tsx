@@ -85,7 +85,7 @@ const SidebarSettingsMenu = (props: Props) => {
                     />
                 </div>
                 <Menu position='top'>
-                    <Menu.SubMenu
+                    {/* <Menu.SubMenu
                         id='import'
                         name={intl.formatMessage({id: 'Sidebar.import', defaultMessage: 'Import'})}
                         position='top'
@@ -138,7 +138,7 @@ const SidebarSettingsMenu = (props: Props) => {
                                 />
                             ))
                         }
-                    </Menu.SubMenu>
+                    </Menu.SubMenu> */}
                     <Menu.SubMenu
                         id='theme'
                         name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}

@@ -39,7 +39,7 @@ const ShareBoardButton = (props: Props) => {
         return (
             <div className='invitation'>
                 {memberAvatars}
-                <ChevronDownIcon />
+                <ChevronDownIcon color='#6A6F78'/>
             </div>
         );
     }

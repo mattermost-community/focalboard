@@ -38,6 +38,7 @@ import {LimitUnlimited} from '../../boardCloudLimits'
 import FilterComponent from './filterComponent'
 
 import './viewHeaderNew.scss'
+import { ChevronDownIcon } from '@mattermost/compass-icons/components'
 
 type Props = {
     board: Board
@@ -116,6 +117,19 @@ const ViewHeaderNew = (props: Props) => {
         return false
     }
 
+    const iconForFilters = () => {
+        return (
+            <div className='filter-button'>
+                        <FormattedMessage
+                            id='ViewHeader.filters'
+                            defaultMessage='Filters'
+                        />                
+                        
+                        <ChevronDownIcon color='#6A6F78' />
+            </div>
+        );
+    }
+
     return (
         <div className='ViewHeaderNew'>
             <div className='viewSelector'>
@@ -163,11 +177,9 @@ const ViewHeaderNew = (props: Props) => {
                         onClick={() => setShowFilter(!showFilter)}
                         onMouseOver={() => setLockFilterOnClose(true)}
                         onMouseLeave={() => setLockFilterOnClose(false)}
+                        icon={iconForFilters()}
                     >
-                        <FormattedMessage
-                            id='ViewHeader.filter'
-                            defaultMessage='Filter'
-                        />
+
                     </Button>
                     {showFilter &&
                     <FilterComponent

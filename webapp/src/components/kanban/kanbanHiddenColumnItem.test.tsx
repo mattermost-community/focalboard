@@ -40,7 +40,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
                     cards: [card],
                 }}
                 readonly={false}
-                onDrop={jest.fn()}
+                // onDrop={jest.fn()}
                 intl={intl}
             />,
         ))
@@ -55,7 +55,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
                     cards: [card],
                 }}
                 readonly={true}
-                onDrop={jest.fn()}
+                // onDrop={jest.fn()}
                 intl={intl}
             />,
         ))
@@ -70,7 +70,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
                     cards: [card],
                 }}
                 readonly={false}
-                onDrop={jest.fn()}
+                // onDrop={jest.fn()}
                 intl={intl}
             />,
         ))
@@ -88,7 +88,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
                     cards: [card],
                 }}
                 readonly={false}
-                onDrop={jest.fn()}
+                // onDrop={jest.fn()}
                 intl={intl}
             />,
         ))
@@ -113,7 +113,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
                     cards: [card, card2],
                 }}
                 readonly={false}
-                onDrop={jest.fn()}
+                // onDrop={jest.fn()}
                 intl={intl}
             />,
         ))

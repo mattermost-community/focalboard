@@ -19,16 +19,19 @@ function groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty
                 // if optionId not found, its an old (deleted) option that can be ignored
             }
         } else {
+
+            // Commented cause i know shit about why they have made this functionality for // 
+
             // Empty group
-            const emptyGroupCards = cards.filter((card) => {
-                const groupByOptionId = card.fields.properties[groupByProperty?.id || '']
-                return !groupByOptionId || !groupByProperty?.options.find((option) => option.id === groupByOptionId)
-            })
-            const group: BoardGroup = {
-                option: {id: '', value: `No ${groupByProperty?.name}`, color: ''},
-                cards: emptyGroupCards,
-            }
-            groups.push(group)
+            // const emptyGroupCards = cards.filter((card) => {
+            //     const groupByOptionId = card.fields.properties[groupByProperty?.id || '']
+            //     return !groupByOptionId || !groupByProperty?.options.find((option) => option.id === groupByOptionId)
+            // })
+            // const group: BoardGroup = {
+            //     option: {id: '', value: `No ${groupByProperty?.name}`, color: ''},
+            //     cards: emptyGroupCards,
+            // }
+            // groups.push(group)
         }
     }
     return groups

@@ -67,7 +67,6 @@ import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 import ViewHeaderNew from './viewHeader/viewHeaderNew'
 
 
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 type Props = {
     clientConfig?: ClientConfig
@@ -414,6 +413,7 @@ const CenterPanel = (props: Props) => {
                     <CardDialog
                         board={board}
                         activeView={activeView}
+                        column={groupByProperty}
                         views={views}
                         cards={cards}
                         key={props.shownCardId}
