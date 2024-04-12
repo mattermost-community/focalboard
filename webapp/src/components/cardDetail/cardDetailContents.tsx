@@ -185,7 +185,7 @@ const CardDetailContents = (props: Props) => {
     return (
         <div className='octo-content CardDetailContents'>
             <div className='octo-block'>
-                <div className='octo-block-margin'/>
+                {/* <div className='octo-block-margin'/> */}
                 {!props.readonly &&
                     <MarkdownEditor
                         id={id}

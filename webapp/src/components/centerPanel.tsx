@@ -65,6 +65,7 @@ import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 import ViewHeaderNew from './viewHeader/viewHeaderNew'
+import {optionsByType} from './calculations/options'
 
 
 
@@ -74,7 +75,7 @@ type Props = {
     cards: Card[]
     activeView: BoardView
     views: BoardView[]
-    groupByProperty?: IPropertyTemplate
+    groupByProperty: IPropertyTemplate
     dateDisplayProperty?: IPropertyTemplate
     readonly: boolean
     shownCardId?: string
@@ -413,7 +414,7 @@ const CenterPanel = (props: Props) => {
                     <CardDialog
                         board={board}
                         activeView={activeView}
-                        column={groupByProperty}
+                        column={props.groupByProperty}
                         views={views}
                         cards={cards}
                         key={props.shownCardId}

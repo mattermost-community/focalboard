@@ -103,15 +103,15 @@ function createBoard(board?: Board): Board {
     const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []
     const selectProperties = cardProperties.find((o) => o.type === 'select')
-    if (!selectProperties) {
-        const property: IPropertyTemplate = {
-            id: Utils.createGuid(IDType.BlockID),
-            name: 'Status',
-            type: 'select',
-            options: [],
-        }
-        cardProperties.push(property)
-    }
+    // if (!selectProperties) {
+    //     const property: IPropertyTemplate = {
+    //         id: Utils.createGuid(IDType.BlockID),
+    //         name: 'Status',
+    //         type: 'select',
+    //         options: [],
+    //     }
+    //     cardProperties.push(property)
+    // }
 
     if (board?.cardProperties) {
         // Deep clone of card properties and their options

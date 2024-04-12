@@ -100,7 +100,8 @@ const KanbanCard = (props: Props) => {
                         style={{
                             ...provided.draggableProps.style,
                             transition: snapshot.isDragging ? 'transform 0.05s linear' : 'none',
-                            opacity: 0.9
+                            opacity: 0.9,
+                            marginBottom: '10px' 
                         }}
                         onClick={(e) => props.onClick && props.onClick(e, card)}
                     >

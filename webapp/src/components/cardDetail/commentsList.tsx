@@ -99,7 +99,8 @@ const CommentsList = (props: Props) => {
                     <Comment
                         key={comment.id}
                         comment={comment}
-                        userImageUrl={Utils.getProfilePicture(comment.modifiedBy)}
+                        // userImageUrl={Utils.getProfilePicture(comment.modifiedBy)}
+                        userImageUrl={'https://squad.midnight.works/assets/avatars/U05Q0AGNAKA_s.jpg'}
                         userId={comment.modifiedBy}
                         readonly={props.readonly || !canDeleteComment}
                     />

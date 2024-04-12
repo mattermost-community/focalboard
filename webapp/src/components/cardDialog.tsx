@@ -35,7 +35,7 @@ import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
-import Dialog from './dialog'
+import CustomDialog from './customDialog'
 
 import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
@@ -44,7 +44,7 @@ type Props = {
     board: Board
     activeView: BoardView
     views: BoardView[]
-    column: IPropertyTemplate | undefined
+    column: IPropertyTemplate 
     cards: Card[]
     cardId: string
     onClose: () => void
@@ -63,6 +63,8 @@ const CardDialog = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
+
+    const columnDetails = column.options.find( option => option.id === card?.fields.properties[column?.id])
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -276,12 +278,16 @@ const CardDialog = (props: Props): JSX.Element => {
 
     return (
         <>
-            <Dialog
+            <CustomDialog
                 title={<div/>}
                 className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
                 toolbar={toolbar}
+                card={card}
+                board={board}
+                readonly={props.readonly}
+                column={columnDetails}
             >
                 {isTemplate &&
                     <div className='banner'>
@@ -298,7 +304,6 @@ const CardDialog = (props: Props): JSX.Element => {
                         views={views}
                         cards={cards}
                         card={card}
-                        column={column}
                         contents={contents}
                         comments={comments}
                         attachments={attachments}
@@ -315,7 +320,7 @@ const CardDialog = (props: Props): JSX.Element => {
                             defaultMessage="This card doesn't exist or is inaccessible."
                         />
                     </div>}
-            </Dialog>
+            </CustomDialog>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </>

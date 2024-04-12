@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyOption} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
@@ -39,6 +39,7 @@ import {CardDetailProvider} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
+import CardInList from './cardInList'
 import useImagePaste from './imagePaste'
 import AttachmentList from './attachment'
 
@@ -57,7 +58,6 @@ type Props = {
     attachments: AttachmentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
-    column: IPropertyTemplate | undefined
     onClose: () => void
     onDelete: (block: Block) => void
     addAttachment: () => void
@@ -194,136 +194,12 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }), [props.contents])
 
-    console.log(props)
-
     return (
         <>
-            <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
-                <div>
-                    <div>
-                        {/* <BlockIconSelector
-                        block={card}
-                        size='l'
-                        readonly={props.readonly || !canEditBoardCards || limited}
-                        /> */}
-                        {!props.readonly && canEditBoardCards && !card.fields.icon &&
-                            <div className='add-buttons'>
-                                <Button
-                                    emphasis='default'
-                                    size='small'
-                                    onClick={setRandomIcon}
-                                    icon={
-                                        <CompassIcon
-                                            icon='emoticon-outline'
-                                        />}
-
-                                >
-                                    <FormattedMessage
-                                        id='CardDetail.add-icon'
-                                        defaultMessage='Add icon'
-                                    />
-                                </Button>
-                            </div>}
-
-                        <EditableArea
-                            ref={titleRef}
-                            className='title'
-                            value={title}
-                            placeholderText='Untitled'
-                            onChange={(newTitle: string) => setTitle(newTitle)}
-                            saveOnEsc={true}
-                            onSave={saveTitle}
-                            onCancel={() => setTitle(props.card.title)}
-                            readonly={props.readonly || !canEditBoardCards || limited}
-                            spellCheck={true}
-                        />
-
-                        <div>in list </div>
-                        
-                        {/* Hidden (limited) card copy + CTA */}
-
-                        {limited && <div className='CardDetail__limited-wrapper'>
-                            <CardSkeleton
-                                className='CardDetail__limited-bg'
-                            />
-                            <p className='CardDetail__limited-title'>
-                                <FormattedMessage
-                                    id='CardDetail.limited-title'
-                                    defaultMessage='This card is hidden'
-                                />
-                            </p>
-                            <p className='CardDetail__limited-body'>
-                                <FormattedMessage
-                                    id='CardDetail.limited-body'
-                                    defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
-                                />
-                                <br/>
-                                <a
-                                    className='CardDetail__limited-link'
-                                    role='button'
-                                    onClick={() => {
-                                        props.onClose();
-                                        (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
-                                    }}
-                                >
-                                    <FormattedMessage
-                                        id='CardDetial.limited-link'
-                                        defaultMessage='Learn more about our plans.'
-                                    />
-                                </a>
-                            </p>
-                            <Button
-                                className='CardDetail__limited-button'
-                                onClick={() => {
-                                    props.onClose();
-                                    (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
-                                }}
-                                emphasis='primary'
-                                size='large'
-                            >
-                                {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
-                            </Button>
-                        </div>}
-                    </div>
-                    
-                    {/* Property list */}
-
-                    {!limited &&
-                    <CardDetailProperties
-                        board={props.board}
-                        card={props.card}
-                        cards={props.cards}
-                        activeView={props.activeView}
-                        views={props.views}
-                        readonly={props.readonly}
-                    />}
-
-                    {attachments.length !== 0 && <Fragment>
-                        <hr/>
-                        <AttachmentList
-                            attachments={attachments}
-                            onDelete={onDelete}
-                            addAttachment={addAttachment}
-                        />
-                    </Fragment>}
-                </div>
-
-                {/* Comments */}
-
-                {!limited && <Fragment>
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        boardId={card.boardId}
-                        cardId={card.id}
-                        readonly={props.readonly || !canCommentBoardCards}
-                    />
-                </Fragment>}
-            </div>
-
             {/* Content blocks */}
 
             {!limited && <div className='CardDetail CardDetail--fullwidth content-blocks'>
+
                 {newBoardsEditor && (
                     <BlocksEditor
                         boardId={card.boardId}
@@ -403,6 +279,91 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
                     </CardDetailProvider>)}
             </div>}
+
+            <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
+                <div>
+                    <div>                        
+                        {/* Hidden (limited) card copy + CTA */}
+
+                        {limited && <div className='CardDetail__limited-wrapper'>
+                            <CardSkeleton
+                                className='CardDetail__limited-bg'
+                            />
+                            <p className='CardDetail__limited-title'>
+                                <FormattedMessage
+                                    id='CardDetail.limited-title'
+                                    defaultMessage='This card is hidden'
+                                />
+                            </p>
+                            <p className='CardDetail__limited-body'>
+                                <FormattedMessage
+                                    id='CardDetail.limited-body'
+                                    defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
+                                />
+                                <br/>
+                                <a
+                                    className='CardDetail__limited-link'
+                                    role='button'
+                                    onClick={() => {
+                                        props.onClose();
+                                        (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
+                                    }}
+                                >
+                                    <FormattedMessage
+                                        id='CardDetial.limited-link'
+                                        defaultMessage='Learn more about our plans.'
+                                    />
+                                </a>
+                            </p>
+                            <Button
+                                className='CardDetail__limited-button'
+                                onClick={() => {
+                                    props.onClose();
+                                    (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
+                                }}
+                                emphasis='primary'
+                                size='large'
+                            >
+                                {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
+                            </Button>
+                        </div>}
+                    </div>
+                    
+                    {/* Property list */}
+
+                    {!limited &&
+                    <CardDetailProperties
+                        board={props.board}
+                        card={props.card}
+                        cards={props.cards}
+                        activeView={props.activeView}
+                        views={props.views}
+                        readonly={props.readonly}
+                    />}
+
+                    {attachments.length !== 0 && <Fragment>
+                        <hr/>
+                        <AttachmentList
+                            attachments={attachments}
+                            onDelete={onDelete}
+                            addAttachment={addAttachment}
+                        />
+                    </Fragment>}
+
+                {/* Comments */}
+
+                {!limited && <Fragment>
+                    <hr/>
+                    <CommentsList
+                        comments={comments}
+                        boardId={card.boardId}
+                        cardId={card.id}
+                        readonly={props.readonly || !canCommentBoardCards}
+                    />
+                </Fragment>}
+                </div>
+
+            </div>
         </>
     )
 }

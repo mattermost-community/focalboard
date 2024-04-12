@@ -17,6 +17,7 @@ import {TestBlockFactory} from '../test/testBlockFactory'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
 
 import CardDialog from './cardDialog'
+import {optionsByType} from './calculations/options'
 
 jest.mock('../mutator')
 jest.mock('../octoClient')
@@ -104,6 +105,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -126,6 +133,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -147,6 +160,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -168,6 +187,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={closeFn}
                         showCard={jest.fn()}
@@ -190,6 +215,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -212,6 +243,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -248,6 +285,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -285,6 +328,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -309,6 +358,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -348,6 +403,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[card]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
@@ -383,6 +444,12 @@ describe('components/cardDialog', () => {
                         activeView={boardView}
                         views={[boardView]}
                         cards={[limitedCard]}
+                        column={{
+                            id: 'mockId',
+                            name: 'mockName', 
+                            type: 'text',
+                            options: []
+                        }}
                         cardId={limitedCard.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}

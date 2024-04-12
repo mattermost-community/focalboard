@@ -214,8 +214,8 @@ const Kanban = (props: Props) => {
                     const draggedCards: Card[] = draggedCardIds
                         .map(id => props.cards.find(card => card.id === id))
                         .filter((card): card is Card => card !== undefined);
-                    const propertyUpdates = draggedCards.map(card =>
-                        // TypeScript now understands `card` cannot be undefined
+                    
+                        const propertyUpdates = draggedCards.map(card =>
                         mutator.changePropertyValue(props.board.id, card, groupByProperty.id, destination.droppableId, description)
                     );
             
@@ -251,6 +251,7 @@ const Kanban = (props: Props) => {
 	const [placeholderProps, setPlaceholderProps] = useState({});
     const queryAttr = "data-rbd-drag-handle-draggable-id";
 
+    
     const onDragUpdate = (update: DropResult) => {
         if(!update.destination){
           return;
@@ -277,7 +278,6 @@ const Kanban = (props: Props) => {
                     const marginBottom = parseFloat(style.marginBottom);
                     return total + curr.clientHeight + marginBottom;
                 }, 0);
-    
                 setPlaceholderProps({
                     clientHeight,
                     clientWidth,
