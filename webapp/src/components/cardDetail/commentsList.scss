@@ -1,8 +1,7 @@
 .CommentsList {
-    padding: 8px 0;
+    padding: 8px 15px;
     display: flex;
     flex-direction: column;
-
     width: 100%;
 
     .comment-avatar {
@@ -12,21 +11,41 @@
     }
 
     .CommentsList__new {
-        position: relative;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
-        padding: 8px 0;
+        align-items: flex-end;
+        padding: 15px;
         min-height: 48px;
-    }
+        width: 100%;
+        justify-content: space-between;
+        gap: 6px;
+    }    
 
     .newcomment {
         flex-grow: 1;
-        margin: 0 0 0 8px;
+        height: 100%;
         overflow: hidden;
+        background-color: #323940;
+        border-radius: 5px;
+        padding: 2px 8px;
+
+        > .octo-placeholder {
+            display: flex;
+            align-items: center;
+        }
+
+        > .MarkdownEditorInput {
+            padding: 2px 8px;
+        }
 
         + button {
-            margin: -4px 0 0 8px;
+            // margin: -4px 0 0 8px;
+            background-color: #323940;
+            color: #B6C2CF;
         }
     }
 }

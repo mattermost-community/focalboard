@@ -55,14 +55,10 @@ const CommentsList = (props: Props) => {
 
     const newCommentComponent = (
         <div className='CommentsList__new'>
-            <img
-                className='comment-avatar'
-                src={Utils.getProfilePicture(me?.id)}
-            />
             <MarkdownEditor
                 className='newcomment'
                 text={newComment}
-                placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
+                placeholderText={intl.formatMessage({id: 'CardDetail.new2-comment-placeholder', defaultMessage: 'Your comment'})}
                 onChange={(value: string) => {
                     if (newComment !== value) {
                         setNewComment(value)
@@ -70,7 +66,7 @@ const CommentsList = (props: Props) => {
                 }}
             />
 
-            {newComment &&
+            {/* {newComment && */}
             <Button
                 filled={true}
                 onClick={onSendClicked}
@@ -80,7 +76,7 @@ const CommentsList = (props: Props) => {
                     defaultMessage='Send'
                 />
             </Button>
-            }
+            {/* } */}
 
             <AddCommentTourStep/>
         </div>
@@ -91,7 +87,7 @@ const CommentsList = (props: Props) => {
             {/* New comment */}
             {!props.readonly && newCommentComponent}
 
-            {comments.slice(0).reverse().map((comment) => {
+            {comments.slice(0).map((comment) => {
                 // Only modify _own_ comments, EXCEPT for Admins, which can delete _any_ comment
                 // NOTE: editing comments will exist in the future (in addition to deleting)
                 const canDeleteComment: boolean = canDeleteOthersComments || me?.id === comment.modifiedBy
@@ -108,7 +104,7 @@ const CommentsList = (props: Props) => {
             })}
 
             {/* horizontal divider below comments */}
-            {!(comments.length === 0 && props.readonly) && <hr className='CommentsList__divider'/>}
+            {/* {!(comments.length === 0 && props.readonly) && <hr className='CommentsList__divider'/>} */}
         </div>
     )
 }

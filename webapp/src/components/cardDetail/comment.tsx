@@ -38,18 +38,21 @@ const Comment: FC<Props> = (props: Props) => {
             className='Comment comment'
         >
             <div className='comment-header'>
-                <img
-                    className='comment-avatar'
-                    src={userImageUrl}
-                />
-                <div className='comment-username'>{user?.username}</div>
-                <GuestBadge show={user?.is_guest}/>
+                {/* <div> */}
+                    <img
+                        className='comment-avatar'
+                        src={userImageUrl}
+                    />
+                    <div className='comment-username'>{user?.username}</div>
+                    <GuestBadge show={user?.is_guest}/>  
+                {/* </div> */}
 
-                <Tooltip title={Utils.displayDateTime(date, intl)}>
+
+                {/* <Tooltip title={Utils.displayDateTime(date, intl)}> */}
                     <div className='comment-date'>
-                        {Utils.relativeDisplayDateTime(date, intl)}
+                        {Utils.displayTime(date, intl)}
                     </div>
-                </Tooltip>
+                {/* </Tooltip> */}
 
                 {!props.readonly && (
                     <MenuWrapper>

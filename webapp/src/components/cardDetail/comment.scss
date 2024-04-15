@@ -7,6 +7,10 @@
         .MenuWrapper {
             display: block;
         }
+
+        .comment-date {
+            display: none;
+        }
     }
 
     .MenuWrapper {
@@ -36,13 +40,16 @@
     }
 
     .comment-date {
-        color: #ccc;
-        font-size: 12px;
+        position: absolute;
+        right: 0;
+        color: #B6C2CF;
+        font-size: 14px;
+        font-weight: 400;
     }
 
     .comment-text {
         color: rgb(var(--center-channel-color-rgb));
-        width: 100%;
+        // width: 100%;
         padding-left: 32px;
         overflow-wrap: anywhere;
 
@@ -57,6 +64,10 @@
         p {
             &:first-child {
                 margin-top: 0;
+                background-color: #323940;
+                padding: 5px 11px;
+                border-radius: 5px;
+                width: fit-content;
             }
         }
     }

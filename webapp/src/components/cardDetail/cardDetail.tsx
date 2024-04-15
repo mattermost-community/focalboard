@@ -280,89 +280,89 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     </CardDetailProvider>)}
             </div>}
 
-            <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
-                <div>
-                    <div>                        
-                        {/* Hidden (limited) card copy + CTA */}
+            <div className='Comments-section'>
+                <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
+                    <div>
+                        <div>                        
+                            {/* Hidden (limited) card copy + CTA */}
 
-                        {limited && <div className='CardDetail__limited-wrapper'>
-                            <CardSkeleton
-                                className='CardDetail__limited-bg'
-                            />
-                            <p className='CardDetail__limited-title'>
-                                <FormattedMessage
-                                    id='CardDetail.limited-title'
-                                    defaultMessage='This card is hidden'
+                            {limited && <div className='CardDetail__limited-wrapper'>
+                                <CardSkeleton
+                                    className='CardDetail__limited-bg'
                                 />
-                            </p>
-                            <p className='CardDetail__limited-body'>
-                                <FormattedMessage
-                                    id='CardDetail.limited-body'
-                                    defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
-                                />
-                                <br/>
-                                <a
-                                    className='CardDetail__limited-link'
-                                    role='button'
+                                <p className='CardDetail__limited-title'>
+                                    <FormattedMessage
+                                        id='CardDetail.limited-title'
+                                        defaultMessage='This card is hidden'
+                                    />
+                                </p>
+                                <p className='CardDetail__limited-body'>
+                                    <FormattedMessage
+                                        id='CardDetail.limited-body'
+                                        defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
+                                    />
+                                    <br/>
+                                    <a
+                                        className='CardDetail__limited-link'
+                                        role='button'
+                                        onClick={() => {
+                                            props.onClose();
+                                            (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
+                                        }}
+                                    >
+                                        <FormattedMessage
+                                            id='CardDetial.limited-link'
+                                            defaultMessage='Learn more about our plans.'
+                                        />
+                                    </a>
+                                </p>
+                                <Button
+                                    className='CardDetail__limited-button'
                                     onClick={() => {
                                         props.onClose();
-                                        (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
+                                        (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
                                     }}
+                                    emphasis='primary'
+                                    size='large'
                                 >
-                                    <FormattedMessage
-                                        id='CardDetial.limited-link'
-                                        defaultMessage='Learn more about our plans.'
-                                    />
-                                </a>
-                            </p>
-                            <Button
-                                className='CardDetail__limited-button'
-                                onClick={() => {
-                                    props.onClose();
-                                    (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
-                                }}
-                                emphasis='primary'
-                                size='large'
-                            >
-                                {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
-                            </Button>
-                        </div>}
-                    </div>
-                    
-                    {/* Property list */}
+                                    {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
+                                </Button>
+                            </div>}
+                        </div>
+                        
+                        {/* Property list */}
 
-                    {!limited &&
-                    <CardDetailProperties
-                        board={props.board}
-                        card={props.card}
-                        cards={props.cards}
-                        activeView={props.activeView}
-                        views={props.views}
-                        readonly={props.readonly}
-                    />}
+                        {!limited &&
+                        <CardDetailProperties
+                            board={props.board}
+                            card={props.card}
+                            cards={props.cards}
+                            activeView={props.activeView}
+                            views={props.views}
+                            readonly={props.readonly}
+                        />}
 
-                    {attachments.length !== 0 && <Fragment>
-                        <hr/>
-                        <AttachmentList
-                            attachments={attachments}
-                            onDelete={onDelete}
-                            addAttachment={addAttachment}
+                        {attachments.length !== 0 && <Fragment>
+                            <hr/>
+                            <AttachmentList
+                                attachments={attachments}
+                                onDelete={onDelete}
+                                addAttachment={addAttachment}
+                            />
+                        </Fragment>}
+
+                    {/* Comments */}
+
+                    {!limited && <Fragment>
+                        <CommentsList
+                            comments={comments}
+                            boardId={card.boardId}
+                            cardId={card.id}
+                            readonly={props.readonly || !canCommentBoardCards}
                         />
                     </Fragment>}
-
-                {/* Comments */}
-
-                {!limited && <Fragment>
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        boardId={card.boardId}
-                        cardId={card.id}
-                        readonly={props.readonly || !canCommentBoardCards}
-                    />
-                </Fragment>}
+                    </div>
                 </div>
-
             </div>
         </>
     )

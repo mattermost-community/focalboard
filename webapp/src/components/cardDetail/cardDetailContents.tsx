@@ -161,6 +161,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
 const CardDetailContents = (props: Props) => {
     const intl = useIntl()
     const {contents, card, id} = props
+    console.log(card)
     if (contents.length) {
         return (
             <div className='octo-content'>

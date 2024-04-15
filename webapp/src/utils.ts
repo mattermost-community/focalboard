@@ -342,6 +342,14 @@ class Utils {
         })
     }
 
+    static displayTime(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    }    
+
     static inputDate(date: Date, intl: IntlShape): string {
         return intl.formatDate(date, {
             year: 'numeric',

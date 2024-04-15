@@ -114,7 +114,8 @@
             display: flex;
             flex-direction: row;
             width: 100%; 
-            padding: 14px 22px;
+            height: calc(100% - 84px);
+            // padding: 14px 0;
         }
 
         > .banner {
