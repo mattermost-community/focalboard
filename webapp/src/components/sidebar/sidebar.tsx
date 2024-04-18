@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useCallback, useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
@@ -9,7 +9,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getCurrentBoard, getMySortedBoards} from '../../store/boards'
+import {getCurrentBoard, getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
@@ -32,7 +32,7 @@ import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import wsClient, {WSClient} from '../../wsclient'
 
-import {getCurrentTeam, getCurrentTeamId} from '../../store/teams'
+import {Team, getCurrentTeam, getCurrentTeamId} from '../../store/teams'
 
 import {Constants} from '../../constants'
 
@@ -51,11 +51,14 @@ import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
 import FocalboardLogoIcon from '../../widgets/icons/focalboard_logo'
+import {useHistory, useRouteMatch} from 'react-router-dom'
+
 
 type Props = {
     activeBoardId?: string
     onBoardTemplateSelectorOpen: () => void
     onBoardTemplateSelectorClose?: () => void
+    channelId?: string
 }
 
 function getWindowDimensions() {
@@ -76,6 +79,19 @@ const Sidebar = (props: Props) => {
     const me = useAppSelector<IUser|null>(getMe)
     const activeViewID = useAppSelector(getCurrentViewId)
     const currentBoard = useAppSelector(getCurrentBoard)
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
+    const intl = useIntl()
+    const history = useHistory()
+    const match = useRouteMatch<{boardId: string, viewId?: string}>()
+    const currentBoardId = useAppSelector<string>(getCurrentBoardId) || null
+
+    const showBoard = useCallback(async (boardId) => {
+        Utils.showBoard(boardId, match, history)
+        // if (onClose) {
+        //     onClose()
+        // }
+    }, [match, history])
+
 
     useEffect(() => {
         const categoryOnChangeHandler = (_: WSClient, categories: Category[]) => {
@@ -437,7 +453,12 @@ const Sidebar = (props: Props) => {
                 (!Utils.isFocalboardPlugin()) &&
                 <div
                     className='add-board'
-                    onClick={props.onBoardTemplateSelectorOpen}
+                    // onClick={props.onBoardTemplateSelectorOpen}
+                    onClick={async () => {
+                        const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                        const board = boardsAndBlocks.boards[0]
+                        await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
+                    }}
                 >
                     <FormattedMessage
                         id='Sidebar.add-board'

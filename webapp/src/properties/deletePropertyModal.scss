@@ -1,0 +1,41 @@
+.delete-modal {
+    position: absolute;
+    width: 100%;
+    max-width: 300px;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    z-index: 2;
+    box-shadow: var(--ds-shadow-overlay, 0 8px 12px #091e4226, 0 0 1px #091e424f);
+    background: #3F474F;
+    border-radius: 5px;
+    padding: 10px;
+
+    .modal-container {
+        position: relative;
+    
+        .close-button { 
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .modal-title {
+            text-align: center;
+        }
+    
+        .modal-content {
+            width: auto; 
+    
+            .delete-button {
+                background-color: red;
+                color: #fff;
+                width: 100%;
+                text-align: center;
+                border-radius: 4px;
+            }
+        }
+    }
+}
+

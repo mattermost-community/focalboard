@@ -36,6 +36,7 @@ import GuestNoBoards from './guestNoBoards'
 import Sidebar from './sidebar/sidebar'
 
 import './workspace.scss'
+import {property} from 'lodash'
 
 type Props = {
     readonly: boolean

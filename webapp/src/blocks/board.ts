@@ -7,6 +7,7 @@ import {Utils, IDType} from '../utils'
 
 import {Block, BlockPatch, createPatchesFromBlocks} from './block'
 import {Card} from './card'
+import {property} from 'lodash'
 
 const BoardTypeOpen = 'O'
 const BoardTypePrivate = 'P'
@@ -83,7 +84,7 @@ type BoardsAndBlocksPatch = {
     blockPatches: BlockPatch[]
 }
 
-type PropertyTypeEnum = 'text' | 'labels' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'multiPerson' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy' | 'unknown'
+type PropertyTypeEnum = 'text' | 'labels' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'multiPerson' | 'file' | 'checkbox' | 'checklist' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy' | 'unknown'
 
 interface IPropertyOption {
     id: string
@@ -103,15 +104,15 @@ function createBoard(board?: Board): Board {
     const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []
     const selectProperties = cardProperties.find((o) => o.type === 'select')
-    // if (!selectProperties) {
-    //     const property: IPropertyTemplate = {
-    //         id: Utils.createGuid(IDType.BlockID),
-    //         name: 'Status',
-    //         type: 'select',
-    //         options: [],
-    //     }
-    //     cardProperties.push(property)
-    // }
+    if (!selectProperties) {
+        const property: IPropertyTemplate = {
+            id: Utils.createGuid(IDType.BlockID),
+            name: 'Status',
+            type: 'select',
+            options: [],
+        }
+        cardProperties.push(property)
+    }
 
     if (board?.cardProperties) {
         // Deep clone of card properties and their options

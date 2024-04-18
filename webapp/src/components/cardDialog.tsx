@@ -44,7 +44,7 @@ type Props = {
     board: Board
     activeView: BoardView
     views: BoardView[]
-    column: IPropertyTemplate 
+    column: IPropertyTemplate | undefined
     cards: Card[]
     cardId: string
     onClose: () => void
@@ -64,7 +64,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
 
-    const columnDetails = column.options.find( option => option.id === card?.fields.properties[column?.id])
+    const columnDetails = column?.options.find( option => option.id === card?.fields.properties[column?.id])
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {

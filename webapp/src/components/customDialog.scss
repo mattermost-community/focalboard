@@ -81,6 +81,7 @@
             justify-content: space-between;
             width: 100%;
             padding: 14px 22px;
+            background-color: #323940;
         
             .EditableAreaWrap > .EditableArea {
                 &.Editable.title { 
@@ -90,6 +91,7 @@
                     letter-spacing: 0;
                     text-align: left;
                     color: #B6C2CF;
+                    background-color: #323940;
                 }
             }
 

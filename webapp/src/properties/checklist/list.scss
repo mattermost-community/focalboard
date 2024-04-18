@@ -1,0 +1,140 @@
+.checkLists {
+
+
+    .checklist-container {
+        width: 100%;
+        margin-top: 15px;
+
+        .checklist-title-save {
+
+            input {
+                display: block;
+                width: 100%;
+                box-sizing: border-box; 
+                padding: 10px;
+                background: #3F474F;     
+                outline: -webkit-focus-ring-color auto 1px;
+                margin: 0;   
+            }
+
+            button {
+                background: #0c66e4;
+                outline: none;
+                border: none;
+                color: #ffffff;          
+                margin-top: 8px;
+                padding: 8px 12px;
+                cursor: pointer;
+                border-radius: 3px;
+            }
+        }
+
+        button {
+            background: #3F474F;
+            outline: none;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+
+        }
+       
+        .title-section {
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .title {
+                width: 100%;
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 19px;
+                letter-spacing: 0;
+                text-align: left;
+                color: #B6C2CF;
+            }
+        }
+
+        .progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+
+
+            .progress-bar {
+                width: 100%;
+            }
+        }
+
+        .items-list {
+
+
+            .item {
+                list-style-type: none;
+                display: flex;
+                align-items: start;
+                gap: 5px;
+                padding: 7px 0;
+                font-size: 16px;
+                color: #B6C2CF;
+
+                input[type=checkbox] {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                &.line-through {
+                    text-decoration: line-through;
+                }
+            }
+
+            .item-edit {
+                width: 100%;
+                display: block;
+
+                input[type=text] {
+                    display: block;
+                    width: 100%;
+                    box-sizing: border-box; 
+                    padding: 10px;
+                    background: #3F474F;     
+                    outline: -webkit-focus-ring-color auto 1px;
+                    margin: 0;  
+                }
+
+                button {
+                    background: #0c66e4;
+                    outline: none;
+                    border: none;
+                    color: #ffffff;          
+                    margin-top: 8px;
+                    padding: 8px 12px;
+                    cursor: pointer;
+                    border-radius: 3px;
+                }
+            }
+
+            .item-value {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+
+                .item-text {
+                    width: 100%;
+                    height: 100%;
+                }
+                
+                button {
+                    background: none;
+                    outline: none;
+                    padding: 0;
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

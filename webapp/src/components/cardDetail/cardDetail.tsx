@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
-import {Board, IPropertyOption} from '../../blocks/board'
+import {Board, IPropertyOption, IPropertyTemplate} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
@@ -44,6 +44,15 @@ import useImagePaste from './imagePaste'
 import AttachmentList from './attachment'
 
 import './cardDetail.scss'
+import {PropertyTypes} from '../../widgets/propertyMenu'
+import propsRegistry from '../../properties'
+import ModalProperty from '../../components/modalProperty'
+import {PropertyType} from '../../properties/types'
+
+import {IDType} from '../../utils'
+import Checklist from '../../properties/checklist/checklist'
+import List from '../../properties/checklist/list'
+
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'
@@ -61,6 +70,17 @@ type Props = {
     onClose: () => void
     onDelete: (block: Block) => void
     addAttachment: () => void
+}
+
+interface Item {
+    id: number
+    value: string;
+    checked: boolean;
+}
+
+interface PropertyObject {
+    title: string;
+    items: Item[];
 }
 
 async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
@@ -194,11 +214,118 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }), [props.contents])
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedType, setSelectedType] = useState<PropertyType | null>(null);
+
+    const handleTypeSelected = (type: PropertyType) => {
+        setSelectedType(type);
+        setIsModalOpen(true);
+    };
+
+    const [newTemplateId, setNewTemplateId] = useState('')
+
+    useEffect(() => {
+        const newProperty = props.board.cardProperties.find((property) => property.id === newTemplateId)
+        if (newProperty) {
+            setNewTemplateId('');
+        }
+    }, [newTemplateId, props.board.cardProperties]);
+    
+
+    const [propertyValue, setPropertyValue] = useState('');
+
+    useEffect(() => {
+        if (propertyValue) {
+            setPropertyValue(propertyValue);
+        }
+    }, [propertyValue]); 
+
+    const handleSave = async (value: string) => {
+        if (!selectedType) {
+            console.error("No type selected");
+            return;
+        }
+    
+        const template = {
+            id: Utils.createGuid(IDType.BlockID),
+            name: selectedType.displayName(intl),
+            type: selectedType.type,
+            options: []
+        };
+    
+        const jsonValue = {
+            title: value
+        };
+    
+        try {
+            const templateId = await mutator.insertPropertyTemplate(props.board, props.activeView, -1, template);
+            await mutator.changePropertyValue(props.board.id, card, templateId, JSON.stringify(jsonValue))
+            setNewTemplateId(templateId);
+            setPropertyValue(value);
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Failed to save template:", error);
+        }
+    };
+    
+    const safelyParseJson = (jsonString: string) => {
+        try {
+            const jsonObject = JSON.parse(jsonString);
+            return jsonObject;
+        } catch (error) {
+            return null;
+        }
+    }
+
     return (
         <>
             {/* Content blocks */}
 
-            {!limited && <div className='CardDetail CardDetail--fullwidth content-blocks'>
+            {!limited && <div className='CardDetail CardDetail-main CardDetail--fullwidth content-blocks'>
+                <div>
+                    {/* {!props.readonly && canEditBoardProperties && */}
+                        <div className='octo-propertyname add-property' style={{marginBottom: '30px', position:'relative'}}>
+                                <PropertyTypes
+                                    label={intl.formatMessage({id: 'PropertyMenu.selectPropertyType', defaultMessage: 'Properties'})}
+                                    onTypeSelected={handleTypeSelected}
+                                />
+                                <ModalProperty
+                                    isOpen={isModalOpen}
+                                    onClose={() => setIsModalOpen(false)}
+                                    onSave={handleSave}
+                                />
+                        </div>
+                    {/* } */}
+                </div>
+
+                {newTemplateId && propertyValue ? null : props.board.cardProperties
+                    .filter((propertyTemplate: IPropertyTemplate) => propertyTemplate.name === 'Checklist')
+                    .map((propertyTemplate: IPropertyTemplate) => {
+                        let property = card.fields.properties[propertyTemplate.id];
+                        let propertyObject: PropertyObject | null = null;
+                        if (typeof property === 'string') {
+                            propertyObject = safelyParseJson(property);
+                        } else if (Array.isArray(property) && property.length > 0 && typeof property[0] === 'string') {
+                            propertyObject = safelyParseJson(property[0]);
+                        }
+                        if (propertyObject && propertyObject.title) {
+                            return (
+                                <div className='checkLists'>
+                                    <List 
+                                        card={card}
+                                        cards={props.cards}
+                                        views={props.views}
+                                        board={props.board}
+                                        readOnly={props.readonly}
+                                        listTitle={propertyObject.title}
+                                        itemsData={propertyObject?.items ?? []}
+                                        propertyId={propertyTemplate.id}
+                                    />
+                                </div>
+                            );
+                        }
+                        return null;
+                })}
 
                 {newBoardsEditor && (
                     <BlocksEditor
@@ -332,7 +459,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         
                         {/* Property list */}
 
-                        {!limited &&
+                        {/* {!limited &&
                         <CardDetailProperties
                             board={props.board}
                             card={props.card}
@@ -340,7 +467,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             activeView={props.activeView}
                             views={props.views}
                             readonly={props.readonly}
-                        />}
+                        />} */}
 
                         {attachments.length !== 0 && <Fragment>
                             <hr/>

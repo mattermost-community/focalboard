@@ -647,6 +647,29 @@ class Mutator {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.boardId, card: card.id})
     }
 
+    // async changePropertyValueNew(boardId: string, card: Card, propertyId: string, value?: string | string[] | { [key: string]: any }, description = 'change property') {
+    //     const oldValue = card.fields.properties[propertyId];
+    
+    //     // Convert both oldValue and newValue to a comparable format (string)
+    //     const oldValueStr = JSON.stringify(oldValue);
+    //     const newValueStr = JSON.stringify(value);
+    
+    //     // Don't save anything if property value was not changed
+    //     if (oldValueStr === newValueStr) {
+    //         return;
+    //     }
+    
+    //     const newCard = createCard(card);
+    //     if (value !== undefined) {
+    //         newCard.fields.properties[propertyId] = JSON.stringify(value);
+    //     } else {
+    //         delete newCard.fields.properties[propertyId];
+    //     }
+    //     await this.updateBlock(boardId, newCard, card, description);
+    //     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: boardId, card: card.id});
+    // }
+    
+
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyTypeEnum, newName: string) {
         if (propertyTemplate.type === newType && propertyTemplate.name === newName) {
             return

@@ -75,7 +75,7 @@ type Props = {
     cards: Card[]
     activeView: BoardView
     views: BoardView[]
-    groupByProperty: IPropertyTemplate
+    groupByProperty: IPropertyTemplate | undefined
     dateDisplayProperty?: IPropertyTemplate
     readonly: boolean
     shownCardId?: string
@@ -99,7 +99,6 @@ const CenterPanel = (props: Props) => {
     const dispatch = useAppDispatch()
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
-
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
     useEffect(() => {
@@ -181,7 +180,6 @@ const CenterPanel = (props: Props) => {
 
     const addCard = useCallback(async (groupByOptionId?: string, show = false, properties: Record<string, string> = {}): Promise<void> => {
         const {activeView, board, groupByProperty} = props
-
         const card = createCard()
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
@@ -414,7 +412,7 @@ const CenterPanel = (props: Props) => {
                     <CardDialog
                         board={board}
                         activeView={activeView}
-                        column={props.groupByProperty}
+                        column={groupByProperty}
                         views={views}
                         cards={cards}
                         key={props.shownCardId}

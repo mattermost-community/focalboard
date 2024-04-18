@@ -62,9 +62,9 @@ type Props = {
     showHiddenCardCountNotification: (show: boolean) => void
 }
 
-const ScrollingComponent = withScrolling('div')
-const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
-const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
+// const ScrollingComponent = withScrolling('div')
+// const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
+// const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
@@ -210,6 +210,7 @@ const Kanban = (props: Props) => {
                 updatedGroups[destinationIndex].cards.splice(destination.index, 0, cardBeingMoved);
 
                 let cardOrder = updatedGroups.flatMap(group => group.cards.map(card => card.id));
+
                 try {
                     const draggedCards: Card[] = draggedCardIds
                         .map(id => props.cards.find(card => card.id === id))

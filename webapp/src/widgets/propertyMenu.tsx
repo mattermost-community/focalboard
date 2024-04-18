@@ -23,6 +23,7 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
 type TypesProps = {
     label: string
     onTypeSelected: (type: PropertyType) => void
+    propertyType?: PropertyType
 }
 
 export const PropertyTypes = (props: TypesProps): JSX.Element => {
@@ -36,7 +37,7 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
             <Menu.Separator/>
 
             {
-                propsRegistry.list().map((p) => (
+                propsRegistry.list().filter(property => ['checklist', 'labels'].includes(property.type)).map((p) => (
                     <Menu.Text
                         key={p.type}
                         id={p.type}

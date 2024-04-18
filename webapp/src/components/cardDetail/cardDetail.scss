@@ -153,6 +153,15 @@
         }
     }
 
+    .MenuOption > .menu-option__content {
+        background-color: #3F474F;
+        margin: 5px 0;
+        padding: 4px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        color: #B6C2CF;
+    }
+
     &.content-blocks {
         position: relative;
         width: 100%;
@@ -178,6 +187,11 @@
 
     &.CardDetail--is-limited {
         flex: 1;
+    }
+
+    &.CardDetail-main {
+        padding: 15px;
+        background-color: #323940;
     }
 
     &__limited-wrapper {
