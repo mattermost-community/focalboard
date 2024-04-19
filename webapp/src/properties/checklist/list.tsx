@@ -42,6 +42,7 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteCandidateId, setDeleteCandidateId] = useState<string | null>(null);
     const [originalValue, setOriginalValue] = useState('');
+    const [fromSameClient, setFromSameClient] = useState(false);
 
     const calculateProgress = () => {
         const totalItems = itemsData.filter(item => item.value !== '').length;
@@ -57,9 +58,8 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
                 items: items
             };
             mutator.changePropertyValue(board.id, card, propertyId, JSON.stringify(jsonValue));
-            setShouldSync(false); // Reset the flag after syncing
+            setShouldSync(false);
         }
-
         setProgress(calculateProgress());
     }, [shouldSync, items]); 
 
@@ -70,7 +70,6 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
             const maxId = itemsData.reduce((max, item) => Math.max(max, item.id), 0);
             setIdForItem(maxId + 1);
         }
-
     }, [itemsData]);
 
     useEffect(() => {
@@ -138,6 +137,8 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
     const addItem = () => {
         if (readOnly || isEditingItem) return;
         const newId = idForItem;
+        setFromSameClient(true)
+        if (!fromSameClient) return;
         setItems(prevItems => [...prevItems, { id: newId, value: '', checked: false }]);
         setEditableId(newId);
         setIdForItem(prevId => prevId + 1);
@@ -169,66 +170,62 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
     const handleKeyPressItems = (event: KeyboardEvent<HTMLInputElement>, id: number) => {
         if (event.key === 'Enter') {
             event.preventDefault(); 
-            console.log('hit')
-            addItem();
+            setFromSameClient(true)
+            if (isEditingItem) {
+                setEditableId(null)
+                setIsEditingItem(false)
+            } else {
+                addItem()
+            }
             saveItem(id);
         }
     }; 
 
     const handleBlurItem = (id: number) => {
         const currentItem = items.find(item => item.id === id);
-    
+        setIsEditingItem(false);
+
         setTimeout(() => {
             if (!currentItem) {
                 console.error('No item found with ID:', id);
-                setEditableId(null);
-                setIsEditingItem(false);
                 return;
             }
-    
+            
             if (currentItem.value.trim().length === 0) {
-                console.log('prima')
                 if (originalValue !== '') {
-                    console.log('a doua')
-
                     setItems(items.map(item =>
                         item.id === id ? { ...item, value: originalValue } : item
                     ));
+                } else {
+                    setItems(items.filter(item => item.id !== id));
                 }
             } else {
-                console.log('a treia')
-
                 setItems(items.map(item =>
                     item.id === id ? { ...item, value: currentItem.value.trim() } : item
                 ));
             }
     
-            // Always clear editableId and isEditingItem regardless of the condition
             setEditableId(null);
-            setIsEditingItem(false);
-    
-            // Optionally save the item if changes were made
-            if (currentItem.value.trim() !== '') {
-                saveItem(id);
-            } else {
-                setItems(prevItems => prevItems.filter(item => item.id !== id));
-            }
         }, 150);
     };
     
+    const saveItem = (id: number, fromClick: boolean = false) => {
+        setItems(prevItems => {
+            const updatedItems = prevItems.map(item =>
+                item.id === id ? { ...item, value: item.value.trim() } : item
+            ).filter(item => item.value !== '');
     
-
-    const saveItem = (id: number) => {
-        setItems(prevItems => prevItems.map(item =>
-            item.id === id ? { ...item, value: item.value.trim() ? item.value : '' } : item
-        ).filter(item => item.value !== ''));
-
-        setShouldSync(true); 
-        if (id === editableId && !isEditingItem) {
-            addItem();  
+            console.log("Updated Items Before Saving:", updatedItems); 
+            return updatedItems;
+        });
+    
+        setShouldSync(true);
+    
+        if (id === editableId && !fromClick) {
+            addItem();
         }
     };
-
+        
     const deleteItem = (id: number) => {
         setItems(prevItems => prevItems.filter(item => item.id !== id));
         setShouldSync(true); 
@@ -253,7 +250,9 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
         setShowDeleteModal(false);
         setDeleteCandidateId(null);
     };
-    
+
+    console.log(fromSameClient)
+
     return (
         <div className="checklist-container">
             <div>
@@ -297,7 +296,13 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
                 {items.map((item) => (
                     <li className={`item ${item.checked ? 'line-through' : ''}`} key={item.id}>
                         {editableId !== item.id && (
-                            <input type="checkbox" checked={item.checked} readOnly={readOnly} onClick={() => toggleItem(item.id)} />
+                            <input 
+                                type="checkbox" 
+                                checked={item.checked} 
+                                readOnly={readOnly} 
+                                onChange={() => {}}
+                                onClick={() => toggleItem(item.id)} 
+                            />                        
                         )}
                         {editableId === item.id ? (
                             <div className='item-edit'>
@@ -313,11 +318,13 @@ const List: React.FC<ListProps> = ({ card, board, readOnly, listTitle, itemsData
                                 />
                                 <button
                                     type='button'
-                                    onClick={() => saveItem(item.id)}>Save</button>           
+                                    onClick={() => saveItem(item.id, true)}>Save</button>           
                             </div>
                         ) : ( 
                             <div className='item-value'>
-                                <div className='item-text' onClick={() => handleItemClick(item.id)}>{item.value}</div>
+                                <div 
+                                    className='item-text' 
+                                    onClick={() => handleItemClick(item.id)}>{item.value}</div>
                                 <button
                                     onClick={() => deleteItem(item.id)}>
                                     <CloseIcon />
