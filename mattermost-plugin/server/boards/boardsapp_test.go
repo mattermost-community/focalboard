@@ -85,9 +85,9 @@ func TestSetConfiguration(t *testing.T) {
 
 	t.Run("test boards feature flags", func(t *testing.T) {
 		featureFlags := &model.FeatureFlags{
-			TestFeature:        "test",
-			TestBoolFeature:    boolTrue,
-			BoardsFeatureFlags: "hello_world-myTest",
+			TestFeature:     "test",
+			TestBoolFeature: boolTrue,
+			// BoardsFeatureFlags: "hello_world-myTest",
 		}
 
 		mmConfig := baseConfig

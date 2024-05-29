@@ -100,7 +100,7 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 			mlog.Int("cardLimit", cardLimit),
 		)
 		a.SetCardLimit(cardLimit)
-		return a.doUpdateCardLimitTimestamp()
+		// return a.doUpdateCardLimitTimestamp()
 	}
 
 	a.logger.Info(

@@ -28,10 +28,6 @@ type Plugin struct {
 }
 
 func (p *Plugin) OnActivate() error {
-	if p.API.GetConfig().FeatureFlags.BoardsProduct {
-		p.API.LogError(ErrPluginNotAllowed.Error())
-		return ErrPluginNotAllowed
-	}
 
 	client := pluginapi.NewClient(p.API, p.Driver)
 

@@ -3,7 +3,6 @@ package boards
 import (
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-server/v6/product"
 
 	mm_model "github.com/mattermost/mattermost/server/public/model"
 )
@@ -81,4 +80,5 @@ func (bs *boardsServiceAPI) DuplicateBoard(boardID string, userID string,
 }
 
 // Ensure boardsServiceAPI implements product.BoardsService interface.
-var _ product.BoardsService = (*boardsServiceAPI)(nil)
+// Commented out this becuase we are not using boards as a product.
+// var _ product.BoardsService = (*boardsServiceAPI)(nil)
