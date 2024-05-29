@@ -9,9 +9,9 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 
 	sq "github.com/Masterminds/squirrel"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {

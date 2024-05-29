@@ -14,8 +14,8 @@ import (
 
 	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
 
-	serverModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	serverModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -55,7 +55,7 @@ func TestOnConfigurationChange(t *testing.T) {
 	basePlugins[PluginName][SharedBoardsName] = true
 
 	baseFeatureFlags := &serverModel.FeatureFlags{
-		BoardsFeatureFlags: "Feature1-Feature2",
+		// BoardsFeatureFlags: "Feature1-Feature2", // TODO: add feature flag for boards
 	}
 	basePluginSettings := &serverModel.PluginSettings{
 		Directory: &stringRef,
@@ -96,7 +96,7 @@ func TestOnConfigurationChange(t *testing.T) {
 			server:          th.Server,
 			wsPluginAdapter: &FakePluginAdapter{},
 			servicesAPI:     api,
-			logger:          mlog.CreateConsoleTestLogger(true, mlog.LvlError),
+			logger:          mlog.CreateConsoleTestLogger(&testing.T{}),
 		}
 
 		err := b.OnConfigurationChange()

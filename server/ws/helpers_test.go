@@ -6,8 +6,8 @@ import (
 	authMocks "github.com/mattermost/focalboard/server/auth/mocks"
 	wsMocks "github.com/mattermost/focalboard/server/ws/mocks"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/golang/mock/gomock"
 )
@@ -36,7 +36,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 		auth:  mockAuth,
 		store: mockStore,
 		ctrl:  ctrl,
-		pa:    NewPluginAdapter(mockAPI, mockAuth, mockStore, mlog.CreateConsoleTestLogger(true, mlog.LvlDebug)),
+		pa:    NewPluginAdapter(mockAPI, mockAuth, mockStore, mlog.CreateConsoleTestLogger(t)),
 	}
 }
 

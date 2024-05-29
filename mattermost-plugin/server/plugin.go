@@ -11,11 +11,11 @@ import (
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
 	"github.com/mattermost/focalboard/server/model"
 
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
+	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var ErrPluginNotAllowed = errors.New("boards plugin not allowed while Boards product enabled")

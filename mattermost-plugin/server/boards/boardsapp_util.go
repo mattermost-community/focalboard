@@ -10,7 +10,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/services/config"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 const defaultS3Timeout = 60 * 1000 // 60 seconds
@@ -81,9 +81,9 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 
 	serverRoot := baseURL + "/plugins/focalboard"
-	if mmconfig.FeatureFlags.BoardsProduct {
-		serverRoot = baseURL + "/boards"
-	}
+	// if mmconfig.FeatureFlags.BoardsProduct { // TODO: add feature flag for boards
+	serverRoot = baseURL + "/boards"
+	// }
 	return &config.Configuration{
 		ServerRoot:               serverRoot,
 		Port:                     -1,

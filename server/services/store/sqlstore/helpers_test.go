@@ -8,7 +8,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func SetupTests(t *testing.T) (store.Store, func()) {
@@ -18,7 +18,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	dbType, connectionString, err := PrepareNewTestDatabase()
 	require.NoError(t, err)
 
-	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
+	logger := mlog.CreateConsoleTestLogger(t)
 
 	sqlDB, err := sql.Open(dbType, connectionString)
 	require.NoError(t, err)

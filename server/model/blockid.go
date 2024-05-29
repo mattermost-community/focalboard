@@ -5,7 +5,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // GenerateBlockIDs generates new IDs for all the blocks of the list,

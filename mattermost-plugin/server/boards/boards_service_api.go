@@ -3,9 +3,9 @@ package boards
 import (
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
-
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/product"
+
+	mm_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 // boardsServiceAPI provides a service API for other products such as Channels.

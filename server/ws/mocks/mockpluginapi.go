@@ -10,7 +10,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/mattermost/mattermost-server/v6/model"
+	model "github.com/mattermost/mattermost/server/public/model"
 )
 
 // MockAPI is a mock of API interface.

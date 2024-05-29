@@ -9,11 +9,11 @@ import (
 
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func TestHello(t *testing.T) {
-	testAPI := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
+	testAPI := API{logger: mlog.CreateConsoleTestLogger(t)}
 
 	t.Run("Returns 'Hello' on success", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/hello", nil)
@@ -35,7 +35,7 @@ func TestHello(t *testing.T) {
 }
 
 func TestPing(t *testing.T) {
-	testAPI := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
+	testAPI := API{logger: mlog.CreateConsoleTestLogger(t)}
 
 	t.Run("Returns metadata on success", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/ping", nil)

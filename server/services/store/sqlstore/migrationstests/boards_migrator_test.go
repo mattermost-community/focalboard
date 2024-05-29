@@ -6,9 +6,10 @@ import (
 	"database/sql"
 	"fmt"
 	"path/filepath"
+	"testing"
 	"text/template"
 
-	"github.com/mattermost/mattermost-plugin-api/cluster"
+	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 	"github.com/mattermost/morph"
 	"github.com/mattermost/morph/drivers"
 	"github.com/mattermost/morph/drivers/mysql"
@@ -17,9 +18,9 @@ import (
 	embedded "github.com/mattermost/morph/sources/embedded"
 	"github.com/mgdelacroix/foundation"
 
-	"github.com/mattermost/mattermost-server/v6/db"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	mmSqlStore "github.com/mattermost/mattermost-server/v6/store/sqlstore"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	mmSqlStore "github.com/mattermost/mattermost/server/public/utils/sql"
+	"github.com/mattermost/mattermost/server/v8/channels/db"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -206,7 +207,7 @@ func (bm *BoardsMigrator) Setup() error {
 		DBType:           bm.driverName,
 		ConnectionString: bm.connString,
 		TablePrefix:      tablePrefix,
-		Logger:           mlog.CreateConsoleTestLogger(false, mlog.LvlDebug),
+		Logger:           mlog.CreateConsoleTestLogger(&testing.T{}),
 		DB:               bm.db,
 		IsPlugin:         bm.withMattermostMigrations,
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {

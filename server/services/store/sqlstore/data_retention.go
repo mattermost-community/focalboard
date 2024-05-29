@@ -13,7 +13,7 @@ import (
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 type RetentionTableDeletionInfo struct {
@@ -25,7 +25,7 @@ type RetentionTableDeletionInfo struct {
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, batchSize int64) (int64, error) {
 	s.logger.Info("Start Boards Data Retention",
 		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
-		mlog.Int64("Raw Date", globalRetentionDate))
+		mlog.Int("Raw Date", globalRetentionDate))
 	deleteTables := []RetentionTableDeletionInfo{
 		{
 			Table:         "blocks",

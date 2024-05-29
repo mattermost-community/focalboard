@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -16,7 +16,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var boardsBotID string
@@ -587,7 +587,7 @@ func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 		s.logger.Error(
 			"failed to save fileinfo",
 			mlog.String("file_name", fileInfo.Name),
-			mlog.Int64("size", fileInfo.Size),
+			mlog.Int("size", fileInfo.Size),
 			mlog.Err(err),
 		)
 		return err

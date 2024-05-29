@@ -11,8 +11,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func TestSetConfiguration(t *testing.T) {
@@ -108,7 +108,7 @@ func TestServeHTTP(t *testing.T) {
 
 	b := &BoardsApp{
 		server: th.Server,
-		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
+		logger: mlog.CreateConsoleTestLogger(t),
 	}
 
 	assert := assert.New(t)
