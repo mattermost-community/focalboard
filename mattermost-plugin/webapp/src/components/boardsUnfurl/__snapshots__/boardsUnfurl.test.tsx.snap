@@ -51,7 +51,7 @@ exports[`components/boardsUnfurl/BoardsUnfurl renders normally 1`] = `
         <span
           class="post-preview__time"
         >
-          Updated January 01, 1970, 12:00 AM
+          Updated January 01, 1970 at 5:30 AM
         </span>
       </div>
     </div>
