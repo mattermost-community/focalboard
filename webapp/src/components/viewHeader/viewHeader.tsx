@@ -127,8 +127,9 @@ const ViewHeader = (props: Props) => {
             return true
         }
 
-        setShowViewLimitDialog(true)
-        return false
+        // TODO (clean-up): as limit are removed we have to clean up the following code.
+        setShowViewLimitDialog(false)
+        return true
     }
 
     return (

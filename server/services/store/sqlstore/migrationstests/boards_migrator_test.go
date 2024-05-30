@@ -16,7 +16,6 @@ import (
 	"github.com/mattermost/morph/drivers/postgres"
 	"github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
-	"github.com/mgdelacroix/foundation"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	mmSqlStore "github.com/mattermost/mattermost/server/public/utils/sql"
@@ -244,8 +243,8 @@ func (bm *BoardsMigrator) MigrateToStep(step int) error {
 	return nil
 }
 
-func (bm *BoardsMigrator) Interceptors() map[int]foundation.Interceptor {
-	return map[int]foundation.Interceptor{
+func (bm *BoardsMigrator) Interceptors() map[int]func() error {
+	return map[int]func() error{
 		18: bm.store.RunDeletedMembershipBoardsMigration,
 		35: func() error {
 			return bm.store.RunDeDuplicateCategoryBoardsMigration(35)
