@@ -43,7 +43,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: apt-get update
       run: sudo apt-get update
@@ -202,7 +202,7 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: Build webapp
       run: cd focalboard; make webapp
