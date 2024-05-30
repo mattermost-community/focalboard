@@ -159,13 +159,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("block_count", len(blocks)),
 	)
 
-	var bErr error
-	blocks, bErr = a.app.ApplyCloudLimits(blocks)
-	if bErr != nil {
-		a.errorResponse(w, r, err)
-		return
-	}
-
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r, err)

@@ -85,8 +85,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerAchivesRoutes(apiv2)
 	a.registerSubscriptionsRoutes(apiv2)
 	a.registerFilesRoutes(apiv2)
-	a.registerLimitsRoutes(apiv2)
-	a.registerInsightsRoutes(apiv2)
 	a.registerOnboardingRoutes(apiv2)
 	a.registerSearchRoutes(apiv2)
 	a.registerConfigRoutes(apiv2)
@@ -96,7 +94,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerBoardsRoutes(apiv2)
 	a.registerBlocksRoutes(apiv2)
 	a.registerContentBlocksRoutes(apiv2)
-	a.registerStatisticsRoutes(apiv2)
 	a.registerComplianceRoutes(apiv2)
 
 	// V3 routes

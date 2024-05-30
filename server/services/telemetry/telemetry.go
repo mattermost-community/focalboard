@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	rudder "github.com/rudderlabs/analytics-go"
 
@@ -93,7 +94,7 @@ func (ts *Service) sendTelemetry(event string, properties map[string]interface{}
 func (ts *Service) initRudder(endpoint, rudderKey string) {
 	if ts.rudderClient == nil {
 		config := rudder.Config{}
-		config.Logger = rudder.StdLogger(ts.logger.StdLogger(mlog.LvlFBTelemetry))
+		config.Logger = rudder.StdLogger(ts.logger.StdLogger(model.LvlFBTelemetry))
 		config.Endpoint = endpoint
 		// For testing
 		if endpoint != rudderDataplaneURL {

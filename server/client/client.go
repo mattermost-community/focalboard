@@ -973,21 +973,22 @@ func (c *Client) ImportArchive(teamID string, data io.Reader) *Response {
 	return BuildResponse(r)
 }
 
-func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
-	r, err := c.DoAPIGet("/limits", "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
+// Rajat - Delete
+// func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
+// 	r, err := c.DoAPIGet("/limits", "")
+// 	if err != nil {
+// 		return nil, BuildErrorResponse(r, err)
+// 	}
+// 	defer closeBody(r)
 
-	var limits *model.BoardsCloudLimits
-	err = json.NewDecoder(r.Body).Decode(&limits)
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
+// 	var limits *model.BoardsCloudLimits
+// 	err = json.NewDecoder(r.Body).Decode(&limits)
+// 	if err != nil {
+// 		return nil, BuildErrorResponse(r, err)
+// 	}
 
-	return limits, BuildResponse(r)
-}
+// 	return limits, BuildResponse(r)
+// }
 
 func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where string, userID string) (bool, *Response) {
 	r, err := c.DoAPIPost("/content-blocks/"+srcBlockID+"/moveto/"+where+"/"+dstBlockID, "")
@@ -999,21 +1000,22 @@ func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where st
 	return true, BuildResponse(r)
 }
 
-func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
-	r, err := c.DoAPIGet("/statistics", "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
+// Rajat - Delete
+// func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
+// 	r, err := c.DoAPIGet("/statistics", "")
+// 	if err != nil {
+// 		return nil, BuildErrorResponse(r, err)
+// 	}
+// 	defer closeBody(r)
 
-	var stats *model.BoardsStatistics
-	err = json.NewDecoder(r.Body).Decode(&stats)
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
+// 	var stats *model.BoardsStatistics
+// 	err = json.NewDecoder(r.Body).Decode(&stats)
+// 	if err != nil {
+// 		return nil, BuildErrorResponse(r, err)
+// 	}
 
-	return stats, BuildResponse(r)
-}
+// 	return stats, BuildResponse(r)
+// }
 
 func (c *Client) GetBoardsForCompliance(teamID string, page, perPage int) (*model.BoardsComplianceResponse, *Response) {
 	query := fmt.Sprintf("?team_id=%s&page=%d&per_page=%d", teamID, page, perPage)

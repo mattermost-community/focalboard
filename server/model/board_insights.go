@@ -9,7 +9,6 @@ import (
 
 // BoardInsightsList is a response type with pagination support.
 type BoardInsightsList struct {
-	mmModel.InsightsListData
 	Items []*BoardInsight `json:"items"`
 }
 
@@ -52,11 +51,9 @@ func BoardInsightsFromJSON(data io.Reader) []BoardInsight {
 // sorted by ActivityCount(score). Returns a BoardInsightsList.
 func GetTopBoardInsightsListWithPagination(boards []*BoardInsight, limit int) *BoardInsightsList {
 	// Add pagination support
-	var hasNext bool
 	if limit != 0 && len(boards) == limit+1 {
-		hasNext = true
 		boards = boards[:len(boards)-1]
 	}
 
-	return &BoardInsightsList{InsightsListData: mmModel.InsightsListData{HasNext: hasNext}, Items: boards}
+	return &BoardInsightsList{Items: boards}
 }
