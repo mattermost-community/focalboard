@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/wiggin77/merror"
@@ -868,8 +869,17 @@ func (s *SQLStore) doesDuplicateCategoryBoardsExist() (bool, error) {
 }
 
 func (s *SQLStore) runMySQLDeDuplicateCategoryBoardsMigration() error {
-	query := "DELETE FROM " + s.tablePrefix + "category_boards WHERE id NOT IN " +
-		"(SELECT * FROM ( SELECT min(id) FROM " + s.tablePrefix + "category_boards GROUP BY user_id, board_id ) as data)"
+	validatedTablePrefix := s.tablePrefix
+
+	var queryBuilder strings.Builder
+	queryBuilder.WriteString("DELETE FROM ")
+	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString("category_boards WHERE id NOT IN ")
+	queryBuilder.WriteString("(SELECT * FROM ( SELECT min(id) FROM ")
+	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString("category_boards GROUP BY user_id, board_id ) as data)")
+
+	query := queryBuilder.String()
 	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("Failed to de-duplicate data in category_boards table", mlog.Err(err))
 	}
@@ -878,10 +888,22 @@ func (s *SQLStore) runMySQLDeDuplicateCategoryBoardsMigration() error {
 }
 
 func (s *SQLStore) runPostgresDeDuplicateCategoryBoardsMigration() error {
-	query := "WITH duplicates AS (SELECT id, ROW_NUMBER() OVER(PARTITION BY user_id, board_id) AS rownum " +
-		"FROM " + s.tablePrefix + "category_boards) " +
-		"DELETE FROM " + s.tablePrefix + "category_boards USING duplicates " +
-		"WHERE " + s.tablePrefix + "category_boards.id = duplicates.id AND duplicates.rownum > 1;"
+	validatedTablePrefix := s.tablePrefix
+
+	var queryBuilder strings.Builder
+	queryBuilder.WriteString("WITH duplicates AS (SELECT id, ROW_NUMBER() OVER(PARTITION BY user_id, board_id) AS rownum ")
+	queryBuilder.WriteString("FROM ")
+	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString("category_boards) ")
+	queryBuilder.WriteString("DELETE FROM ")
+	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString("category_boards USING duplicates ")
+	queryBuilder.WriteString("WHERE ")
+	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString("category_boards.id = duplicates.id AND duplicates.rownum > 1;")
+
+	query := queryBuilder.String()
+
 	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("Failed to de-duplicate data in category_boards table", mlog.Err(err))
 	}
