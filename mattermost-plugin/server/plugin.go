@@ -23,12 +23,10 @@ var ErrPluginNotAllowed = errors.New("boards plugin not allowed while Boards pro
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
 	plugin.MattermostPlugin
-
 	boardsApp *boards.BoardsApp
 }
 
 func (p *Plugin) OnActivate() error {
-
 	client := pluginapi.NewClient(p.API, p.Driver)
 
 	logger, _ := mlog.NewLogger()

@@ -6,7 +6,6 @@ package boards
 import (
 	"math"
 	"path"
-	"strings"
 
 	"github.com/mattermost/focalboard/server/services/config"
 
@@ -68,8 +67,6 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 		enableBoardsDeletion = true
 	}
 
-	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
-
 	showEmailAddress := false
 	if mmconfig.PrivacySettings.ShowEmailAddress != nil {
 		showEmailAddress = *mmconfig.PrivacySettings.ShowEmailAddress
@@ -81,9 +78,7 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 
 	serverRoot := baseURL + "/plugins/focalboard"
-	// if mmconfig.FeatureFlags.BoardsProduct { // TODO: add feature flag for boards
-	serverRoot = baseURL + "/boards"
-	// }
+
 	return &config.Configuration{
 		ServerRoot:               serverRoot,
 		Port:                     -1,
@@ -107,7 +102,6 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 		LocalModeSocketLocation:  "",
 		AuthMode:                 "mattermost",
 		EnablePublicSharedBoards: enablePublicSharedBoards,
-		FeatureFlags:             featureFlags,
 		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
 		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
 		EnableDataRetention:      enableBoardsDeletion,
@@ -141,19 +135,4 @@ func getPluginSettingInt(mmConfig mm_model.Config, key string, def int) int {
 		return def
 	}
 	return int(math.Round(valFloat))
-}
-
-func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
-	featureFlags := make(map[string]string)
-	for key, value := range configFeatureFlags {
-		// Break out FeatureFlags and pass remaining
-		if key == boardsFeatureFlagName {
-			for _, flag := range strings.Split(value, "-") {
-				featureFlags[flag] = "true"
-			}
-		} else {
-			featureFlags[key] = value
-		}
-	}
-	return featureFlags
 }

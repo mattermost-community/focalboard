@@ -82,24 +82,6 @@ func TestSetConfiguration(t *testing.T) {
 		config := createBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, true, config.EnablePublicSharedBoards)
 	})
-
-	t.Run("test boards feature flags", func(t *testing.T) {
-		featureFlags := &model.FeatureFlags{
-			TestFeature:     "test",
-			TestBoolFeature: boolTrue,
-			// BoardsFeatureFlags: "hello_world-myTest",
-		}
-
-		mmConfig := baseConfig
-		mmConfig.FeatureFlags = featureFlags
-
-		config := createBoardsConfig(*mmConfig, "", "")
-		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
-		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
-
-		assert.Equal(t, "true", config.FeatureFlags["hello_world"])
-		assert.Equal(t, "true", config.FeatureFlags["myTest"])
-	})
 }
 
 func TestServeHTTP(t *testing.T) {

@@ -16,9 +16,6 @@ func TestGetClientConfig(t *testing.T) {
 		newConfiguration.Telemetry = true
 		newConfiguration.TelemetryID = "abcde"
 		newConfiguration.EnablePublicSharedBoards = true
-		newConfiguration.FeatureFlags = make(map[string]string)
-		newConfiguration.FeatureFlags["BoardsFeature1"] = "true"
-		newConfiguration.FeatureFlags["BoardsFeature2"] = "true"
 		newConfiguration.TeammateNameDisplay = "username"
 		th.App.SetConfig(&newConfiguration)
 

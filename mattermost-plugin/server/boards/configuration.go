@@ -75,25 +75,16 @@ func (b *BoardsApp) OnConfigurationChange() error {
 	}
 	mmconfig := b.servicesAPI.GetConfig()
 
-	// handle plugin configuration settings
-	enableShareBoards := true // TODO: made enableShareBoards to default true as mmconfi.ProductSettings.EnablePublicSharedBoards need to be rechecked.
+	enableShareBoards := false
 	if mmconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
 		enableShareBoards = true
 	}
-
-	// TODO: shift it to PluginSetting rather than ProductSettings.
-	// if mmconfig.ProductSettings.EnablePublicSharedBoards != nil {
-	// 	enableShareBoards = *mmconfig.ProductSettings.EnablePublicSharedBoards
-	// }
 
 	configuration := &configuration{
 		EnablePublicSharedBoards: enableShareBoards,
 	}
 	b.setConfiguration(configuration)
 	b.server.Config().EnablePublicSharedBoards = enableShareBoards
-
-	// handle feature flags
-	b.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	// handle Data Retention settings
 	enableBoardsDeletion := false

@@ -54,9 +54,7 @@ func TestOnConfigurationChange(t *testing.T) {
 	basePlugins[PluginName] = make(map[string]interface{})
 	basePlugins[PluginName][SharedBoardsName] = true
 
-	baseFeatureFlags := &serverModel.FeatureFlags{
-		// BoardsFeatureFlags: "Feature1-Feature2", // TODO: add feature flag for boards
-	}
+	baseFeatureFlags := &serverModel.FeatureFlags{}
 	basePluginSettings := &serverModel.PluginSettings{
 		Directory: &stringRef,
 		Plugins:   basePlugins,
@@ -106,10 +104,6 @@ func TestOnConfigurationChange(t *testing.T) {
 		// make sure both App and Server got updated
 		assert.True(t, b.server.Config().EnablePublicSharedBoards)
 		assert.True(t, b.server.App().GetClientConfig().EnablePublicSharedBoards)
-
-		assert.Equal(t, "true", b.server.Config().FeatureFlags["Feature1"])
-		assert.Equal(t, "true", b.server.Config().FeatureFlags["Feature2"])
-		assert.Equal(t, "", b.server.Config().FeatureFlags["Feature3"])
 	})
 }
 
