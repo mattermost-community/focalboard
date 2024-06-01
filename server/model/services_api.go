@@ -67,9 +67,6 @@ type ServicesAPI interface {
 	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast)
 	PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error
 
-	// Cloud service
-	GetCloudLimits() (*mm_model.ProductLimits, error)
-
 	// Config service
 	GetConfig() *mm_model.Config
 

@@ -163,7 +163,6 @@ type Store interface {
 	DBVersion() string
 
 	GetLicense() *mmModel.License
-	GetCloudLimits() (*mmModel.ProductLimits, error)
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	PostMessage(message, postType, channelID string) error

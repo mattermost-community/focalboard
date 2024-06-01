@@ -173,10 +173,6 @@ func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 	return nil
 }
 
-func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, error) {
-	return nil, nil
-}
-
 func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query string) ([]*mmModel.Channel, error) {
 	return nil, store.NewNotSupportedError("search user channels not supported on standalone mode")
 }

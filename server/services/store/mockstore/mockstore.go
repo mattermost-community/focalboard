@@ -778,21 +778,6 @@ func (mr *MockStoreMockRecorder) GetChannel(arg0, arg1 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChannel", reflect.TypeOf((*MockStore)(nil).GetChannel), arg0, arg1)
 }
 
-// GetCloudLimits mocks base method.
-func (m *MockStore) GetCloudLimits() (*model0.ProductLimits, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCloudLimits")
-	ret0, _ := ret[0].(*model0.ProductLimits)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetCloudLimits indicates an expected call of GetCloudLimits.
-func (mr *MockStoreMockRecorder) GetCloudLimits() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudLimits", reflect.TypeOf((*MockStore)(nil).GetCloudLimits))
-}
-
 // GetFileInfo mocks base method.
 func (m *MockStore) GetFileInfo(arg0 string) (*model0.FileInfo, error) {
 	m.ctrl.T.Helper()

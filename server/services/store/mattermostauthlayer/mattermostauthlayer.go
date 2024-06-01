@@ -34,7 +34,6 @@ type servicesAPI interface {
 	GetUserByUsername(username string) (*mmModel.User, error)
 	GetLicense() *mmModel.License
 	GetFileInfo(fileID string) (*mmModel.FileInfo, error)
-	GetCloudLimits() (*mmModel.ProductLimits, error)
 	EnsureBot(bot *mmModel.Bot) (string, error)
 	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
 	GetTeamMember(teamID string, userID string) (*mmModel.TeamMember, error)
@@ -951,10 +950,6 @@ func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows, removeDuplicates bo
 	}
 
 	return boards, nil
-}
-
-func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
-	return s.servicesAPI.GetCloudLimits()
 }
 
 func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) ([]*model.BoardMember, error) {

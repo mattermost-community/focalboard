@@ -199,8 +199,6 @@ func TestIsWithinViewsLimit(t *testing.T) {
 	t.Run("within views limit", func(t *testing.T) {
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{{}}, nil)
@@ -213,8 +211,6 @@ func TestIsWithinViewsLimit(t *testing.T) {
 	t.Run("view limit exactly reached", func(t *testing.T) {
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{{}}, nil)
@@ -227,8 +223,6 @@ func TestIsWithinViewsLimit(t *testing.T) {
 	t.Run("view limit already exceeded", func(t *testing.T) {
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{{}, {}, {}}, nil)
@@ -241,8 +235,6 @@ func TestIsWithinViewsLimit(t *testing.T) {
 	t.Run("creating first view", func(t *testing.T) {
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{}, nil)
@@ -309,8 +301,6 @@ func TestInsertBlocks(t *testing.T) {
 		}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]*model.Block{{}}, nil)
@@ -337,8 +327,6 @@ func TestInsertBlocks(t *testing.T) {
 		}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]*model.Block{{}, {}}, nil)
@@ -374,8 +362,6 @@ func TestInsertBlocks(t *testing.T) {
 		}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense).Times(2)
 
-		cloudLimit := &mmModel.ProductLimits{}
-		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil).Times(2)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil).Times(2)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil).Times(2)
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]*model.Block{{}}, nil).Times(2)

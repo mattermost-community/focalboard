@@ -181,14 +181,6 @@ func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEv
 }
 
 //
-// Cloud service.
-//
-
-func (a *pluginAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
-	return a.api.GetCloudLimits()
-}
-
-//
 // Config service.
 //
 

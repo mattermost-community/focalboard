@@ -433,11 +433,6 @@ func (s *SQLStore) GetChannel(teamID string, channelID string) (*mmModel.Channel
 
 }
 
-func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
-	return s.getCloudLimits(s.db)
-
-}
-
 func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
 
