@@ -9,6 +9,10 @@ import (
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 
+func (a *App) GetUsedCardsCount() (int, error) {
+	return a.store.GetUsedCardsCount()
+}
+
 // SetCloudLimits sets the limits of the server.
 func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 	oldCardLimit := a.CardLimit()

@@ -94,6 +94,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerBoardsRoutes(apiv2)
 	a.registerBlocksRoutes(apiv2)
 	a.registerContentBlocksRoutes(apiv2)
+	a.registerStatisticsRoutes(apiv2)
 	a.registerComplianceRoutes(apiv2)
 
 	// V3 routes
