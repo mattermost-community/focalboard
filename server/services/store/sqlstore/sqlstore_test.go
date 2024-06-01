@@ -28,7 +28,6 @@ func TestSQLStore(t *testing.T) {
 	t.Run("StoreTestFileStore", func(t *testing.T) { storetests.StoreTestFileStore(t, SetupTests) })
 	t.Run("StoreTestCategoryStore", func(t *testing.T) { storetests.StoreTestCategoryStore(t, SetupTests) })
 	t.Run("StoreTestCategoryBoardsStore", func(t *testing.T) { storetests.StoreTestCategoryBoardsStore(t, SetupTests) })
-	t.Run("BoardsInsightsStore", func(t *testing.T) { storetests.StoreTestBoardsInsightsStore(t, SetupTests) })
 	t.Run("ComplianceHistoryStore", func(t *testing.T) { storetests.StoreTestComplianceHistoryStore(t, SetupTests) })
 }
 

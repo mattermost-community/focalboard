@@ -1047,21 +1047,6 @@ func (mr *MockStoreMockRecorder) GetTeam(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeam", reflect.TypeOf((*MockStore)(nil).GetTeam), arg0)
 }
 
-// GetTeamBoardsInsights mocks base method.
-func (m *MockStore) GetTeamBoardsInsights(arg0 string, arg1 int64, arg2, arg3 int, arg4 []string) (*model.BoardInsightsList, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1, arg2, arg3, arg4)
-	ret0, _ := ret[0].(*model.BoardInsightsList)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetTeamBoardsInsights indicates an expected call of GetTeamBoardsInsights.
-func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1, arg2, arg3, arg4)
-}
-
 // GetTeamCount mocks base method.
 func (m *MockStore) GetTeamCount() (int64, error) {
 	m.ctrl.T.Helper()
@@ -1120,21 +1105,6 @@ func (m *MockStore) GetUsedCardsCount() (int, error) {
 func (mr *MockStoreMockRecorder) GetUsedCardsCount() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsedCardsCount", reflect.TypeOf((*MockStore)(nil).GetUsedCardsCount))
-}
-
-// GetUserBoardsInsights mocks base method.
-func (m *MockStore) GetUserBoardsInsights(arg0, arg1 string, arg2 int64, arg3, arg4 int, arg5 []string) (*model.BoardInsightsList, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserBoardsInsights", arg0, arg1, arg2, arg3, arg4, arg5)
-	ret0, _ := ret[0].(*model.BoardInsightsList)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetUserBoardsInsights indicates an expected call of GetUserBoardsInsights.
-func (mr *MockStoreMockRecorder) GetUserBoardsInsights(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetUserBoardsInsights), arg0, arg1, arg2, arg3, arg4, arg5)
 }
 
 // GetUserByEmail mocks base method.
