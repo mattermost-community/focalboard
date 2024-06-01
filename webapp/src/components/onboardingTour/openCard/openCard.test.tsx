@@ -39,9 +39,7 @@ describe('components/onboardingTour/addComments/OpenCardTourStep', () => {
             current: 'card_id_1',
         },
         clientConfig: {
-            value: {
-                featureFlags: {},
-            },
+            value: {},
         },
     }
     let store = mockStore(state)

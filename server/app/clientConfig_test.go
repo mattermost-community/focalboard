@@ -23,7 +23,6 @@ func TestGetClientConfig(t *testing.T) {
 		require.True(t, clientConfig.EnablePublicSharedBoards)
 		require.True(t, clientConfig.Telemetry)
 		require.Equal(t, "abcde", clientConfig.TelemetryID)
-		require.Equal(t, 2, len(clientConfig.FeatureFlags))
 		require.Equal(t, "username", clientConfig.TeammateNameDisplay)
 	})
 }

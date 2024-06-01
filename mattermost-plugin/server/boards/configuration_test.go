@@ -54,7 +54,6 @@ func TestOnConfigurationChange(t *testing.T) {
 	basePlugins[PluginName] = make(map[string]interface{})
 	basePlugins[PluginName][SharedBoardsName] = true
 
-	baseFeatureFlags := &serverModel.FeatureFlags{}
 	basePluginSettings := &serverModel.PluginSettings{
 		Directory: &stringRef,
 		Plugins:   basePlugins,
@@ -75,7 +74,6 @@ func TestOnConfigurationChange(t *testing.T) {
 	}
 
 	baseConfig := &serverModel.Config{
-		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
 		TeamSettings:          *baseTeamSettings,

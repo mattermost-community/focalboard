@@ -19,10 +19,6 @@ type ClientConfig struct {
 	// required: true
 	TeammateNameDisplay string `json:"teammateNameDisplay"`
 
-	// The server feature flags
-	// required: true
-	FeatureFlags map[string]string `json:"featureFlags"`
-
 	// Required for file upload to check the size of the file
 	// required: true
 	MaxFileSize int64 `json:"maxFileSize"`

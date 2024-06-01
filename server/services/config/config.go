@@ -96,7 +96,6 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("EnableLocalMode", false)
 	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
 	viper.SetDefault("EnablePublicSharedBoards", false)
-	viper.SetDefault("FeatureFlags", map[string]string{})
 	viper.SetDefault("AuthMode", "native")
 	viper.SetDefault("NotifyFreqCardSeconds", 120)    // 2 minutes after last card edit
 	viper.SetDefault("NotifyFreqBoardSeconds", 86400) // 1 day after last card edit

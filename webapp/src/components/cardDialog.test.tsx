@@ -45,11 +45,7 @@ describe('components/cardDialog', () => {
 
     const state = {
         clientConfig: {
-            value: {
-                featureFlags: {
-                    subscriptions: true,
-                },
-            },
+            value: {},
         },
         comments: {
             comments: {},
@@ -330,11 +326,7 @@ describe('components/cardDialog', () => {
         const newState = JSON.parse(JSON.stringify(state))
         newState.users.blockSubscriptions = [{blockId: card.id}]
         newState.clientConfig = {
-            value: {
-                featureFlags: {
-                    subscriptions: true,
-                },
-            },
+            value: {},
         }
 
         const newStore = mockStateStore([], newState)

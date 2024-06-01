@@ -19,7 +19,6 @@ func TestSetConfiguration(t *testing.T) {
 	boolTrue := true
 	stringRef := ""
 
-	baseFeatureFlags := &model.FeatureFlags{}
 	basePluginSettings := &model.PluginSettings{
 		Directory: &stringRef,
 	}
@@ -53,7 +52,6 @@ func TestSetConfiguration(t *testing.T) {
 	}
 
 	baseConfig := &model.Config{
-		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		SqlSettings:           *baseSQLSettings,
 		FileSettings:          *baseFileSettings,
