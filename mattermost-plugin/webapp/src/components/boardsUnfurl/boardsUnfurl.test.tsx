@@ -28,6 +28,16 @@ mockedUtils.createGuid = jest.requireActual('../../../../../webapp/src/utils').U
 mockedUtils.blockTypeToIDType = jest.requireActual('../../../../../webapp/src/utils').Utils.blockTypeToIDType
 mockedUtils.displayDateTime = jest.requireActual('../../../../../webapp/src/utils').Utils.displayDateTime
 
+let mockDisplayDateTime: jest.SpyInstance
+
+beforeEach(() => {
+    mockDisplayDateTime = jest.spyOn(Utils, 'displayDateTime').mockImplementation(() => 'July 10, 2022 at 1:40 AM')
+})
+
+afterEach(() => {
+    mockDisplayDateTime.mockRestore()
+})
+
 describe('components/boardsUnfurl/BoardsUnfurl', () => {
     const team = {
         id: 'team-id',
