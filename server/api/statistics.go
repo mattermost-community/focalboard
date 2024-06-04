@@ -15,7 +15,6 @@ func (a *API) registerStatisticsRoutes(r *mux.Router) {
 }
 
 func (a *API) handleStatistics(w http.ResponseWriter, r *http.Request) {
-
 	// swagger:operation GET /statistics handleStatistics
 	//
 	// Fetches the statistic  of the server.
