@@ -18,7 +18,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	dbType, connectionString, err := PrepareNewTestDatabase()
 	require.NoError(t, err)
 
-	logger := mlog.CreateConsoleTestLogger(t)
+	logger, _ := mlog.NewLogger()
 
 	sqlDB, err := sql.Open(dbType, connectionString)
 	require.NoError(t, err)

@@ -53,7 +53,7 @@ func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
 		WebPath:             "/",
 	}
 
-	logger := mlog.CreateConsoleTestLogger(&testing.T{})
+	logger, _ := mlog.NewLogger()
 
 	mockStore.EXPECT().GetTeam(gomock.Any()).Return(nil, nil).AnyTimes()
 	mockStore.EXPECT().UpsertTeamSignupToken(gomock.Any()).AnyTimes()
@@ -79,9 +79,10 @@ func TestRunDataRetention(t *testing.T) {
 	th, tearDown := SetupTestHelperMockStore(t)
 	defer tearDown()
 
+	logger, _ := mlog.NewLogger()
 	b := &BoardsApp{
 		server: th.Server,
-		logger: mlog.CreateConsoleTestLogger(&testing.T{}),
+		logger: logger,
 	}
 
 	now := time.Now().UnixNano()

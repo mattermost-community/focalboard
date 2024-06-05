@@ -23,7 +23,7 @@ func TestClientUpdateNotify(t *testing.T) {
 		WebhookUpdate: []string{ts.URL},
 	}
 
-	logger := mlog.CreateConsoleTestLogger(t)
+	logger, _ := mlog.NewLogger()
 	defer func() {
 		err := logger.Shutdown()
 		assert.NoError(t, err)

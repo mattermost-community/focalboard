@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"fmt"
 	"path/filepath"
-	"testing"
 	"text/template"
 
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
@@ -202,11 +201,13 @@ func (bm *BoardsMigrator) Setup() error {
 		}
 	}
 
+	logger, _ := mlog.NewLogger()
+
 	storeParams := sqlstore.Params{
 		DBType:           bm.driverName,
 		ConnectionString: bm.connString,
 		TablePrefix:      tablePrefix,
-		Logger:           mlog.CreateConsoleTestLogger(&testing.T{}),
+		Logger:           logger,
 		DB:               bm.db,
 		IsPlugin:         bm.withMattermostMigrations,
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {

@@ -50,9 +50,8 @@ func TestConcatenationSelector(t *testing.T) {
 }
 
 func TestElementInColumn(t *testing.T) {
-	store, tearDown := SetupTests(t)
+	store, _ := SetupTests(t)
 	sqlStore := store.(*SQLStore)
-	defer tearDown()
 
 	inLiteral := sqlStore.elementInColumn("test_column")
 	switch sqlStore.dbType {
