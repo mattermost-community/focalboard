@@ -4,6 +4,9 @@ import React from 'react'
 
 import {Placement} from 'tippy.js'
 
+import {ClientConfig} from '../../../config/clientConfig'
+import {getClientConfig} from '../../../store/clientConfig'
+
 import {useAppSelector} from '../../../store/hooks'
 import {getCurrentBoard} from '../../../store/boards'
 import {getCurrentCard} from '../../../store/cards'
@@ -31,17 +34,19 @@ type Props = {
 
 const TourTipRenderer = (props: Props): JSX.Element | null => {
     const board = useAppSelector(getCurrentBoard)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     let isOnboardingBoard = board ? board.title === OnboardingBoardTitle : false
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const disableTour = clientConfig?.featureFlags?.disableTour || false
 
     if (props.showForce) {
         isOnboardingBoard = true
     }
 
-    const showTour = isOnboardingBoard && onboardingTourStarted && onboardingTourCategory === props.category
+    const showTour = !disableTour && isOnboardingBoard && onboardingTourStarted && onboardingTourCategory === props.category
     let showTourTip = showTour && onboardingTourStep === props.step.toString()
 
     if (props.requireCard) {

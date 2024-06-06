@@ -11,6 +11,8 @@ import {getLoggedIn, getMe, getMyConfig} from './store/users'
 import {useAppSelector} from './store/hooks'
 import {UserSettingKey} from './userSettings'
 import {IUser} from './user'
+import {getClientConfig} from './store/clientConfig'
+import {ClientConfig} from './config/clientConfig'
 
 type RouteProps = {
     path: string|string[]
@@ -26,11 +28,12 @@ function FBRoute(props: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const me = useAppSelector<IUser|null>(getMe)
     const myConfig = useAppSelector(getMyConfig)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     let redirect: React.ReactNode = null
 
     // No FTUE for guests
-    const disableTour = me?.is_guest || false
+    const disableTour = me?.is_guest || clientConfig?.featureFlags?.disableTour || false
 
     const showWelcomePage = !disableTour &&
         Utils.isFocalboardPlugin() &&

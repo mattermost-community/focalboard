@@ -25,8 +25,9 @@ import (
 )
 
 const (
-	PluginName       = "focalboard"
-	SharedBoardsName = "enablepublicsharedboards"
+	boardsFeatureFlagName = "BoardsFeatureFlags"
+	PluginName            = "focalboard"
+	SharedBoardsName      = "enablepublicsharedboards"
 
 	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
 	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"

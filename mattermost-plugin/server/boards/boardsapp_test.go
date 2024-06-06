@@ -19,6 +19,7 @@ func TestSetConfiguration(t *testing.T) {
 	boolTrue := true
 	stringRef := ""
 
+	baseFeatureFlags := &model.FeatureFlags{}
 	basePluginSettings := &model.PluginSettings{
 		Directory: &stringRef,
 	}
@@ -52,6 +53,7 @@ func TestSetConfiguration(t *testing.T) {
 	}
 
 	baseConfig := &model.Config{
+		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		SqlSettings:           *baseSQLSettings,
 		FileSettings:          *baseFileSettings,
@@ -59,6 +61,20 @@ func TestSetConfiguration(t *testing.T) {
 		TeamSettings:          *baseTeamSettings,
 		PrivacySettings:       *basePrivacySettings,
 	}
+
+	t.Run("test boards feature flags", func(t *testing.T) {
+		featureFlags := &model.FeatureFlags{
+			TestFeature:     "test",
+			TestBoolFeature: boolTrue,
+		}
+
+		mmConfig := baseConfig
+		mmConfig.FeatureFlags = featureFlags
+
+		config := createBoardsConfig(*mmConfig, "", "")
+		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
+		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
+	})
 
 	t.Run("test enable telemetry", func(t *testing.T) {
 		logSettings := &model.LogSettings{
