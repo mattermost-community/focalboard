@@ -28,6 +28,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	storeParams := Params{
 		DBType:           dbType,
 		ConnectionString: connectionString,
+		DBPingAttempts:   5,
 		TablePrefix:      "test_",
 		Logger:           logger,
 		DB:               sqlDB,

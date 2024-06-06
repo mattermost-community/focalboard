@@ -869,14 +869,14 @@ func (s *SQLStore) doesDuplicateCategoryBoardsExist() (bool, error) {
 }
 
 func (s *SQLStore) runMySQLDeDuplicateCategoryBoardsMigration() error {
-	validatedTablePrefix := s.tablePrefix
+	tablePrefix := s.tablePrefix
 
 	var queryBuilder strings.Builder
 	queryBuilder.WriteString("DELETE FROM ")
-	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString(tablePrefix)
 	queryBuilder.WriteString("category_boards WHERE id NOT IN ")
 	queryBuilder.WriteString("(SELECT * FROM ( SELECT min(id) FROM ")
-	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString(tablePrefix)
 	queryBuilder.WriteString("category_boards GROUP BY user_id, board_id ) as data)")
 
 	query := queryBuilder.String()
@@ -888,18 +888,18 @@ func (s *SQLStore) runMySQLDeDuplicateCategoryBoardsMigration() error {
 }
 
 func (s *SQLStore) runPostgresDeDuplicateCategoryBoardsMigration() error {
-	validatedTablePrefix := s.tablePrefix
+	tablePrefix := s.tablePrefix
 
 	var queryBuilder strings.Builder
 	queryBuilder.WriteString("WITH duplicates AS (SELECT id, ROW_NUMBER() OVER(PARTITION BY user_id, board_id) AS rownum ")
 	queryBuilder.WriteString("FROM ")
-	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString(tablePrefix)
 	queryBuilder.WriteString("category_boards) ")
 	queryBuilder.WriteString("DELETE FROM ")
-	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString(tablePrefix)
 	queryBuilder.WriteString("category_boards USING duplicates ")
 	queryBuilder.WriteString("WHERE ")
-	queryBuilder.WriteString(validatedTablePrefix)
+	queryBuilder.WriteString(tablePrefix)
 	queryBuilder.WriteString("category_boards.id = duplicates.id AND duplicates.rownum > 1;")
 
 	query := queryBuilder.String()

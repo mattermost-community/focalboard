@@ -205,6 +205,7 @@ func (bm *BoardsMigrator) Setup() error {
 
 	storeParams := sqlstore.Params{
 		DBType:           bm.driverName,
+		DBPingAttempts:   5,
 		ConnectionString: bm.connString,
 		TablePrefix:      tablePrefix,
 		Logger:           logger,

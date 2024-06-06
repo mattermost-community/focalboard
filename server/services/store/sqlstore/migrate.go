@@ -68,7 +68,7 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	}
 	*settings.DriverName = s.dbType
 
-	db, _ := sqlUtils.SetupConnection(s.logger, "master", connectionString, &settings, 5) // TODO: Need to find a way to get DBPingAttempts parameter from server
+	db, _ := sqlUtils.SetupConnection(s.logger, "master", connectionString, &settings, s.dbPingAttempts)
 
 	return db, nil
 }

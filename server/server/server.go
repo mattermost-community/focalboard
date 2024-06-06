@@ -223,6 +223,7 @@ func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.Logge
 
 	storeParams := sqlstore.Params{
 		DBType:           config.DBType,
+		DBPingAttempts:   config.DBPingAttempts,
 		ConnectionString: config.DBConfigString,
 		TablePrefix:      config.DBTablePrefix,
 		Logger:           logger,

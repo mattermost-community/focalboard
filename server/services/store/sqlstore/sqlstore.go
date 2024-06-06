@@ -22,6 +22,7 @@ type SQLStore struct {
 	dbType           string
 	tablePrefix      string
 	connectionString string
+	dbPingAttempts   int
 	isPlugin         bool
 	isSingleUser     bool
 	logger           mlog.LoggerIFace
@@ -47,6 +48,7 @@ func New(params Params) (*SQLStore, error) {
 		// TODO: add replica DB support too.
 		db:               params.DB,
 		dbType:           params.DBType,
+		dbPingAttempts:   params.DBPingAttempts,
 		tablePrefix:      params.TablePrefix,
 		connectionString: params.ConnectionString,
 		logger:           params.Logger,

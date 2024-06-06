@@ -18,6 +18,7 @@ type servicesAPI interface {
 type Params struct {
 	DBType           string
 	ConnectionString string
+	DBPingAttempts   int
 	TablePrefix      string
 	Logger           mlog.LoggerIFace
 	DB               *sql.DB

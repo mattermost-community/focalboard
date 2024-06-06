@@ -9,6 +9,7 @@ import (
 const (
 	DefaultServerRoot = "http://localhost:8000"
 	DefaultPort       = 8000
+	DBPingAttempts    = 5
 )
 
 type AmazonS3Config struct {
@@ -31,6 +32,7 @@ type Configuration struct {
 	Port                     int            `json:"port" mapstructure:"port"`
 	DBType                   string         `json:"dbtype" mapstructure:"dbtype"`
 	DBConfigString           string         `json:"dbconfig" mapstructure:"dbconfig"`
+	DBPingAttempts           int            `json:"dbpingattempts" mapstructure:"dbpingattempts"`
 	DBTablePrefix            string         `json:"dbtableprefix" mapstructure:"dbtableprefix"`
 	UseSSL                   bool           `json:"useSSL" mapstructure:"useSSL"`
 	SecureCookie             bool           `json:"secureCookie" mapstructure:"secureCookie"`
@@ -79,6 +81,7 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetEnvPrefix("focalboard")
 	viper.AutomaticEnv() // read config values from env like FOCALBOARD_SERVERROOT=...
 	viper.SetDefault("ServerRoot", DefaultServerRoot)
+	viper.SetDefault("DBPingAttempts", DBPingAttempts)
 	viper.SetDefault("Port", DefaultPort)
 	viper.SetDefault("DBType", "sqlite3")
 	viper.SetDefault("DBConfigString", "./focalboard.db")
