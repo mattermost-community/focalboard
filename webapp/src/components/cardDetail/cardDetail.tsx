@@ -22,13 +22,15 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import BlockIconSelector from '../blockIconSelector'
 
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {updateCards, setCurrent as setCurrentCard} from '../../store/cards'
 import {updateContents} from '../../store/contents'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import BlocksEditor from '../blocksEditor/blocksEditor'
 import {BlockData} from '../blocksEditor/blocks/types'
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
 
 import CardSkeleton from '../../svg/card-skeleton'
 
@@ -114,7 +116,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
     saveTitleRef.current = saveTitle
     const intl = useIntl()
 
-    const newBoardsEditor = false
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
+    const newBoardsEditor = clientConfig?.featureFlags?.newBoardsEditor || false
 
     useImagePaste(props.board.id, card.id, card.fields.contentOrder)
 
