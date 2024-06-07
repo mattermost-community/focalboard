@@ -10,10 +10,10 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/mattermost-plugin-api/cluster"
+	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // SQLStore is a SQL database.
@@ -22,6 +22,7 @@ type SQLStore struct {
 	dbType           string
 	tablePrefix      string
 	connectionString string
+	dbPingAttempts   int
 	isPlugin         bool
 	isSingleUser     bool
 	logger           mlog.LoggerIFace
@@ -47,6 +48,7 @@ func New(params Params) (*SQLStore, error) {
 		// TODO: add replica DB support too.
 		db:               params.DB,
 		dbType:           params.DBType,
+		dbPingAttempts:   params.DBPingAttempts,
 		tablePrefix:      params.TablePrefix,
 		connectionString: params.ConnectionString,
 		logger:           params.Logger,
@@ -171,10 +173,6 @@ func (s *SQLStore) elementInColumn(column string) string {
 
 func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 	return nil
-}
-
-func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, error) {
-	return nil, nil
 }
 
 func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query string) ([]*mmModel.Channel, error) {

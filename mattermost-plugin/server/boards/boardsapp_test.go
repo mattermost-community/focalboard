@@ -11,8 +11,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func TestSetConfiguration(t *testing.T) {
@@ -62,6 +62,20 @@ func TestSetConfiguration(t *testing.T) {
 		PrivacySettings:       *basePrivacySettings,
 	}
 
+	t.Run("test boards feature flags", func(t *testing.T) {
+		featureFlags := &model.FeatureFlags{
+			TestFeature:     "test",
+			TestBoolFeature: boolTrue,
+		}
+
+		mmConfig := baseConfig
+		mmConfig.FeatureFlags = featureFlags
+
+		config := createBoardsConfig(*mmConfig, "", "")
+		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
+		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
+	})
+
 	t.Run("test enable telemetry", func(t *testing.T) {
 		logSettings := &model.LogSettings{
 			EnableDiagnostics: &boolTrue,
@@ -82,24 +96,6 @@ func TestSetConfiguration(t *testing.T) {
 		config := createBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, true, config.EnablePublicSharedBoards)
 	})
-
-	t.Run("test boards feature flags", func(t *testing.T) {
-		featureFlags := &model.FeatureFlags{
-			TestFeature:        "test",
-			TestBoolFeature:    boolTrue,
-			BoardsFeatureFlags: "hello_world-myTest",
-		}
-
-		mmConfig := baseConfig
-		mmConfig.FeatureFlags = featureFlags
-
-		config := createBoardsConfig(*mmConfig, "", "")
-		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
-		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
-
-		assert.Equal(t, "true", config.FeatureFlags["hello_world"])
-		assert.Equal(t, "true", config.FeatureFlags["myTest"])
-	})
 }
 
 func TestServeHTTP(t *testing.T) {
@@ -108,7 +104,7 @@ func TestServeHTTP(t *testing.T) {
 
 	b := &BoardsApp{
 		server: th.Server,
-		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
+		logger: mlog.CreateConsoleTestLogger(t),
 	}
 
 	assert := assert.New(t)

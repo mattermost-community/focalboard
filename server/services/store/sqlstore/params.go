@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // servicesAPI is the interface required my the Params to interact with the mattermost-server.
@@ -18,6 +18,7 @@ type servicesAPI interface {
 type Params struct {
 	DBType           string
 	ConnectionString string
+	DBPingAttempts   int
 	TablePrefix      string
 	Logger           mlog.LoggerIFace
 	DB               *sql.DB

@@ -41,13 +41,12 @@ linters:
     - staticcheck
     - prealloc
     - asciicheck
-    - depguard
     - dogsled
     - dupl
     - goconst
     - gocritic
     - godot
-    - goerr113
+    - err113
     - goheader
     - revive
     - nakedret

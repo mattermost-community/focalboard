@@ -15,8 +15,8 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 type TestHelperMockStore struct {
@@ -53,7 +53,7 @@ func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
 		WebPath:             "/",
 	}
 
-	logger := mlog.CreateConsoleTestLogger(true, mlog.LvlDebug)
+	logger, _ := mlog.NewLogger()
 
 	mockStore.EXPECT().GetTeam(gomock.Any()).Return(nil, nil).AnyTimes()
 	mockStore.EXPECT().UpsertTeamSignupToken(gomock.Any()).AnyTimes()
@@ -79,9 +79,10 @@ func TestRunDataRetention(t *testing.T) {
 	th, tearDown := SetupTestHelperMockStore(t)
 	defer tearDown()
 
+	logger, _ := mlog.NewLogger()
 	b := &BoardsApp{
 		server: th.Server,
-		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
+		logger: logger,
 	}
 
 	now := time.Now().UnixNano()

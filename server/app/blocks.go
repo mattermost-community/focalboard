@@ -7,7 +7,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
@@ -54,15 +54,6 @@ func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTe
 		return nil
 	})
 
-	go func() {
-		if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed duplicating a block",
-				mlog.Err(uErr),
-			)
-		}
-	}()
-
 	return blocks, err
 }
 
@@ -74,16 +65,6 @@ func (a *App) PatchBlockAndNotify(blockID string, blockPatch *model.BlockPatch, 
 	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return nil, err
-	}
-
-	if a.IsCloudLimited() {
-		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]*model.Block{oldBlock})
-		if lErr != nil {
-			return nil, lErr
-		}
-		if containsLimitedBlocks {
-			return nil, model.ErrPatchUpdatesLimitedCards
-		}
 	}
 
 	board, err := a.store.GetBoard(oldBlock.BoardID)
@@ -125,16 +106,6 @@ func (a *App) PatchBlocksAndNotify(teamID string, blockPatches *model.BlockPatch
 	oldBlocks, err := a.store.GetBlocksByIDs(blockPatches.BlockIDs)
 	if err != nil {
 		return err
-	}
-
-	if a.IsCloudLimited() {
-		containsLimitedBlocks, err := a.ContainsLimitedBlocks(oldBlocks)
-		if err != nil {
-			return err
-		}
-		if containsLimitedBlocks {
-			return model.ErrPatchUpdatesLimitedCards
-		}
 	}
 
 	if err := a.store.PatchBlocks(blockPatches, modifiedByID); err != nil {
@@ -182,45 +153,7 @@ func (a *App) InsertBlockAndNotify(block *model.Block, modifiedByID string, disa
 		})
 	}
 
-	go func() {
-		if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed after inserting a block",
-				mlog.Err(uErr),
-			)
-		}
-	}()
-
 	return err
-}
-
-func (a *App) isWithinViewsLimit(boardID string, block *model.Block) (bool, error) {
-	// ToDo: Cloud Limits have been disabled by design. We should
-	// revisit the decision and update the related code accordingly
-
-	/*
-		limits, err := a.GetBoardsCloudLimits()
-		if err != nil {
-			return false, err
-		}
-
-		if limits.Views == model.LimitUnlimited {
-			return true, nil
-		}
-
-		views, err := a.store.GetBlocksWithParentAndType(boardID, block.ParentID, model.TypeView)
-		if err != nil {
-			return false, err
-		}
-
-		// < rather than <= because we'll be creating new view if this
-		// check passes. When that view is created, the limit will be reached.
-		// That's why we need to check for if existing + the being-created
-		// view doesn't exceed the limit.
-		return len(views) < limits.Views, nil
-	*/
-
-	return true, nil
 }
 
 func (a *App) InsertBlocks(blocks []*model.Block, modifiedByID string) ([]*model.Block, error) {
@@ -247,20 +180,6 @@ func (a *App) InsertBlocksAndNotify(blocks []*model.Block, modifiedByID string, 
 
 	needsNotify := make([]*model.Block, 0, len(blocks))
 	for i := range blocks {
-		// this check is needed to whitelist inbuilt template
-		// initialization. They do contain more than 5 views per board.
-		if boardID != "0" && blocks[i].Type == model.TypeView {
-			withinLimit, err := a.isWithinViewsLimit(board.ID, blocks[i])
-			if err != nil {
-				return nil, err
-			}
-
-			if !withinLimit {
-				a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID), mlog.String("team_id", board.TeamID))
-				return nil, model.ErrViewsLimitReached
-			}
-		}
-
 		err := a.store.InsertBlock(blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
@@ -281,15 +200,6 @@ func (a *App) InsertBlocksAndNotify(blocks []*model.Block, modifiedByID string, 
 		}
 		return nil
 	})
-
-	go func() {
-		if err := a.UpdateCardLimitTimestamp(); err != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed after inserting blocks",
-				mlog.Err(err),
-			)
-		}
-	}()
 
 	return blocks, nil
 }
@@ -331,15 +241,6 @@ func (a *App) DeleteBlockAndNotify(blockID string, modifiedBy string, disableNot
 		}
 		return nil
 	})
-
-	go func() {
-		if err := a.UpdateCardLimitTimestamp(); err != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed after deleting a block",
-				mlog.Err(err),
-			)
-		}
-	}()
 
 	return nil
 }
@@ -393,15 +294,6 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 
 		return nil
 	})
-
-	go func() {
-		if err := a.UpdateCardLimitTimestamp(); err != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed after undeleting a block",
-				mlog.Err(err),
-			)
-		}
-	}()
 
 	return block, nil
 }

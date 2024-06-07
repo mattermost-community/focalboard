@@ -10,8 +10,8 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mux "github.com/gorilla/mux"
-	model "github.com/mattermost/mattermost-server/v6/model"
-	mlog "github.com/mattermost/mattermost-server/v6/shared/mlog"
+	model "github.com/mattermost/mattermost/server/public/model"
+	mlog "github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // MockServicesAPI is a mock of ServicesAPI interface.
@@ -139,21 +139,6 @@ func (m *MockServicesAPI) GetChannelsForTeamForUser(arg0, arg1 string, arg2 bool
 func (mr *MockServicesAPIMockRecorder) GetChannelsForTeamForUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChannelsForTeamForUser", reflect.TypeOf((*MockServicesAPI)(nil).GetChannelsForTeamForUser), arg0, arg1, arg2)
-}
-
-// GetCloudLimits mocks base method.
-func (m *MockServicesAPI) GetCloudLimits() (*model.ProductLimits, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCloudLimits")
-	ret0, _ := ret[0].(*model.ProductLimits)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetCloudLimits indicates an expected call of GetCloudLimits.
-func (mr *MockServicesAPIMockRecorder) GetCloudLimits() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudLimits", reflect.TypeOf((*MockServicesAPI)(nil).GetCloudLimits))
 }
 
 // GetConfig mocks base method.

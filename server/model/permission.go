@@ -1,7 +1,7 @@
 package model
 
 import (
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 var (

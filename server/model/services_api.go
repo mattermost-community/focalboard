@@ -10,8 +10,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 const (
@@ -66,9 +66,6 @@ type ServicesAPI interface {
 	// Cluster service
 	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast)
 	PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error
-
-	// Cloud service
-	GetCloudLimits() (*mm_model.ProductLimits, error)
 
 	// Config service
 	GetConfig() *mm_model.Config

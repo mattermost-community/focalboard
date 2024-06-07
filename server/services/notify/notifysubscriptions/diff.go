@@ -9,7 +9,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // Diff represents a difference between two versions of a block.
@@ -209,7 +209,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 		mlog.String("block_id", newBlock.ID),
 		mlog.String("block_type", string(newBlock.Type)),
 		mlog.String("modified_by", newBlock.ModifiedBy),
-		mlog.Int64("update_at", newBlock.UpdateAt),
+		mlog.Int("update_at", newBlock.UpdateAt),
 	)
 
 	// find the version of the block as it was at the time of last notify.
@@ -230,9 +230,9 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 		dg.logger.Debug("generateDiffForBlock - old block",
 			mlog.String("block_id", oldBlock.ID),
 			mlog.String("block_type", string(oldBlock.Type)),
-			mlog.Int64("before_update_at", dg.lastNotifyAt),
+			mlog.Int("before_update_at", dg.lastNotifyAt),
 			mlog.String("modified_by", oldBlock.ModifiedBy),
-			mlog.Int64("update_at", oldBlock.UpdateAt),
+			mlog.Int("update_at", oldBlock.UpdateAt),
 		)
 	}
 
@@ -248,7 +248,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 	authors := make(StringMap)
 
 	dg.logger.Debug("generateDiffForBlock - authors",
-		mlog.Int64("after_update_at", dg.lastNotifyAt),
+		mlog.Int("after_update_at", dg.lastNotifyAt),
 		mlog.Int("history_count", len(chgBlocks)),
 	)
 

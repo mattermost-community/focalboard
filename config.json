@@ -3,6 +3,7 @@
 	"port": 8000,
 	"dbtype": "sqlite3",
 	"dbconfig": "./focalboard.db?_busy_timeout=5000",
+	"dbpingattempts": 5,
 	"dbtableprefix": "",
 	"postgres_dbconfig": "dbname=focalboard sslmode=disable",
 	"useSSL": false,

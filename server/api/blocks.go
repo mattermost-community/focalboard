@@ -11,7 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func (a *API) registerBlocksRoutes(r *mux.Router) {
@@ -158,13 +158,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 		mlog.Int("block_count", len(blocks)),
 	)
-
-	var bErr error
-	blocks, bErr = a.app.ApplyCloudLimits(blocks)
-	if bErr != nil {
-		a.errorResponse(w, r, err)
-		return
-	}
 
 	json, err := json.Marshal(blocks)
 	if err != nil {

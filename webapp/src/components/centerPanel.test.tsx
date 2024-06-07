@@ -75,11 +75,7 @@ describe('components/centerPanel', () => {
     }
     const state = {
         clientConfig: {
-            value: {
-                featureFlags: {
-                    subscriptions: true,
-                },
-            },
+            value: {},
         },
         searchText: '',
         users: {
@@ -577,11 +573,7 @@ describe('components/centerPanel', () => {
     }
     const state = {
         clientConfig: {
-            value: {
-                featureFlags: {
-                    subscriptions: true,
-                },
-            },
+            value: {},
         },
         searchText: '',
         users: {

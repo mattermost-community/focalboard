@@ -12,7 +12,7 @@ import (
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 const (
@@ -1087,14 +1087,14 @@ func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, paren
 		return err
 	}
 	rowsAffected, _ := result.RowsAffected()
-	s.logger.Debug("undeleteBlockChildren - insertQuery", mlog.Int64("rows_affected", rowsAffected))
+	s.logger.Debug("undeleteBlockChildren - insertQuery", mlog.Int("rows_affected", rowsAffected))
 
 	result, err = insertHistoryQuery.Exec()
 	if err != nil {
 		return err
 	}
 	rowsAffected, _ = result.RowsAffected()
-	s.logger.Debug("undeleteBlockChildren - insertHistoryQuery", mlog.Int64("rows_affected", rowsAffected))
+	s.logger.Debug("undeleteBlockChildren - insertHistoryQuery", mlog.Int("rows_affected", rowsAffected))
 
 	return nil
 }

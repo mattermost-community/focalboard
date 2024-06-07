@@ -9,10 +9,10 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost/server/public/plugin"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 type storeService interface {
@@ -178,14 +178,6 @@ func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[strin
 
 func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error {
 	return a.api.PublishPluginClusterEvent(ev, opts)
-}
-
-//
-// Cloud service.
-//
-
-func (a *pluginAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
-	return a.api.GetCloudLimits()
 }
 
 //
