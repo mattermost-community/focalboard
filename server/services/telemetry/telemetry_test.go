@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/stretchr/testify/require"
 )
 
@@ -60,7 +60,7 @@ func TestTelemetry(t *testing.T) {
 	}
 
 	t.Run("Register tracker and run telemetry job", func(t *testing.T) {
-		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(false, mlog.LvlDebug))
+		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(t))
 		service.RegisterTracker("mockTracker", func() (Tracker, error) {
 			return map[string]interface{}{
 				"mockTrackerKey": "mockTrackerValue",
@@ -72,7 +72,7 @@ func TestTelemetry(t *testing.T) {
 	})
 
 	t.Run("do telemetry if needed", func(t *testing.T) {
-		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(false, mlog.LvlDebug))
+		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(t))
 		service.RegisterTracker("mockTracker", func() (Tracker, error) {
 			return map[string]interface{}{
 				"mockTrackerKey": "mockTrackerValue",

@@ -9,7 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/wiggin77/merror"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var (

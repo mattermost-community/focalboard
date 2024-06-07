@@ -8,11 +8,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func Test_newChangeNotifier(t *testing.T) {
-	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
+	logger := mlog.CreateConsoleTestLogger(t)
 
 	t.Run("startup, shutdown", func(t *testing.T) {
 		cn := NewCallbackQueue("test1", 100, 5, logger)

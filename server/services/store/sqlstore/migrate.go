@@ -13,9 +13,9 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	sqlUtils "github.com/mattermost/mattermost/server/public/utils/sql"
 
 	"github.com/mattermost/morph"
 	drivers "github.com/mattermost/morph/drivers"
@@ -50,12 +50,12 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
 	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = sqlstore.ResetReadTimeout(connectionString)
+		connectionString, err = sqlUtils.ResetReadTimeout(connectionString)
 		if err != nil {
 			return nil, err
 		}
 
-		connectionString, err = sqlstore.AppendMultipleStatementsFlag(connectionString)
+		connectionString, err = sqlUtils.AppendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
@@ -68,7 +68,7 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	}
 	*settings.DriverName = s.dbType
 
-	db := sqlstore.SetupConnection("master", connectionString, &settings)
+	db, _ := sqlUtils.SetupConnection(s.logger, "master", connectionString, &settings, s.dbPingAttempts)
 
 	return db, nil
 }
@@ -293,7 +293,7 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 	}
 
 	for _, migration := range applied {
-		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
+		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint("version", migration.Version), mlog.String("name", migration.Name))
 	}
 
 	if _, err = engine.Apply(version - currentVersion); err != nil {

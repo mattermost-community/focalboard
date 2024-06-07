@@ -10,7 +10,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/services/config"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 const defaultS3Timeout = 60 * 1000 // 60 seconds
@@ -81,9 +81,7 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 
 	serverRoot := baseURL + "/plugins/focalboard"
-	if mmconfig.FeatureFlags.BoardsProduct {
-		serverRoot = baseURL + "/boards"
-	}
+
 	return &config.Configuration{
 		ServerRoot:               serverRoot,
 		Port:                     -1,
@@ -118,6 +116,21 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 }
 
+func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
+	featureFlags := make(map[string]string)
+	for key, value := range configFeatureFlags {
+		// Break out FeatureFlags and pass remaining
+		if key == boardsFeatureFlagName {
+			for _, flag := range strings.Split(value, "-") {
+				featureFlags[flag] = "true"
+			}
+		} else {
+			featureFlags[key] = value
+		}
+	}
+	return featureFlags
+}
+
 func getPluginSetting(mmConfig mm_model.Config, key string) (interface{}, bool) {
 	plugin, ok := mmConfig.PluginSettings.Plugins[PluginName]
 	if !ok {
@@ -141,19 +154,4 @@ func getPluginSettingInt(mmConfig mm_model.Config, key string, def int) int {
 		return def
 	}
 	return int(math.Round(valFloat))
-}
-
-func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
-	featureFlags := make(map[string]string)
-	for key, value := range configFeatureFlags {
-		// Break out FeatureFlags and pass remaining
-		if key == boardsFeatureFlagName {
-			for _, flag := range strings.Split(value, "-") {
-				featureFlags[flag] = "true"
-			}
-		} else {
-			featureFlags[key] = value
-		}
-	}
-	return featureFlags
 }

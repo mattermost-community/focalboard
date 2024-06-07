@@ -31,10 +31,7 @@ linters:
   enable:
     - gofmt
     - goimports
-    - deadcode
     - ineffassign
-    - structcheck
-    - varcheck
     - unparam
     - errcheck
     - govet
@@ -48,13 +45,12 @@ linters:
     - staticcheck
     - prealloc
     - asciicheck
-    - depguard
     - dogsled
     - dupl
     - goconst
     - gocritic
     - godot
-    - goerr113
+    - err113
     - goheader
     - revive
     - nakedret
@@ -75,9 +71,7 @@ issues:
   exclude-rules:
     - path: server/manifest.go
       linters:
-        - deadcode
         - unused
-        - varcheck
     - path: server/configuration.go
       linters:
         - unused

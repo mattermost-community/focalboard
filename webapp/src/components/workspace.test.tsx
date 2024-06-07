@@ -158,7 +158,6 @@ describe('src/components/workspace', () => {
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
                 teammateNameDisplay: 'username',
-                featureFlags: {},
             },
         },
         contents: {
@@ -283,7 +282,6 @@ describe('src/components/workspace', () => {
                     telemetryid: 'telemetry',
                     enablePublicSharedBoards: true,
                     teammateNameDisplay: 'username',
-                    featureFlags: {},
                 },
             },
             sidebar: {
@@ -382,7 +380,6 @@ describe('src/components/workspace', () => {
                     telemetryid: 'telemetry',
                     enablePublicSharedBoards: true,
                     teammateNameDisplay: 'username',
-                    featureFlags: {},
                 },
             },
             contents: {
@@ -487,7 +484,6 @@ describe('src/components/workspace', () => {
                     telemetryid: 'telemetry',
                     enablePublicSharedBoards: true,
                     teammateNameDisplay: 'username',
-                    featureFlags: {},
                 },
             },
             contents: {
@@ -597,7 +593,6 @@ describe('src/components/workspace', () => {
                     telemetryid: 'telemetry',
                     enablePublicSharedBoards: true,
                     teammateNameDisplay: 'username',
-                    featureFlags: {},
                 },
             },
             contents: {

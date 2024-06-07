@@ -33,8 +33,8 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
 
-	"github.com/mattermost/mattermost-server/v6/shared/filestore"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore"
 )
 
 const (
@@ -223,6 +223,7 @@ func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.Logge
 
 	storeParams := sqlstore.Params{
 		DBType:           config.DBType,
+		DBPingAttempts:   config.DBPingAttempts,
 		ConnectionString: config.DBConfigString,
 		TablePrefix:      config.DBTablePrefix,
 		Logger:           logger,
@@ -272,7 +273,7 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "blocks"), mlog.Err(err))
 			return
 		}
-		s.logger.Log(mlog.LvlFBMetrics, "Block metrics collected", mlog.Map("block_counts", blockCounts))
+		s.logger.Debug("Block metrics collected", mlog.Map("block_counts", blockCounts))
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
@@ -281,14 +282,14 @@ func (s *Server) Start() error {
 			s.logger.Error("Error updating metrics", mlog.String("group", "boards"), mlog.Err(err))
 			return
 		}
-		s.logger.Log(mlog.LvlFBMetrics, "Board metrics collected", mlog.Int64("board_count", boardCount))
+		s.logger.Debug("Board metrics collected", mlog.Int("board_count", boardCount))
 		s.metricsService.ObserveBoardCount(boardCount)
 		teamCount, err := s.store.GetTeamCount()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "teams"), mlog.Err(err))
 			return
 		}
-		s.logger.Log(mlog.LvlFBMetrics, "Team metrics collected", mlog.Int64("team_count", teamCount))
+		s.logger.Debug("Team metrics collected", mlog.Int("team_count", teamCount))
 		s.metricsService.ObserveTeamCount(teamCount)
 	}
 	// metricsUpdater()   Calling this immediately causes integration unit tests to fail.

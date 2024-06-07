@@ -9,14 +9,14 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/stretchr/testify/require"
 
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
+	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 )
 
 func TestErrorResponse(t *testing.T) {
-	testAPI := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
+	testAPI := API{logger: mlog.CreateConsoleTestLogger(t)}
 
 	testCases := []struct {
 		Name         string

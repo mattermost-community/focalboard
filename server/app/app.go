@@ -15,9 +15,9 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/filestore"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore"
 )
 
 const (

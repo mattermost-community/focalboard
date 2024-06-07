@@ -11,7 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var (
@@ -218,17 +218,6 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		}
 		return nil
 	})
-
-	if len(bab.Blocks) != 0 {
-		go func() {
-			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
-				a.logger.Error(
-					"UpdateCardLimitTimestamp failed after duplicating a board",
-					mlog.Err(uErr),
-				)
-			}
-		}()
-	}
 
 	return bab, members, err
 }
@@ -469,15 +458,6 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 		return nil
 	})
 
-	go func() {
-		if err := a.UpdateCardLimitTimestamp(); err != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed after deleting a board",
-				mlog.Err(err),
-			)
-		}
-	}()
-
 	return nil
 }
 
@@ -714,15 +694,6 @@ func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
 		a.wsAdapter.BroadcastBoardChange(board.TeamID, board)
 		return nil
 	})
-
-	go func() {
-		if err := a.UpdateCardLimitTimestamp(); err != nil {
-			a.logger.Error(
-				"UpdateCardLimitTimestamp failed after undeleting a board",
-				mlog.Err(err),
-			)
-		}
-	}()
 
 	return nil
 }

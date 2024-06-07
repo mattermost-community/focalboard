@@ -14,8 +14,8 @@ import (
 
 	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
 
-	serverModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	serverModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -54,9 +54,6 @@ func TestOnConfigurationChange(t *testing.T) {
 	basePlugins[PluginName] = make(map[string]interface{})
 	basePlugins[PluginName][SharedBoardsName] = true
 
-	baseFeatureFlags := &serverModel.FeatureFlags{
-		BoardsFeatureFlags: "Feature1-Feature2",
-	}
 	basePluginSettings := &serverModel.PluginSettings{
 		Directory: &stringRef,
 		Plugins:   basePlugins,
@@ -77,7 +74,6 @@ func TestOnConfigurationChange(t *testing.T) {
 	}
 
 	baseConfig := &serverModel.Config{
-		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
 		TeamSettings:          *baseTeamSettings,
@@ -96,7 +92,7 @@ func TestOnConfigurationChange(t *testing.T) {
 			server:          th.Server,
 			wsPluginAdapter: &FakePluginAdapter{},
 			servicesAPI:     api,
-			logger:          mlog.CreateConsoleTestLogger(true, mlog.LvlError),
+			logger:          mlog.CreateConsoleTestLogger(&testing.T{}),
 		}
 
 		err := b.OnConfigurationChange()
@@ -106,10 +102,6 @@ func TestOnConfigurationChange(t *testing.T) {
 		// make sure both App and Server got updated
 		assert.True(t, b.server.Config().EnablePublicSharedBoards)
 		assert.True(t, b.server.App().GetClientConfig().EnablePublicSharedBoards)
-
-		assert.Equal(t, "true", b.server.Config().FeatureFlags["Feature1"])
-		assert.Equal(t, "true", b.server.Config().FeatureFlags["Feature2"])
-		assert.Equal(t, "", b.server.Config().FeatureFlags["Feature3"])
 	})
 }
 

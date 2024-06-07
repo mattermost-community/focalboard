@@ -4,7 +4,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, addMember bool) (*model.BoardsAndBlocks, error) {
@@ -44,17 +44,6 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 		}
 	}
 
-	if len(newBab.Blocks) != 0 {
-		go func() {
-			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
-				a.logger.Error(
-					"UpdateCardLimitTimestamp failed after creating boards and blocks",
-					mlog.Err(uErr),
-				)
-			}
-		}()
-	}
-
 	for _, board := range newBab.Boards {
 		if !board.IsTemplate {
 			if err := a.addBoardsToDefaultCategory(userID, board.TeamID, []*model.Board{board}); err != nil {
@@ -70,16 +59,6 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 	oldBlocks, err := a.store.GetBlocksByIDs(pbab.BlockIDs)
 	if err != nil {
 		return nil, err
-	}
-
-	if a.IsCloudLimited() {
-		containsLimitedBlocks, cErr := a.ContainsLimitedBlocks(oldBlocks)
-		if cErr != nil {
-			return nil, cErr
-		}
-		if containsLimitedBlocks {
-			return nil, model.ErrPatchUpdatesLimitedCards
-		}
 	}
 
 	oldBlocksMap := map[string]*model.Block{}
@@ -151,17 +130,6 @@ func (a *App) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID st
 		}
 		return nil
 	})
-
-	if len(dbab.Blocks) != 0 {
-		go func() {
-			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
-				a.logger.Error(
-					"UpdateCardLimitTimestamp failed after deleting boards and blocks",
-					mlog.Err(uErr),
-				)
-			}
-		}()
-	}
 
 	return nil
 }

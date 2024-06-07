@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 func NewFileInfo(name string) *mm_model.FileInfo {

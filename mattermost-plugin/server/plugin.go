@@ -11,11 +11,11 @@ import (
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
 	"github.com/mattermost/focalboard/server/model"
 
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
+	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var ErrPluginNotAllowed = errors.New("boards plugin not allowed while Boards product enabled")
@@ -23,16 +23,10 @@ var ErrPluginNotAllowed = errors.New("boards plugin not allowed while Boards pro
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
 	plugin.MattermostPlugin
-
 	boardsApp *boards.BoardsApp
 }
 
 func (p *Plugin) OnActivate() error {
-	if p.API.GetConfig().FeatureFlags.BoardsProduct {
-		p.API.LogError(ErrPluginNotAllowed.Error())
-		return ErrPluginNotAllowed
-	}
-
 	client := pluginapi.NewClient(p.API, p.Driver)
 
 	logger, _ := mlog.NewLogger()
@@ -95,10 +89,6 @@ func (p *Plugin) MessageWillBePosted(ctx *plugin.Context, post *mm_model.Post) (
 
 func (p *Plugin) MessageWillBeUpdated(ctx *plugin.Context, newPost, oldPost *mm_model.Post) (*mm_model.Post, string) {
 	return p.boardsApp.MessageWillBeUpdated(ctx, newPost, oldPost)
-}
-
-func (p *Plugin) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
-	p.boardsApp.OnCloudLimitsUpdated(limits)
 }
 
 func (p *Plugin) RunDataRetention(nowTime, batchSize int64) (int64, error) {

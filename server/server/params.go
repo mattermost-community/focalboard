@@ -10,7 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 type Params struct {
