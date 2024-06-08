@@ -10,51 +10,68 @@ import {TestBlockFactory} from './test/testBlockFactory'
 import {Utils} from './utils'
 
 import {IPropertyTemplate} from './blocks/board'
+import {blockTypes} from './blocks/block'
 
 jest.mock('./utils')
 const mockedUtils = mocked(Utils, true)
 
 const dayMillis = 24 * 60 * 60 * 1000
 
-describe('src/cardFilter', () => {
-    const board = TestBlockFactory.createBoard()
-    board.id = '1'
+const board = TestBlockFactory.createBoard()
+board.id = '1'
 
-    const card1 = TestBlockFactory.createCard(board)
-    card1.id = '1'
-    card1.title = 'card1'
-    card1.fields.properties.propertyId = 'Status'
+const block = {
+    id: 'id',
+    boardId: 'boardId',
+    parentId: 'parnetId',
+    createdBy: 'createdBy',
+    modifiedBy: 'modifiedBy',
+    schema: 1,
+    type: blockTypes[13],
+    title: 'title',
+    fields: {
+        properties: {
+            propertyId: 'Status',
+        },
+    },
+    createAt: new Date('December 7, 2023').getTime(),
+    updateAt: new Date('December 7, 2023').getTime(),
+    deleteAt: new Date('December 7, 2023').getTime(),
+}
+const card = TestBlockFactory.createCardWithBlock(board, block)
+
+describe('src/cardFilter', () => {
     const filterClause = createFilterClause({propertyId: 'propertyId', condition: 'isNotEmpty', values: ['Status']})
 
     describe('verify isClauseMet method', () => {
         test('should be true with isNotEmpty clause', () => {
             const filterClauseIsNotEmpty = createFilterClause({propertyId: 'propertyId', condition: 'isNotEmpty', values: ['Status']})
-            const result = CardFilter.isClauseMet(filterClauseIsNotEmpty, [], card1)
+            const result = CardFilter.isClauseMet(filterClauseIsNotEmpty, [], card)
             expect(result).toBeTruthy()
         })
         test('should be false with isEmpty clause', () => {
             const filterClauseIsEmpty = createFilterClause({propertyId: 'propertyId', condition: 'isEmpty', values: ['Status']})
-            const result = CardFilter.isClauseMet(filterClauseIsEmpty, [], card1)
+            const result = CardFilter.isClauseMet(filterClauseIsEmpty, [], card)
             expect(result).toBeFalsy()
         })
         test('should be true with includes clause', () => {
             const filterClauseIncludes = createFilterClause({propertyId: 'propertyId', condition: 'includes', values: ['Status']})
-            const result = CardFilter.isClauseMet(filterClauseIncludes, [], card1)
+            const result = CardFilter.isClauseMet(filterClauseIncludes, [], card)
             expect(result).toBeTruthy()
         })
         test('should be true with includes and no values clauses', () => {
             const filterClauseIncludes = createFilterClause({propertyId: 'propertyId', condition: 'includes', values: []})
-            const result = CardFilter.isClauseMet(filterClauseIncludes, [], card1)
+            const result = CardFilter.isClauseMet(filterClauseIncludes, [], card)
             expect(result).toBeTruthy()
         })
         test('should be false with notIncludes clause', () => {
             const filterClauseNotIncludes = createFilterClause({propertyId: 'propertyId', condition: 'notIncludes', values: ['Status']})
-            const result = CardFilter.isClauseMet(filterClauseNotIncludes, [], card1)
+            const result = CardFilter.isClauseMet(filterClauseNotIncludes, [], card)
             expect(result).toBeFalsy()
         })
         test('should be true with notIncludes and no values clauses', () => {
             const filterClauseNotIncludes = createFilterClause({propertyId: 'propertyId', condition: 'notIncludes', values: []})
-            const result = CardFilter.isClauseMet(filterClauseNotIncludes, [], card1)
+            const result = CardFilter.isClauseMet(filterClauseNotIncludes, [], card)
             expect(result).toBeTruthy()
         })
     })
@@ -62,7 +79,7 @@ describe('src/cardFilter', () => {
     describe('verify isClauseMet method - person property', () => {
         const personCard = TestBlockFactory.createCard(board)
         personCard.id = '1'
-        personCard.title = 'card1'
+        personCard.title = 'card'
         personCard.fields.properties.personPropertyID = 'personid1'
 
         const template: IPropertyTemplate = {
@@ -107,7 +124,7 @@ describe('src/cardFilter', () => {
     describe('verify isClauseMet method - multi-person property', () => {
         const personCard = TestBlockFactory.createCard(board)
         personCard.id = '1'
-        personCard.title = 'card1'
+        personCard.title = 'card'
         personCard.fields.properties.personPropertyID = ['personid1', 'personid2']
 
         const template: IPropertyTemplate = {
@@ -167,7 +184,7 @@ describe('src/cardFilter', () => {
     describe('verify isClauseMet method - (createdBy) person property', () => {
         const personCard = TestBlockFactory.createCard(board)
         personCard.id = '1'
-        personCard.title = 'card1'
+        personCard.title = 'card'
         personCard.createdBy = 'personid1'
 
         const template: IPropertyTemplate = {
@@ -206,7 +223,7 @@ describe('src/cardFilter', () => {
 
         const dateCard = TestBlockFactory.createCard(board)
         dateCard.id = '1'
-        dateCard.title = 'card1'
+        dateCard.title = 'card'
         dateCard.fields.properties.datePropertyID = '{ "from": ' + propertyDate.toString() + ' }'
 
         const checkDayBefore = propertyDate - dayMillis
@@ -265,7 +282,7 @@ describe('src/cardFilter', () => {
         const toDate = fromDate + (2 * dayMillis)
         const dateCard = TestBlockFactory.createCard(board)
         dateCard.id = '1'
-        dateCard.title = 'card1'
+        dateCard.title = 'card'
         dateCard.fields.properties.datePropertyID = '{ "from": ' + fromDate.toString() + ', "to": ' + toDate.toString() + ' }'
 
         const beforeRange = fromDate - dayMillis
@@ -335,11 +352,6 @@ describe('src/cardFilter', () => {
     })
 
     describe('verify isClauseMet method - (createdTime) date property', () => {
-        const createDate = new Date(card1.createAt)
-        const checkDate = Date.UTC(createDate.getFullYear(), createDate.getMonth(), createDate.getDate(), 12)
-        const checkDayBefore = checkDate - dayMillis
-        const checkDayAfter = checkDate + dayMillis
-
         const template: IPropertyTemplate = {
             id: 'datePropertyID',
             name: 'myDate',
@@ -349,44 +361,51 @@ describe('src/cardFilter', () => {
 
         test('should be true with isSet clause', () => {
             const filterClauseIsSet = createFilterClause({propertyId: 'datePropertyID', condition: 'isSet', values: []})
-            const result = CardFilter.isClauseMet(filterClauseIsSet, [template], card1)
+            const result = CardFilter.isClauseMet(filterClauseIsSet, [template], card)
             expect(result).toBeTruthy()
         })
         test('should be false with notSet clause', () => {
             const filterClauseIsNotSet = createFilterClause({propertyId: 'datePropertyID', condition: 'isNotSet', values: []})
-            const result = CardFilter.isClauseMet(filterClauseIsNotSet, [template], card1)
+            const result = CardFilter.isClauseMet(filterClauseIsNotSet, [template], card)
             expect(result).toBeFalsy()
         })
         test('verify isBefore clause', () => {
-            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [checkDayAfter.toString()]})
-            const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], card1)
+            const filterDateSetInFuture = new Date('December 31, 2023').getTime()
+            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [filterDateSetInFuture.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], card)
             expect(result).toBeTruthy()
 
-            const filterClauseIsNotBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [checkDate.toString()]})
-            const result2 = CardFilter.isClauseMet(filterClauseIsNotBefore, [template], card1)
+            const filterDateSetInPast = new Date('December 6, 2022').getTime()
+            const filterClauseIsNotBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [filterDateSetInPast.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsNotBefore, [template], card)
             expect(result2).toBeFalsy()
         })
         test('verify isAfter clauses', () => {
-            const filterClauseisAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [checkDayBefore.toString()]})
-            const result = CardFilter.isClauseMet(filterClauseisAfter, [template], card1)
+            const filterDateSetInPast = new Date('December 6, 2022').getTime()
+            const filterClauseisAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [filterDateSetInPast.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseisAfter, [template], card)
             expect(result).toBeTruthy()
 
-            const filterClauseisNotAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [checkDate.toString()]})
-            const result2 = CardFilter.isClauseMet(filterClauseisNotAfter, [template], card1)
+            const filterDateSetInFuture = new Date('December 31, 2023').getTime()
+            const filterClauseisNotAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [filterDateSetInFuture.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseisNotAfter, [template], card)
             expect(result2).toBeFalsy()
         })
         test('verify is clause', () => {
             // Is should find on that date regardless of time.
-            const filterClauseIs = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDate.toString()]})
-            const result = CardFilter.isClauseMet(filterClauseIs, [template], card1)
+            const filterDateSetToCurrent = new Date('December 7, 2023').getTime()
+            const filterClauseIs = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [filterDateSetToCurrent.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIs, [template], card)
             expect(result).toBeTruthy()
 
-            const filterClauseIsNot = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDayBefore.toString()]})
-            const result2 = CardFilter.isClauseMet(filterClauseIsNot, [template], card1)
+            const filterDateSetInPast = new Date('December 6, 2023')
+            const filterClauseIsNot = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [filterDateSetInPast.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsNot, [template], card)
             expect(result2).toBeFalsy()
 
-            const filterClauseIsNot2 = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDayAfter.toString()]})
-            const result3 = CardFilter.isClauseMet(filterClauseIsNot2, [template], card1)
+            const filterDateSetInFuture = new Date('December 21, 2023')
+            const filterClauseIsNot2 = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [filterDateSetInFuture.toString()]})
+            const result3 = CardFilter.isClauseMet(filterClauseIsNot2, [template], card)
             expect(result3).toBeFalsy()
         })
     })
@@ -397,7 +416,7 @@ describe('src/cardFilter', () => {
                 operation: 'and',
                 filters: [],
             })
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeTruthy()
         })
         test('should return true with or operation and 2 filterCause, one is false ', () => {
@@ -409,7 +428,7 @@ describe('src/cardFilter', () => {
                     filterClause,
                 ],
             })
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeTruthy()
         })
         test('should return true with or operation and 2 filterCause, 1 filtergroup in filtergroup, one filterClause is false ', () => {
@@ -426,7 +445,7 @@ describe('src/cardFilter', () => {
                 filters: [],
             })
             filterGroup.filters.push(filterGroupInFilterGroup)
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeTruthy()
         })
         test('should return false with or operation and two filterCause, two are false ', () => {
@@ -439,7 +458,7 @@ describe('src/cardFilter', () => {
                     filterClauseEmpty,
                 ],
             })
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeFalsy()
         })
         test('should return false with and operation and 2 filterCause, one is false ', () => {
@@ -451,7 +470,7 @@ describe('src/cardFilter', () => {
                     filterClause,
                 ],
             })
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeFalsy()
         })
         test('should return true with and operation and 2 filterCause, two are true ', () => {
@@ -463,7 +482,7 @@ describe('src/cardFilter', () => {
                     filterClause,
                 ],
             })
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeTruthy()
         })
         test('should return true with or operation and 2 filterCause, 1 filtergroup in filtergroup, one filterClause is false ', () => {
@@ -480,7 +499,7 @@ describe('src/cardFilter', () => {
                 filters: [],
             })
             filterGroup.filters.push(filterGroupInFilterGroup)
-            const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
+            const result = CardFilter.isFilterGroupMet(filterGroup, [], card)
             expect(result).toBeFalsy()
         })
     })
@@ -685,7 +704,7 @@ describe('src/cardFilter', () => {
         })
     })
     describe('verify applyFilterGroup method', () => {
-        test('should return array with card1', () => {
+        test('should return array with card', () => {
             const filterClauseNotIncludes = createFilterClause({propertyId: 'propertyId', condition: 'notIncludes', values: ['Status']})
             const filterGroup = createFilterGroup({
                 operation: 'or',
@@ -694,34 +713,34 @@ describe('src/cardFilter', () => {
                     filterClause,
                 ],
             })
-            const result = CardFilter.applyFilterGroup(filterGroup, [], [card1])
+            const result = CardFilter.applyFilterGroup(filterGroup, [], [card])
             expect(result).toBeDefined()
-            expect(result[0]).toEqual(card1)
+            expect(result[0]).toEqual(card)
         })
     })
     describe('verfiy applyFilterGroup method for case-sensitive search', () => {
-        test('should return array with card1 when search by test as Card1', () => {
-            const filterClauseNotContains = createFilterClause({propertyId: 'title', condition: 'contains', values: ['Card1']})
+        test('should return array with card when search by test as card', () => {
+            const filterClauseNotContains = createFilterClause({propertyId: 'title', condition: 'contains', values: ['title']})
             const filterGroup = createFilterGroup({
                 operation: 'and',
                 filters: [
                     filterClauseNotContains,
                 ],
             })
-            const result = CardFilter.applyFilterGroup(filterGroup, [], [card1])
+            const result = CardFilter.applyFilterGroup(filterGroup, [], [card])
             expect(result.length).toEqual(1)
         })
     })
     describe('verify applyFilter for title', () => {
-        test('should not return array with card1', () => {
-            const filterClauseNotContains = createFilterClause({propertyId: 'title', condition: 'notContains', values: ['card1']})
+        test('should not return array with card', () => {
+            const filterClauseNotContains = createFilterClause({propertyId: 'title', condition: 'notContains', values: ['title']})
             const filterGroup = createFilterGroup({
                 operation: 'and',
                 filters: [
                     filterClauseNotContains,
                 ],
             })
-            const result = CardFilter.applyFilterGroup(filterGroup, [], [card1])
+            const result = CardFilter.applyFilterGroup(filterGroup, [], [card])
             expect(result.length).toEqual(0)
         })
     })
