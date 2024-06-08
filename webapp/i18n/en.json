@@ -2,6 +2,7 @@
   "AdminBadge.SystemAdmin": "Admin",
   "AdminBadge.TeamAdmin": "Team Admin",
   "AppBar.Tooltip": "Toggle Linked Boards",
+  "BlocksEditor.root-input-placeholder": "Add text or type \"/\" for commands",
   "Attachment.Attachment-title": "Attachment",
   "AttachmentBlock.DeleteAction": "delete",
   "AttachmentBlock.addElement": "add {type}",

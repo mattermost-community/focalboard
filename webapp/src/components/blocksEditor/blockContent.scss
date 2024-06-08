@@ -1,5 +1,11 @@
 .BlockContent {
     display: flex;
+    align-items: center;
+    position: relative;
+
+    p {
+        margin: 0;
+    }
 
     &.over-up {
         border-top: 1px solid rgba(128, 192, 255, 0.4);
@@ -10,19 +16,17 @@
     }
 
     &:hover {
-        .action {
+        .block-actions {
             opacity: 1;
-
-            .AddIcon {
-                opacity: 0.5;
-            }
         }
     }
 
-    .action {
+    .block-actions {
         transition: opacity 0.3s;
+        display: flex;
         opacity: 0;
-        margin: 5px;
+        position: absolute;
+        left: -72px;
     }
 
     .content {

@@ -38,6 +38,7 @@ function App() {
         <div className='App'>
             <header className='App-header'>
                 <BlocksEditor
+                    readonly={false}
                     blocks={data}
                     onBlockCreated={async (block: BlockData<any>, afterBlock?: BlockData<any>): Promise<BlockData|null> => {
                         if (block.contentType === 'text' && block.value === '') {

@@ -4,42 +4,44 @@
 import React from 'react'
 import {render, screen, fireEvent} from '@testing-library/react'
 
+import {wrapIntl} from '../../testUtils'
+
 import RootInput from './rootInput'
 
 describe('components/blocksEditor/rootInput', () => {
     test('should match Display snapshot', async () => {
-        const {container} = render(
+        const {container} = render(wrapIntl(
             <RootInput
                 onChange={jest.fn()}
                 value='test-value'
                 onChangeType={jest.fn()}
                 onSave={jest.fn()}
             />,
-        )
+        ))
         expect(container).toMatchSnapshot()
     })
 
     test('should match Input snapshot', async () => {
-        const {container} = render(
+        const {container} = render(wrapIntl(
             <RootInput
                 onChange={jest.fn()}
                 value='test-value'
                 onChangeType={jest.fn()}
                 onSave={jest.fn()}
             />,
-        )
+        ))
         expect(container).toMatchSnapshot()
     })
 
     test('should match Input snapshot with menu open', async () => {
-        const {container} = render(
+        const {container} = render(wrapIntl(
             <RootInput
                 onChange={jest.fn()}
                 value=''
                 onChangeType={jest.fn()}
                 onSave={jest.fn()}
             />,
-        )
+        ))
         const input = screen.getByDisplayValue('')
         fireEvent.change(input, {target: {value: '/'}})
         expect(container).toMatchSnapshot()
@@ -47,14 +49,14 @@ describe('components/blocksEditor/rootInput', () => {
 
     test('should emit onChange event', async () => {
         const onChange = jest.fn()
-        render(
+        render(wrapIntl(
             <RootInput
                 onChange={onChange}
                 value='test-value'
                 onChangeType={jest.fn()}
                 onSave={jest.fn()}
             />,
-        )
+        ))
 
         expect(onChange).not.toBeCalled()
 
@@ -65,14 +67,14 @@ describe('components/blocksEditor/rootInput', () => {
 
     test('should not emit onChangeType event when value is not empty and hit backspace', async () => {
         const onChangeType = jest.fn()
-        render(
+        render(wrapIntl(
             <RootInput
                 onChange={jest.fn()}
                 value='test-value'
                 onChangeType={onChangeType}
                 onSave={jest.fn()}
             />,
-        )
+        ))
 
         expect(onChangeType).not.toBeCalled()
         const input = screen.getByDisplayValue('test-value')
@@ -82,14 +84,14 @@ describe('components/blocksEditor/rootInput', () => {
 
     test('should emit onSave event hit enter', async () => {
         const onSave = jest.fn()
-        render(
+        render(wrapIntl(
             <RootInput
                 onChange={jest.fn()}
                 value='test-value'
                 onChangeType={jest.fn()}
                 onSave={onSave}
             />,
-        )
+        ))
 
         expect(onSave).not.toBeCalled()
         const input = screen.getByDisplayValue('test-value')
@@ -99,19 +101,19 @@ describe('components/blocksEditor/rootInput', () => {
 
     test('should emit onChangeType event on menu option selected', async () => {
         const onChangeType = jest.fn()
-        render(
+        render(wrapIntl(
             <RootInput
                 onChange={jest.fn()}
                 value=''
                 onChangeType={onChangeType}
                 onSave={jest.fn()}
             />,
-        )
+        ))
 
         const input = screen.getByDisplayValue('')
         fireEvent.change(input, {target: {value: '/'}})
 
-        const option = screen.getByText('/title Creates a new Title block.')
+        const option = screen.getByText('Creates a new Title block.')
         fireEvent.click(option)
 
         expect(onChangeType).toBeCalledWith(expect.objectContaining({name: 'h1'}))

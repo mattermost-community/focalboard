@@ -4,6 +4,7 @@ import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './image.scss'
 
@@ -20,6 +21,7 @@ const Image: ContentType<FileInfo> = {
     prefix: '',
     runSlashCommand: (): void => {},
     editable: false,
+    icon: <CompassIcon icon='image-outline'/>,
     Display: (props: BlockInputProps<FileInfo>) => {
         const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
 

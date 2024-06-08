@@ -4,6 +4,7 @@ import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
 import {BlockInputProps, ContentType} from '../types'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './quote.scss'
 
@@ -12,6 +13,7 @@ const Quote: ContentType = {
     displayName: 'Quote',
     slashCommand: '/quote',
     prefix: '> ',
+    icon: <CompassIcon icon='format-quote-open'/>,
     Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
         const html = marked('> ' + props.value, {renderer, breaks: true})

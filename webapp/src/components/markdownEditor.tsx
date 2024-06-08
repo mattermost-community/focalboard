@@ -5,7 +5,7 @@ import React, {useState, Suspense} from 'react'
 import {Utils} from '../utils'
 import './markdownEditor.scss'
 
-const MarkdownEditorInput = React.lazy(() => import('./markdownEditorInput/markdownEditorInput'))
+import MarkdownEditorInput from './markdownEditorInput/markdownEditorInput'
 
 type Props = {
     id?: string

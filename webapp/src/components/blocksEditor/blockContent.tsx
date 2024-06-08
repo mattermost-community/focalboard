@@ -3,9 +3,8 @@
 import React from 'react'
 import {useDrag, useDrop} from 'react-dnd'
 
-import GripIcon from '../../widgets/icons/grip'
-
-import AddIcon from '../../widgets/icons/add'
+import CompassIcon from '../../widgets/icons/compassIcon'
+import IconButton from '../../widgets/buttons/iconButton'
 
 import Editor from './editor'
 import * as registry from './blocks'
@@ -22,6 +21,7 @@ type Props = {
     setAfterBlock: (block: BlockData|null) => void
     onSave: (block: BlockData) => Promise<BlockData|null>
     onMove: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>
+    readonly: boolean
 }
 
 function BlockContent(props: Props) {
@@ -54,7 +54,7 @@ function BlockContent(props: Props) {
         [block, props.onMove, contentOrder],
     )
 
-    if (editing && editing.id === block.id) {
+    if (!props.readonly && editing && editing.id === block.id) {
         return (
             <Editor
                 onSave={async (b) => {
@@ -86,23 +86,27 @@ function BlockContent(props: Props) {
                     setEditing(block)
                 }}
             >
-                <span
-                    className='action'
-                    data-testid='add-action'
-                    onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        props.setAfterBlock(block)
-                    }}
-                >
-                    <AddIcon/>
-                </span>
-                <span
-                    className='action'
-                    ref={drag}
-                >
-                    <GripIcon/>
-                </span>
+                {!props.readonly &&
+                    <div
+                        className='block-actions'
+                        data-testid='block-actions'
+                    >
+                        <IconButton
+                            size={'small'}
+                            icon={<CompassIcon icon='plus'/>}
+                            onClick={(e: any) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                props.setAfterBlock(block)
+                            }}
+                        />
+                        <div ref={drag}>
+                            <IconButton
+                                size={'small'}
+                                icon={<CompassIcon icon='drag-vertical'/>}
+                            />
+                        </div>
+                    </div>}
                 <div
                     className='content'
                     ref={preview}

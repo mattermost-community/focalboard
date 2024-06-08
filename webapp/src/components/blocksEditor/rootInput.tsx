@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
+import {useIntl} from 'react-intl'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
@@ -28,6 +29,7 @@ const styles = {
         background: 'rgb(var(--center-channel-bg-rgb))',
         color: 'rgb(var(--center-channel-color-rgb))',
         flexDirection: 'row',
+        border: 0,
     }),
     input: (provided: CSSObject): CSSObject => ({
         ...provided,
@@ -46,24 +48,42 @@ const styles = {
         ...provided,
         zIndex: 999,
     }),
+    placeholder: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        zIndex: 10,
+    }),
 }
 
 export default function RootInput(props: Props) {
     const [showMenu, setShowMenu] = useState(false)
+    const intl = useIntl()
+
+    const formatOptionLabel = (ct: ContentType) => (
+        <div className='slash-command'>
+            <div className='slash-command__icon'>{ct.icon}</div>
+            <div className='slash-command__info'>
+                <div className='slash-command__title'>{ct.slashCommand}</div>
+                <div className='slash-command__desc'>
+                    {`Creates a new ${ct.displayName} block.`}
+                </div>
+            </div>
+        </div>
+    )
 
     return (
         <Select
             styles={styles}
             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
             className='RootInput'
-            placeholder={'Introduce your text or your slash command'}
+            classNamePrefix={'RootInput'}
+            placeholder={intl.formatMessage({id: 'BlocksEditor.root-input-placeholder', defaultMessage: 'Add text or type "/" for commands'})}
             autoFocus={true}
             menuIsOpen={showMenu}
             menuPortalTarget={document.getElementById('focalboard-root-portal')}
             menuPosition={'fixed'}
             options={registry.list()}
+            formatOptionLabel={formatOptionLabel}
             getOptionValue={(ct: ContentType) => ct.slashCommand}
-            getOptionLabel={(ct: ContentType) => ct.slashCommand + ' Creates a new ' + ct.displayName + ' block.'}
             filterOption={(option: any, inputValue: string): boolean => {
                 return inputValue.startsWith(option.value) || option.value.startsWith(inputValue)
             }}
