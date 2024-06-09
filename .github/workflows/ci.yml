@@ -58,7 +58,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: Build Linux server
       run: cd focalboard; make server-linux-package
