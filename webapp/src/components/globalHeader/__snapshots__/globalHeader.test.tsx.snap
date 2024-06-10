@@ -10,7 +10,7 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
     />
     <a
       class="GlobalHeaderComponent__button help-button"
-      href="https://www.focalboard.com/fwlink/doc-boards.html?v=7.12.0"
+      href="https://www.focalboard.com/fwlink/doc-boards.html?v=8.0.0"
       rel="noreferrer"
       target="_blank"
     >
