@@ -31,5 +31,5 @@
             "help_text": "This allows board editors to share boards that can be accessed by anyone with the link."
         }]
     },
-    "disable_in_marketplace": true
+    "skip_marketplace_if_prepackaged": true
 }

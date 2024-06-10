@@ -50,7 +50,7 @@ const manifestStr = `
       }
     ]
   },
-  "disable_in_marketplace": true
+  "skip_marketplace_if_prepackaged": true
 }
 `
 
