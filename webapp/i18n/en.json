@@ -133,6 +133,7 @@
   "ContentBlock.editCardCheckboxText": "edit card text",
   "ContentBlock.editCardText": "edit card text",
   "ContentBlock.editText": "Edit text...",
+  "ContentBlock.errorText": "You've exceeded the size limit for this content. Please shorten it to avoid losing data.",
   "ContentBlock.image": "image",
   "ContentBlock.insertAbove": "Insert above",
   "ContentBlock.moveBlock": "move card content",

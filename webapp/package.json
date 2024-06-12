@@ -35,6 +35,7 @@
 		"@mattermost/compass-icons": "^0.1.39",
 		"@reduxjs/toolkit": "^1.8.0",
 		"@tippyjs/react": "4.2.6",
+		"classnames": "^2.5.1",
 		"color": "^4.2.1",
 		"draft-js": "^0.11.7",
 		"emoji-mart": "^3.0.1",
