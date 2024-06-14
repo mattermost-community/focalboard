@@ -31,12 +31,8 @@ const TextElement = ({block, readonly}: Props): JSX.Element => {
 
     const textChangedHandler = (text: string): void => {
         setBlockTitle(text)
-        const textSize = new Blob([text]).size
-        if (textSize > BlockTitleMaxRunes) {
-            setIsError(true)
-        } else {
-            setIsError(false)
-        }
+        const textSize = text.length
+        setIsError(textSize > BlockTitleMaxRunes)
     }
 
     const handleBlur = (text: string): void => {
