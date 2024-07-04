@@ -178,7 +178,6 @@ func (a *API) userIsGuest(userID string) (bool, error) {
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {
-	a.logger.Error(err.Error())
 	errorResponse := model.ErrorResponse{Error: err.Error()}
 
 	switch {
@@ -195,14 +194,15 @@ func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	case model.IsErrNotImplemented(err):
 		errorResponse.ErrorCode = http.StatusNotImplemented
 	default:
-		a.logger.Error("API ERROR",
-			mlog.Int("code", http.StatusInternalServerError),
-			mlog.Err(err),
-			mlog.String("api", r.URL.Path),
-		)
 		errorResponse.Error = "internal server error"
 		errorResponse.ErrorCode = http.StatusInternalServerError
 	}
+
+	a.logger.Warn("api error response",
+		mlog.Int("code", http.StatusInternalServerError),
+		mlog.Err(err),
+		mlog.String("api", r.URL.Path),
+	)
 
 	setResponseHeader(w, "Content-Type", "application/json")
 	data, err := json.Marshal(errorResponse)
