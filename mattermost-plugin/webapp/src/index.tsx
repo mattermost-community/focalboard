@@ -158,9 +158,9 @@ const MainApp = (props: Props) => {
             <ReduxProvider store={store}>
                 <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
                     <div id='focalboard-app'>
-                        <App history={browserHistory}/>
+                        <App history={browserHistory} />
                     </div>
-                    <div id='focalboard-root-portal'/>
+                    <div id='focalboard-root-portal' />
                 </WithWebSockets>
             </ReduxProvider>
         </ErrorBoundary>
@@ -170,7 +170,7 @@ const MainApp = (props: Props) => {
 const HeaderComponent = () => {
     return (
         <ErrorBoundary>
-            <GlobalHeader history={browserHistory}/>
+            <GlobalHeader history={browserHistory} />
         </ErrorBoundary>
     )
 }
@@ -228,7 +228,7 @@ export default class Plugin {
                         setMattermostTheme(JSON.parse(preference.value))
                         theme = preference.value
                     }
-                    if(preference.category === 'display_settings' && preference.name === 'name_format'){
+                    if (preference.category === 'display_settings' && preference.name === 'name_format') {
                         UserSettings.nameFormat = preference.value
                     }
                 }
@@ -297,20 +297,20 @@ export default class Plugin {
                 (props: {webSocketClient: MMWebSocketClient}) => (
                     <ReduxProvider store={store}>
                         <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
-                            <RHSChannelBoards/>
+                            <RHSChannelBoards />
                         </WithWebSockets>
                     </ReduxProvider>
                 ),
                 <ErrorBoundary>
                     <ReduxProvider store={store}>
-                        <RHSChannelBoardsHeader/>
+                        <RHSChannelBoardsHeader />
                     </ReduxProvider>
                 </ErrorBoundary>
                 ,
             )
             this.rhsId = rhsId
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => mmStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon />, () => mmStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
 
             this.registry.registerProduct(
                 '/boards',
@@ -322,17 +322,6 @@ export default class Plugin {
                 () => null,
                 true,
             )
-
-            const goToFocalboardTemplate = () => {
-                const currentTeam = mmStore.getState().entities.teams.currentTeamId
-                const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {teamID: currentTeam})
-                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}/new/${currentChannel}`, '_blank', 'noopener')
-            }
-
-            if (registry.registerChannelIntroButtonAction) {
-                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, intl.formatMessage({id: 'ChannelIntro.CreateBoard', defaultMessage: 'Create a board'}))
-            }
 
             if (this.registry.registerAppBarComponent) {
                 this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
@@ -371,7 +360,7 @@ export default class Plugin {
             if (registry.registerSiteStatisticsHandler) {
                 registry.registerSiteStatisticsHandler(async () => {
                     const siteStats = await octoClient.getSiteStatistics()
-                    if(siteStats){
+                    if (siteStats) {
                         return {
                             boards_count: {
                                 name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
@@ -395,7 +384,7 @@ export default class Plugin {
         this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
             <ReduxProvider store={store}>
                 <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
-                    <BoardSelector/>
+                    <BoardSelector />
                 </WithWebSockets>
             </ReduxProvider>
         ))
@@ -416,7 +405,7 @@ export default class Plugin {
                     try {
                         rudderCfg.setCookieDomain = new URL(siteURL).hostname
                         // eslint-disable-next-line no-empty
-                    } catch (_) {}
+                    } catch (_) { }
                 }
                 rudderAnalytics.load(rudderKey, rudderUrl, rudderCfg)
 
