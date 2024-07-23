@@ -37,7 +37,6 @@ import {updateComments} from '../../store/comments'
 import {updateAttachments} from '../../store/attachments'
 import {updateContents} from '../../store/contents'
 import {
-    fetchUserBlockSubscriptions,
     getMe,
     followBlock,
     unfollowBlock,
@@ -86,17 +85,6 @@ const BoardPage = (props: Props): JSX.Element => {
     // redirect to the new URL schema equivalent
     if (Utils.isFocalboardLegacy() && !props.readonly) {
         window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
-    }
-
-    // Load user's block subscriptions when workspace changes
-    // block subscriptions are relevant only in plugin mode.
-    if (Utils.isFocalboardPlugin()) {
-        useEffect(() => {
-            if (!me) {
-                return
-            }
-            dispatch(fetchUserBlockSubscriptions(me!.id))
-        }, [me?.id])
     }
 
     // TODO: Make this less brittle. This only works because this is the root render function

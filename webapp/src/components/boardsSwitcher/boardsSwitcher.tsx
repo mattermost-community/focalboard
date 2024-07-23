@@ -100,38 +100,6 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
             </div>
             {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
-                Utils.isFocalboardPlugin() && !props.userIsGuest &&
-                <MenuWrapper>
-                    <IconButton
-                        size='small'
-                        inverted={true}
-                        className='add-board-icon'
-                        icon={<AddIcon/>}
-                        title={'Add Board Dropdown'}
-                    />
-                    <Menu>
-                        <Menu.Text
-                            id='create-new-board-option'
-                            icon={<CompassIcon icon='plus'/>}
-                            onClick={props.onBoardTemplateSelectorOpen}
-                            name='Create new board'
-                        />
-                        <Menu.Text
-                            id='createNewCategory'
-                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                            icon={
-                                <CompassIcon
-                                    icon='folder-plus-outline'
-                                    className='CreateNewFolderIcon'
-                                />
-                            }
-                            onClick={handleCreateNewCategory}
-                        />
-                    </Menu>
-                </MenuWrapper>
-            }
-
-            {
                 showSwitcher &&
                 <BoardSwitcherDialog onClose={() => setShowSwitcher(false)}/>
             }

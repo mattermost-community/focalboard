@@ -6,8 +6,6 @@ import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@red
 import {default as client} from '../octoClient'
 import {IUser, parseUserProps, UserPreference} from '../user'
 
-import {Utils} from '../utils'
-
 import {Subscription} from '../wsclient'
 
 import {initialLoad} from './initialLoad'
@@ -37,7 +35,7 @@ type UsersStatus = {
 
 export const fetchUserBlockSubscriptions = createAsyncThunk(
     'user/blockSubscriptions',
-    async (userId: string) => (Utils.isFocalboardPlugin() ? client.getUserBlockSubscriptions(userId) : []),
+    async () => ([]),
 )
 
 const initialState = {

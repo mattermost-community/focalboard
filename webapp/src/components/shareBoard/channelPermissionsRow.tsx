@@ -14,7 +14,6 @@ import {getBoardUsers} from '../../store/users'
 import {Channel} from '../../store/channels'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
-import octoClient from '../../octoClient'
 import {Permission} from '../../constants'
 
 import PrivateIcon from '../../widgets/icons/lockOutline'
@@ -44,20 +43,7 @@ const ChannelPermissionsRow = (props: Props): JSX.Element => {
     }
 
     useEffect(() => {
-        if (!Utils.isFocalboardPlugin() || !board.channelId) {
-            setLinkedChannel(null)
-            return
-        }
-        const unknownChannel = {
-            id: board.channelId,
-            type: 'P',
-            name: 'unknown',
-            display_name: intl.formatMessage({
-                id: 'shareBoard.unknown-channel-display-name',
-                defaultMessage: 'Unknown channel',
-            }),
-        } as Channel
-        octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c || unknownChannel))
+        setLinkedChannel(null)
     }, [board.channelId])
 
     if (!linkedChannel) {
