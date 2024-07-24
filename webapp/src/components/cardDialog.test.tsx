@@ -27,7 +27,6 @@ const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
 const mockedOctoClient = mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
-mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
 beforeAll(() => {
     mockDOM()

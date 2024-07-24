@@ -4,9 +4,6 @@ import React, {useEffect, useState} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import MenuWrapper from '../../widgets/menuWrapper'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import Menu from '../../widgets/menu'
 import Search from '../../widgets/icons/search'
 import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
@@ -18,21 +15,14 @@ import {
 import {getCurrentCard} from '../../store/cards'
 
 import './boardsSwitcher.scss'
-import AddIcon from '../../widgets/icons/add'
 import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
 import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
 
-import IconButton from '../../widgets/buttons/iconButton'
 import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
 
-type Props = {
-    onBoardTemplateSelectorOpen: () => void
-    userIsGuest?: boolean
-}
-
-const BoardsSwitcher = (props: Props): JSX.Element => {
+const BoardsSwitcher = (): JSX.Element => {
     const intl = useIntl()
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
@@ -68,10 +58,6 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
             e.preventDefault()
             setShowSwitcher(false)
         }
-    }
-
-    const handleCreateNewCategory = () => {
-        setShowCreateCategoryModal(true)
     }
 
     useEffect(() => {

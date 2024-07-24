@@ -366,10 +366,7 @@ const Sidebar = (props: Props) => {
                 <div className='WorkspaceTitle'/>
             }
 
-            <BoardsSwitcher
-                onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
-                userIsGuest={me?.is_guest}
-            />
+            <BoardsSwitcher/>
 
             <DragDropContext
                 onDragEnd={onDragEnd}
