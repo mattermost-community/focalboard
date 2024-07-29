@@ -41,8 +41,6 @@ const WithWebSockets = (props: Props): React.ReactElement => {
     }, [props.webSocketClient])
 
     useEffect(() => {
-        // if we're running on a plugin instance or we don't have a
-        // user yet, do nothing
         if (!props.userId) {
             return
         }
