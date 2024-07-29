@@ -1,216 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1`] = `
-<div>
-  <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
-  >
-    <div
-      class="backdrop"
-    />
-    <div
-      class="wrapper"
-    >
-      <div
-        class="dialog"
-        role="dialog"
-      >
-        <div
-          class="toolbar"
-        >
-          <div>
-            <h1
-              class="dialog-title"
-            >
-              Share Board
-            </h1>
-          </div>
-          <div
-            class="toolbar--right"
-          >
-            <button
-              aria-label="Close dialog"
-              title="Close dialog"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-close CloseIcon"
-              />
-            </button>
-          </div>
-        </div>
-        <div
-          class="share-input__container"
-        >
-          <div
-            class="share-input"
-          >
-            <i
-              class="CompassIcon icon-magnify MagnifyIcon"
-            />
-            <div
-              class="userSearchInput css-b62m3t-container"
-            >
-              <span
-                class="css-1f43avz-a11yText-A11yText"
-                id="react-select-12-live-region"
-              />
-              <span
-                aria-atomic="false"
-                aria-live="polite"
-                aria-relevant="additions text"
-                class="css-1f43avz-a11yText-A11yText"
-                role="log"
-              />
-              <div
-                class=" css-1wmrr75-Control"
-              >
-                <div
-                  class=" css-b2z5qd-ValueContainer"
-                >
-                  <div
-                    class=" css-1jqq78o-placeholder"
-                    id="react-select-12-placeholder"
-                  >
-                    Search for people and channels
-                  </div>
-                  <div
-                    class=" css-1p5v8kp-Input"
-                    data-value=""
-                  >
-                    <input
-                      aria-activedescendant=""
-                      aria-autocomplete="list"
-                      aria-describedby="react-select-12-placeholder"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      autocorrect="off"
-                      class=""
-                      id="react-select-12-input"
-                      role="combobox"
-                      spellcheck="false"
-                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                      tabindex="0"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div
-                  class=" css-1hb7zxy-IndicatorsContainer"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="user-items"
-        >
-          <div
-            class="user-item"
-          >
-            <div
-              class="user-item__content"
-            >
-              <div
-                class="ml-3"
-              >
-                <strong>
-                  Everyone at Test Team Team
-                </strong>
-              </div>
-            </div>
-            <div>
-              <div
-                aria-label="menuwrapper"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  class="user-item__button"
-                >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="tabs-container"
-        >
-          <button
-            class="tab-item tab-item--active"
-          >
-            Share
-          </button>
-          <button
-            class="tab-item false"
-          >
-            Publish
-          </button>
-        </div>
-        <div
-          class="tabs-content"
-        >
-          <div>
-            <div
-              class="d-flex justify-content-between"
-            >
-              <div
-                class="d-flex flex-column"
-              >
-                <div
-                  class="text-heading2"
-                >
-                  Share internally
-                </div>
-                <div
-                  class="text-light"
-                >
-                  Users who have permissions will be able to use this link.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="d-flex justify-content-between tabs-inputs"
-          >
-            <div
-              class="d-flex input-container"
-            >
-              <a
-                class="shareUrl"
-                href="http://localhost/1/1"
-                rel="noreferrer"
-                target="_blank"
-              >
-                http://localhost/1/1
-              </a>
-            </div>
-            <button
-              title="Copy link"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-content-copy CompassIcon"
-              />
-              <span>
-                Copy link
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 1`] = `
 <div>
   <div
@@ -1984,7 +1773,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-14-live-region"
+                id="react-select-13-live-region"
               />
               <span
                 aria-atomic="false"
@@ -2001,7 +1790,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                 >
                   <div
                     class=" css-1jqq78o-placeholder"
-                    id="react-select-14-placeholder"
+                    id="react-select-13-placeholder"
                   >
                     Search for people
                   </div>
@@ -2012,14 +1801,14 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     <input
                       aria-activedescendant=""
                       aria-autocomplete="list"
-                      aria-describedby="react-select-14-placeholder"
+                      aria-describedby="react-select-13-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
                       autocomplete="off"
                       autocorrect="off"
                       class=""
-                      id="react-select-14-input"
+                      id="react-select-13-input"
                       role="combobox"
                       spellcheck="false"
                       style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -2130,7 +1919,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-14-live-region"
+                id="react-select-13-live-region"
               />
               <span
                 aria-atomic="false"
@@ -2164,7 +1953,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                 >
                   <div
                     class=" css-1jqq78o-placeholder"
-                    id="react-select-14-placeholder"
+                    id="react-select-13-placeholder"
                   >
                     Search for people
                   </div>
@@ -2173,17 +1962,17 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     data-value=""
                   >
                     <input
-                      aria-activedescendant="react-select-14-option-0"
+                      aria-activedescendant="react-select-13-option-0"
                       aria-autocomplete="list"
-                      aria-controls="react-select-14-listbox"
-                      aria-describedby="react-select-14-placeholder"
+                      aria-controls="react-select-13-listbox"
+                      aria-describedby="react-select-13-placeholder"
                       aria-expanded="true"
                       aria-haspopup="true"
                       autocapitalize="none"
                       autocomplete="off"
                       autocorrect="off"
                       class=""
-                      id="react-select-14-input"
+                      id="react-select-13-input"
                       role="combobox"
                       spellcheck="false"
                       style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -2203,14 +1992,14 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                 <div
                   aria-multiselectable="false"
                   class=" css-1d1qzc4-MenuList"
-                  id="react-select-14-listbox"
+                  id="react-select-13-listbox"
                   role="listbox"
                 >
                   <div
                     aria-disabled="false"
                     aria-selected="false"
                     class=" css-8e5kjb-option"
-                    id="react-select-14-option-0"
+                    id="react-select-13-option-0"
                     role="option"
                     tabindex="-1"
                   >
@@ -2235,7 +2024,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     aria-disabled="false"
                     aria-selected="false"
                     class=" css-x3yilo-option"
-                    id="react-select-14-option-1"
+                    id="react-select-13-option-1"
                     role="option"
                     tabindex="-1"
                   >
@@ -2260,7 +2049,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     aria-disabled="false"
                     aria-selected="false"
                     class=" css-x3yilo-option"
-                    id="react-select-14-option-2"
+                    id="react-select-13-option-2"
                     role="option"
                     tabindex="-1"
                   >
@@ -2285,7 +2074,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     aria-disabled="false"
                     aria-selected="false"
                     class=" css-x3yilo-option"
-                    id="react-select-14-option-3"
+                    id="react-select-13-option-3"
                     role="option"
                     tabindex="-1"
                   >
@@ -3717,7 +3506,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
             >
               <span
                 class="css-1f43avz-a11yText-A11yText"
-                id="react-select-13-live-region"
+                id="react-select-12-live-region"
               />
               <span
                 aria-atomic="false"
@@ -3734,7 +3523,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
                 >
                   <div
                     class=" css-1jqq78o-placeholder"
-                    id="react-select-13-placeholder"
+                    id="react-select-12-placeholder"
                   >
                     Search for people
                   </div>
@@ -3745,14 +3534,14 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
                     <input
                       aria-activedescendant=""
                       aria-autocomplete="list"
-                      aria-describedby="react-select-13-placeholder"
+                      aria-describedby="react-select-12-placeholder"
                       aria-expanded="false"
                       aria-haspopup="true"
                       autocapitalize="none"
                       autocomplete="off"
                       autocorrect="off"
                       class=""
-                      id="react-select-13-input"
+                      id="react-select-12-input"
                       role="combobox"
                       spellcheck="false"
                       style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
