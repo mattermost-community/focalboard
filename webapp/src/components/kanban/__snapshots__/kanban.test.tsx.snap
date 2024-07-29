@@ -144,13 +144,13 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -177,13 +177,13 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           </div>
         </div>
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -221,13 +221,13 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -594,13 +594,13 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -627,13 +627,13 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           </div>
         </div>
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -671,13 +671,13 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -880,13 +880,13 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -913,13 +913,13 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -957,13 +957,13 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -1117,13 +1117,13 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -1150,13 +1150,13 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           </div>
         </div>
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button
@@ -1187,13 +1187,13 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
         class="octo-board-column"
       >
         <div
-          class="KanbanCard false"
+          class="KanbanCard"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu "
+            class="MenuWrapper optionsMenu"
             role="button"
           >
             <button

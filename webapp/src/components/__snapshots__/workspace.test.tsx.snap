@@ -637,13 +637,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -680,13 +680,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -723,13 +723,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -998,7 +998,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1028,7 +1028,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1058,7 +1058,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1748,13 +1748,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -1791,13 +1791,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -1834,13 +1834,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -2109,7 +2109,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2139,7 +2139,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2169,7 +2169,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
