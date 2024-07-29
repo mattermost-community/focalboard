@@ -46,7 +46,6 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 import {useHasPermissions} from '../../hooks/permissions'
 
 import TeamPermissionsRow from './teamPermissionsRow'
-import ChannelPermissionsRow from './channelPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
 import './shareBoard.scss'
@@ -385,7 +384,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             </BoardPermissionGate>
             <div className='user-items'>
                 <TeamPermissionsRow/>
-                <ChannelPermissionsRow teammateNameDisplay={me?.props?.teammateNameDisplay || clientConfig.teammateNameDisplay}/>
 
                 {boardUsers.map((user) => {
                     if (!members[user.id]) {
