@@ -5,7 +5,6 @@ node_modules
 .github/
 mac/
 win-wpf/
-mattermost-plugin/
 website/
 linux/
 go.work
