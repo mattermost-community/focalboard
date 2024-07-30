@@ -46,8 +46,7 @@ jobs:
       with:
         path: "focalboard"
     - name: npm ci
-      run: |
-        cd focalboard/webapp && npm ci && cd -
+      run: cd focalboard/webapp && npm ci && cd -
 
     - name: Set up Go
       uses: actions/setup-go@v3
