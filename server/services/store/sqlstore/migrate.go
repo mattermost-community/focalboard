@@ -74,19 +74,6 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 }
 
 func (s *SQLStore) Migrate() error {
-	if s.isPlugin {
-		mutex, mutexErr := s.NewMutexFn("Boards_dbMutex")
-		if mutexErr != nil {
-			return fmt.Errorf("error creating database mutex: %w", mutexErr)
-		}
-
-		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
-		mutex.Lock()
-		defer func() {
-			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
-			mutex.Unlock()
-		}()
-	}
 
 	if err := s.EnsureSchemaMigrationFormat(); err != nil {
 		return err
@@ -152,7 +139,6 @@ func (s *SQLStore) Migrate() error {
 		"postgres":   s.dbType == model.PostgresDBType,
 		"sqlite":     s.dbType == model.SqliteDBType,
 		"mysql":      s.dbType == model.MysqlDBType,
-		"plugin":     s.isPlugin,
 		"singleUser": s.isSingleUser,
 	}
 
@@ -226,14 +212,6 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, teamLessBoardsMigrationRequiredVersion); mErr != nil {
 		return mErr
-	}
-
-	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
-		return fmt.Errorf("error running teamless boards migration: %w", mErr)
-	}
-
-	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
-		return fmt.Errorf("error running deleted membership boards migration: %w", mErr)
 	}
 
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
