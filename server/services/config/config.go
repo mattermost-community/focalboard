@@ -9,6 +9,7 @@ import (
 const (
 	DefaultServerRoot = "http://localhost:8000"
 	DefaultPort       = 8000
+	DBPingAttempts    = 5
 )
 
 type AmazonS3Config struct {
@@ -31,6 +32,7 @@ type Configuration struct {
 	Port                     int               `json:"port" mapstructure:"port"`
 	DBType                   string            `json:"dbtype" mapstructure:"dbtype"`
 	DBConfigString           string            `json:"dbconfig" mapstructure:"dbconfig"`
+	DBPingAttempts           int               `json:"dbpingattempts" mapstructure:"dbpingattempts"`
 	DBTablePrefix            string            `json:"dbtableprefix" mapstructure:"dbtableprefix"`
 	UseSSL                   bool              `json:"useSSL" mapstructure:"useSSL"`
 	SecureCookie             bool              `json:"secureCookie" mapstructure:"secureCookie"`
@@ -80,6 +82,7 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetEnvPrefix("focalboard")
 	viper.AutomaticEnv() // read config values from env like FOCALBOARD_SERVERROOT=...
 	viper.SetDefault("ServerRoot", DefaultServerRoot)
+	viper.SetDefault("DBPingAttempts", DBPingAttempts)
 	viper.SetDefault("Port", DefaultPort)
 	viper.SetDefault("DBType", "sqlite3")
 	viper.SetDefault("DBConfigString", "./focalboard.db")
@@ -97,11 +100,11 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("EnableLocalMode", false)
 	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
 	viper.SetDefault("EnablePublicSharedBoards", false)
-	viper.SetDefault("FeatureFlags", map[string]string{})
 	viper.SetDefault("AuthMode", "native")
 	viper.SetDefault("NotifyFreqCardSeconds", 120)    // 2 minutes after last card edit
 	viper.SetDefault("NotifyFreqBoardSeconds", 86400) // 1 day after last card edit
 	viper.SetDefault("EnableDataRetention", false)
+	viper.SetDefault("FeatureFlags", map[string]string{})
 	viper.SetDefault("DataRetentionDays", 365) // 1 year is default
 	viper.SetDefault("PrometheusAddress", "")
 	viper.SetDefault("TeammateNameDisplay", "username")

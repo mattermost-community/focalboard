@@ -35,12 +35,12 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: apt-get update
       run: sudo apt-get update
@@ -96,7 +96,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: List Xcode versions
       run: ls -n /Applications/ | grep Xcode*
@@ -143,7 +143,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v1
@@ -197,12 +197,12 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: Set up Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: Build webapp
       run: cd focalboard; make webapp

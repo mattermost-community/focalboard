@@ -102,19 +102,21 @@ exports[`components/calculations/Calculation should match snapshot - option chan
           aria-live="polite"
           aria-relevant="additions text"
           class="css-1f43avz-a11yText-A11yText"
+          role="log"
         />
         <div
           class="CalculationOptions__control css-1s59geg-Control"
         >
           <div
-            class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
+            class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1kliayw-ValueContainer"
           >
             <div
-              class="CalculationOptions__single-value css-1qlwihv-singleValue"
+              class="CalculationOptions__single-value css-3hkq9s-singleValue"
             >
               Calculate
             </div>
             <input
+              aria-activedescendant=""
               aria-autocomplete="list"
               aria-expanded="false"
               aria-haspopup="true"
@@ -132,7 +134,7 @@ exports[`components/calculations/Calculation should match snapshot - option chan
           >
             <div
               aria-hidden="true"
-              class="CalculationOptions__indicator CalculationOptions__clear-indicator css-tpaeio-indicatorContainer"
+              class="CalculationOptions__indicator CalculationOptions__clear-indicator css-31haax-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -148,11 +150,11 @@ exports[`components/calculations/Calculation should match snapshot - option chan
               </svg>
             </div>
             <span
-              class="CalculationOptions__indicator-separator css-43ykx9-indicatorSeparator"
+              class="CalculationOptions__indicator-separator css-1uei4ir-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-wpsttr-indicatorContainer"
+              class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-y45573-indicatorContainer"
             >
               <i
                 class="CompassIcon icon-chevron-up ChevronUpIcon"

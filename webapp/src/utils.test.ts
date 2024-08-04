@@ -60,7 +60,7 @@ describe('utils', () => {
         })
 
         test('should encode links', () => {
-            expect(Utils.htmlFromMarkdown('https://example.com?title=August<1>2022')).toBe('<p><a target="_blank" rel="noreferrer" href="https://example.com?title=August&lt;1&gt;2022" title="" onclick="">https://example.com?title=August&lt;1&gt;2022</a></p>')
+            expect(Utils.htmlFromMarkdown('https://example.com?title=August<1>2022')).toBe('<p><a target="_blank" rel="noreferrer" href="https://example.com?title=August&lt;1%3E2022" title="" onclick="">https://example.com?title=August&lt;1&gt;2022</a></p>')
             expect(Utils.htmlFromMarkdown('[Duck Duck Go](https://duckduckgo.com "The best search engine\'s for <privacy>")')).toBe('<p><a target="_blank" rel="noreferrer" href="https://duckduckgo.com" title="The best search engine&#39;s for &lt;privacy&gt;" onclick="">Duck Duck Go</a></p>')
         })
 
@@ -153,14 +153,14 @@ describe('utils', () => {
         it('should show month, day and time for current year', () => {
             const currentYear = new Date().getFullYear()
             const date = new Date(currentYear, 6, 9, 15, 20)
-            expect(Utils.displayDateTime(date, intl)).toBe('July 09, 3:20 PM')
+            expect(Utils.displayDateTime(date, intl)).toBe('July 09 at 3:20 PM')
         })
 
         it('should show month, day, year and time for previous year', () => {
             const currentYear = new Date().getFullYear()
             const previousYear = currentYear - 1
             const date = new Date(previousYear, 6, 9, 5, 35)
-            expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear}, 5:35 AM`)
+            expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear} at 5:35 AM`)
         })
     })
 

@@ -33,7 +33,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: "Test server: ${{matrix['db']}}"
       run: cd focalboard; make server-test-${{matrix['db']}}
@@ -53,12 +53,12 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: Build Linux server
       run: cd focalboard; make server-linux-package
@@ -92,7 +92,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: cd focalboard; make server-test-mini-${{matrix['db']}}
@@ -114,7 +114,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: cd focalboard; make server-test-mini-${{matrix['db']}}

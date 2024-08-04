@@ -10,7 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/morph/models"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // EnsureSchemaMigrationFormat checks the schema migrations table
@@ -44,7 +44,7 @@ func (s *SQLStore) EnsureSchemaMigrationFormat() error {
 		return err
 	}
 
-	s.logger.Info("Populating the temporal schema table", mlog.Uint32("legacySchemaVersion", legacySchemaVersion), mlog.Int("migrations", len(filteredMigrations)))
+	s.logger.Info("Populating the temporal schema table", mlog.Uint("legacySchemaVersion", legacySchemaVersion), mlog.Int("migrations", len(filteredMigrations)))
 
 	if err := s.populateTempSchemaTable(filteredMigrations); err != nil {
 		return err
@@ -259,7 +259,7 @@ func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration) error
 		Columns("Version", "Name")
 
 	for _, migration := range migrations {
-		s.logger.Info("-- Registering migration", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
+		s.logger.Info("-- Registering migration", mlog.Uint("version", migration.Version), mlog.String("name", migration.Name))
 		query = query.Values(migration.Version, migration.Name)
 	}
 

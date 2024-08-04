@@ -3,7 +3,7 @@ package integrationtests
 import (
 	"github.com/mattermost/focalboard/server/services/store"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 type TestStore struct {

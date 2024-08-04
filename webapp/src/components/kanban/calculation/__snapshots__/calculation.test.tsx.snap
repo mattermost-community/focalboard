@@ -44,24 +44,25 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
         aria-live="polite"
         aria-relevant="additions text"
         class="css-1f43avz-a11yText-A11yText"
+        role="log"
       />
       <div
         class="CalculationOptions__control CalculationOptions__control--menu-is-open css-1s59geg-Control"
       >
         <div
-          class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
+          class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1kliayw-ValueContainer"
         >
           <div
-            class="CalculationOptions__single-value css-1qlwihv-singleValue"
+            class="CalculationOptions__single-value css-3hkq9s-singleValue"
           >
             Count
           </div>
           <input
+            aria-activedescendant=""
             aria-autocomplete="list"
             aria-controls="react-select-2-listbox"
             aria-expanded="true"
             aria-haspopup="true"
-            aria-owns="react-select-2-listbox"
             aria-readonly="true"
             class="css-mohuvp-dummyInput-DummyInput"
             id="react-select-2-input"
@@ -76,7 +77,7 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
         >
           <div
             aria-hidden="true"
-            class="CalculationOptions__indicator CalculationOptions__clear-indicator css-tpaeio-indicatorContainer"
+            class="CalculationOptions__indicator CalculationOptions__clear-indicator css-31haax-indicatorContainer"
           >
             <svg
               aria-hidden="true"
@@ -92,11 +93,11 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
             </svg>
           </div>
           <span
-            class="CalculationOptions__indicator-separator css-43ykx9-indicatorSeparator"
+            class="CalculationOptions__indicator-separator css-1uei4ir-indicatorSeparator"
           />
           <div
             aria-hidden="true"
-            class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-wpsttr-indicatorContainer"
+            class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-y45573-indicatorContainer"
           >
             <i
               class="CompassIcon icon-chevron-up ChevronUpIcon"
@@ -105,11 +106,13 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
         </div>
       </div>
       <div
-        class="CalculationOptions__menu css-1rsmi4x-menu"
-        id="react-select-2-listbox"
+        class="CalculationOptions__menu css-45h7mv-menu"
       >
         <div
-          class="CalculationOptions__menu-list css-g29tl0-MenuList"
+          aria-multiselectable="false"
+          class="CalculationOptions__menu-list css-1d1qzc4-MenuList"
+          id="react-select-2-listbox"
+          role="listbox"
         >
           <div
             class="KanbanCalculationOptions_CustomOption active"

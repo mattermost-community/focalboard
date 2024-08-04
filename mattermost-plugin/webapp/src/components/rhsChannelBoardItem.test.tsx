@@ -12,7 +12,19 @@ import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
 
 import {TestBlockFactory} from '../../../../webapp/src/test/testBlockFactory'
 
+import {Utils} from '../../../../webapp/src/utils'
+
 import RHSChannelBoardItem from './rhsChannelBoardItem'
+
+let mockDisplayDateTime: jest.SpyInstance
+
+beforeEach(() => {
+    mockDisplayDateTime = jest.spyOn(Utils, 'displayDateTime').mockImplementation(() => 'July 10, 2022 at 1:40 AM')
+})
+
+afterEach(() => {
+    mockDisplayDateTime.mockRestore()
+})
 
 describe('components/rhsChannelBoardItem', () => {
     it('render board', async () => {

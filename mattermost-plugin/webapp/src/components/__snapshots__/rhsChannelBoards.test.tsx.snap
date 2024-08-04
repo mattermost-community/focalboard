@@ -64,7 +64,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           <div
             class="date"
           >
-            Last update at: July 08, 2022, 8:10 PM
+            Last update at: July 10, 2022 at 1:40 AM
           </div>
         </div>
         <div
@@ -100,7 +100,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           <div
             class="date"
           >
-            Last update at: July 08, 2022, 8:10 PM
+            Last update at: July 10, 2022 at 1:40 AM
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards, no add 
           <div
             class="date"
           >
-            Last update at: July 08, 2022, 8:10 PM
+            Last update at: July 10, 2022 at 1:40 AM
           </div>
         </div>
         <div
@@ -198,7 +198,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards, no add 
           <div
             class="date"
           >
-            Last update at: July 08, 2022, 8:10 PM
+            Last update at: July 10, 2022 at 1:40 AM
           </div>
         </div>
       </div>

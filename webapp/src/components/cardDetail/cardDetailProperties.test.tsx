@@ -100,9 +100,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
             current: card.id,
         },
         clientConfig: {
-            value: {
-                featureFlags: {},
-            },
+            value: {},
         },
     }
 

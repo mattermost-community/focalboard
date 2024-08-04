@@ -18,8 +18,8 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, boardIDs []string) error {
@@ -433,11 +433,6 @@ func (s *SQLStore) GetChannel(teamID string, channelID string) (*mmModel.Channel
 
 }
 
-func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
-	return s.getCloudLimits(s.db)
-
-}
-
 func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
 
@@ -528,11 +523,6 @@ func (s *SQLStore) GetTeam(ID string) (*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
-	return s.getTeamBoardsInsights(s.db, teamID, since, offset, limit, boardIDs)
-
-}
-
 func (s *SQLStore) GetTeamCount() (int64, error) {
 	return s.getTeamCount(s.db)
 
@@ -550,11 +540,6 @@ func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Boa
 
 func (s *SQLStore) GetUsedCardsCount() (int, error) {
 	return s.getUsedCardsCount(s.db)
-
-}
-
-func (s *SQLStore) GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
-	return s.getUserBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
 
 }
 

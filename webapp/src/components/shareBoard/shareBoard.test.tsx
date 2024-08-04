@@ -168,7 +168,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
                 teammateNameDisplay: 'username',
-                featureFlags: {},
             },
         },
         contents: {

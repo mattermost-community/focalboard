@@ -11,10 +11,22 @@ import octoClient from '../../../../webapp/src/octoClient'
 import {BoardMember, createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
 
+import {Utils} from '../../../../webapp/src/utils'
+
 import RHSChannelBoards from './rhsChannelBoards'
 
 jest.mock('../../../../webapp/src/octoClient')
 const mockedOctoClient = mocked(octoClient, true)
+
+let mockDisplayDateTime: jest.SpyInstance
+
+beforeEach(() => {
+    mockDisplayDateTime = jest.spyOn(Utils, 'displayDateTime').mockImplementation(() => 'July 10, 2022 at 1:40 AM')
+})
+
+afterEach(() => {
+    mockDisplayDateTime.mockRestore()
+})
 
 describe('components/rhsChannelBoards', () => {
     const board1 = createBoard()

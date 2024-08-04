@@ -16,7 +16,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/webview/webview"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var sessionToken string = "su-" + uuid.New().String()
@@ -71,13 +71,13 @@ func runServer(port int) (*server.Server, error) {
 	permissionsService := localpermissions.New(db, logger)
 
 	params := server.Params{
-		Cfg:             config,
-		SingleUserToken: sessionToken,
-		DBStore:         db,
-		Logger:          logger,
-		ServerID:        "",
-		WSAdapter:       nil,
-		NotifyBackends:  nil,
+		Cfg:                config,
+		SingleUserToken:    sessionToken,
+		DBStore:            db,
+		Logger:             logger,
+		ServerID:           "",
+		WSAdapter:          nil,
+		NotifyBackends:     nil,
 		PermissionsService: permissionsService,
 	}
 

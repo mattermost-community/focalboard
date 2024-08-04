@@ -24,6 +24,10 @@ describe('src/cardFilter', () => {
     card1.id = '1'
     card1.title = 'card1'
     card1.fields.properties.propertyId = 'Status'
+
+    card1.createAt = new Date('December 7, 2023').getTime()
+    card1.updateAt = new Date('December 7, 2023').getTime()
+    card1.deleteAt = new Date('December 7, 2023').getTime()
     const filterClause = createFilterClause({propertyId: 'propertyId', condition: 'isNotEmpty', values: ['Status']})
 
     describe('verify isClauseMet method', () => {
@@ -336,7 +340,7 @@ describe('src/cardFilter', () => {
 
     describe('verify isClauseMet method - (createdTime) date property', () => {
         const createDate = new Date(card1.createAt)
-        const checkDate = Date.UTC(createDate.getFullYear(), createDate.getMonth(), createDate.getDate(), 12)
+        const checkDate = Date.UTC(createDate.getFullYear(), createDate.getMonth(), createDate.getDate(), createDate.getHours(), createDate.getMinutes(), createDate.getSeconds(), createDate.getMilliseconds())
         const checkDayBefore = checkDate - dayMillis
         const checkDayAfter = checkDate + dayMillis
 

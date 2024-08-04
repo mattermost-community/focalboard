@@ -38,7 +38,6 @@ import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
-import {Constants} from '../../../webapp/src/constants'
 import {Board} from '../../../webapp/src/blocks/board'
 
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
@@ -367,21 +366,6 @@ export default class Plugin {
                 ),
                 false
             )
-
-            // Insights handler
-            if (this.registry?.registerInsightsHandler) {
-                this.registry?.registerInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
-                    if (insightType === Constants.myInsights) {
-                        const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
-
-                        return data
-                    }
-
-                    const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
-
-                    return data
-                })
-            }
 
             // Site statistics handler
             if (registry.registerSiteStatisticsHandler) {
