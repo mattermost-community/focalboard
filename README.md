@@ -5,6 +5,9 @@
 >
 > ️💡 [Learn more](https://forum.mattermost.com/t/upcoming-product-changes-to-boards-and-various-plugins/16669)
 
+Improvements of this fork:
+- BiDi text (Persian, Arabic, Hebrew) support
+
 # Focalboard
 
 ![CI Status](https://github.com/mattermost/focalboard/actions/workflows/ci.yml/badge.svg)
