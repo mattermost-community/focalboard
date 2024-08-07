@@ -183,7 +183,7 @@ const CardDialog = (props: Props): JSX.Element => {
                                         const block = createAttachmentBlock()
                                         block.fields.fileId = fileId || ''
                                         block.title = attachment.name
-                                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
+                                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfully.'}), severity: 'normal'})
                                         resolve(block)
                                     } else {
                                         removeUploadingAttachment(uploadingBlock)

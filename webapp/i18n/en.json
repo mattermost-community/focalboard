@@ -8,7 +8,7 @@
   "AttachmentBlock.delete": "Attachment deleted.",
   "AttachmentBlock.failed": "This file couldn't be uploaded as the file size limit has been reached.",
   "AttachmentBlock.upload": "Attachment uploading.",
-  "AttachmentBlock.uploadSuccess": "Attachment uploaded.",
+  "AttachmentBlock.uploadSuccess": "Attachment uploaded successfully.",
   "AttachmentElement.delete-confirmation-dialog-button-text": "Delete",
   "AttachmentElement.download": "Download",
   "AttachmentElement.upload-percentage": "Uploading...({uploadPercent}%)",
