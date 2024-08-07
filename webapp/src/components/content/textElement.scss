@@ -1,0 +1,13 @@
+.TextElement {
+    display: inline;
+
+    .markdown-editor-error {
+        background-color: rgba(210, 75, 78, 0.08);
+        border: 1px solid var(--error-text);
+    }
+
+    .error-message {
+        color: var(--dnd-indicator, rgba(210, 75, 78, 1));
+        margin: 16px 0;
+    }
+}

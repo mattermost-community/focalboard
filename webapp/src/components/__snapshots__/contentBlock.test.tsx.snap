@@ -476,12 +476,16 @@ exports[`components/contentBlock should match snapshot with textBlock 1`] = `
         style="flex: 0 0 auto; height: 100%;"
       />
       <div
-        class="MarkdownEditor octo-editor  "
+        class="TextElement"
       >
         <div
-          class="octo-editor-preview"
-          data-testid="preview-element"
-        />
+          class="MarkdownEditor octo-editor  "
+        >
+          <div
+            class="octo-editor-preview"
+            data-testid="preview-element"
+          />
+        </div>
       </div>
     </div>
     <div
