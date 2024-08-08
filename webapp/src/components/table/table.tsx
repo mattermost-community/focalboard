@@ -1,18 +1,25 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback} from 'react'
+import React, { useCallback } from 'react'
 
-import {FormattedMessage} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
+import {
+    FixedSizeTree,
+    FixedSizeNodeData,
+    FixedSizeNodeComponentProps,
+} from 'react-vtree';
+import { FixedSizeList, ListChildComponentProps } from 'react-window'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
-import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
-import {createBoardView, BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
-import {Constants, Permission} from '../../constants'
+import { IPropertyOption, IPropertyTemplate, Board, BoardGroup } from '../../blocks/board'
+import { createBoardView, BoardView } from '../../blocks/boardView'
+import { Card } from '../../blocks/card'
+import { Constants, Permission } from '../../constants'
 import mutator from '../../mutator'
-import {Utils} from '../../utils'
-import {useAppDispatch} from '../../store/hooks'
-import {updateView} from '../../store/views'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import { Utils } from '../../utils'
+import { useAppDispatch } from '../../store/hooks'
+import { updateView } from '../../store/views'
+import { useHasCurrentBoardPermissions } from '../../hooks/permissions'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -22,7 +29,8 @@ import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
 
 import TableHeaders from './tableHeaders'
 import TableRows from './tableRows'
-import TableGroup from './tableGroup'
+import TableRow from './tableRow'
+import TableGroupHeaderRow from './tableGroupHeaderRow'
 import CalculationRow from './calculation/calculationRow'
 import {ColumnResizeProvider} from './tableColumnResizeContext'
 
@@ -43,15 +51,29 @@ type Props = {
     showHiddenCardCountNotification: (show: boolean) => void
 }
 
+type TreeData = FixedSizeNodeData &
+{
+    isCard: boolean;
+    isLeaf: boolean;
+    node: BoardGroup | Card;
+};
+
+type StackElement = {
+    nestingLevel: number;
+    node: Card | BoardGroup;
+    isLastCard: boolean;
+    groupId: string;
+};
+
 const Table = (props: Props): JSX.Element => {
-    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCardsCount} = props
+    const { board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCardsCount } = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const dispatch = useAppDispatch()
 
     const resizeColumn = useCallback(async (columnId: string, width: number) => {
-        const columnWidths = {...activeView.fields.columnWidths}
+        const columnWidths = { ...activeView.fields.columnWidths }
         const newWidth = Math.max(Constants.minColumnWidth, width)
         if (newWidth !== columnWidths[columnId]) {
             Utils.log(`Resize of column finished: prev=${columnWidths[columnId]}, new=${newWidth}`)
@@ -108,7 +130,7 @@ const Table = (props: Props): JSX.Element => {
 
     const onDropToGroup = useCallback((srcCard: Card, groupID: string, dstCardID: string) => {
         Utils.log(`onDropToGroup: ${srcCard.title}`)
-        const {selectedCardIds} = props
+        const { selectedCardIds } = props
 
         const draggedCardIds = Array.from(new Set(selectedCardIds).add(srcCard.id))
         const description = draggedCardIds.length > 1 ? `drag ${draggedCardIds.length} cards` : 'drag card'
@@ -170,6 +192,126 @@ const Table = (props: Props): JSX.Element => {
         await mutator.changePropertyOptionValue(board.id, board.cardProperties, groupByProperty!, option, text)
     }, [board, groupByProperty])
 
+    const onClickRow = useCallback((e: React.MouseEvent<HTMLDivElement>, card: Card) => {
+        props.onCardClicked(e, card)
+    }, [props.onCardClicked])
+
+    const Node = ({data: {node, isCard, isLeaf}, style, toggle, isOpen}: FixedSizeNodeComponentProps<TreeData>) => {
+        if (isCard) {
+            const card = node as Card;
+
+            return (
+                <div
+                    style={style}
+                >
+                    <TableRow
+                        key={card.id + card.updateAt}
+                        board={board}
+                        columnWidths={activeView.fields.columnWidths}
+                        isManualSort={activeView.fields.sortOptions.length === 0}
+                        groupById={activeView.fields.groupById}
+                        visiblePropertyIds={activeView.fields.visiblePropertyIds}
+                        collapsedOptionIds={activeView.fields.collapsedOptionIds}
+                        card={card}
+                        addCard={props.addCard}
+                        isSelected={props.selectedCardIds.includes(card.id)}
+                        focusOnMount={props.cardIdToFocusOnRender === card.id}
+                        isLastCard={isLeaf}
+                        onClick={onClickRow}
+                        showCard={props.showCard}
+                        readonly={props.readonly}
+                        onDrop={onDropToCard}
+                    />
+                </div>
+                
+            )
+        }
+        const group = node as BoardGroup;
+        return (
+            <div
+                style={style}
+            >
+                <TableGroupHeaderRow
+                    group={group}
+                    board={board}
+                    activeView={activeView}
+                    groupByProperty={groupByProperty}
+                    hideGroup={hideGroup}
+                    addCard={props.addCard}
+                    readonly={props.readonly}
+                    propertyNameChanged={propertyNameChanged}
+                    onDrop={onDropToGroupHeader}
+                    key={group.option.id}
+                    onDropToGroup={onDropToGroup}
+                    groupToggle={toggle}
+                />
+            </div>
+        )
+    }
+
+    const treeWalker = useCallback(
+        function* treeWalker(
+            refresh: boolean,
+        ): Generator<TreeData | string | symbol, void, boolean> {
+            const stack: StackElement[] = [];
+    
+            for (let i = 0; i < visibleGroups.length; i++) {
+                stack.push({
+                    nestingLevel: 0,
+                    node: visibleGroups[i],
+                    groupId: visibleGroups[i].option.id,
+                    isLastCard: false,
+                });
+            }
+    
+            while (stack.length !== 0) {
+                const {node, nestingLevel, isLastCard, groupId} = stack.pop()!;
+                let isOpened = null
+                let group = null
+                let card = null
+                const isVisible = activeView.fields.collapsedOptionIds?.indexOf(groupId) === -1
+    
+                if (nestingLevel === 0) {
+                    group = node as BoardGroup
+                    const id = group.option.id;
+                    isOpened = yield refresh ?
+                        {
+                            id,
+                            isLeaf: group.cards.length === 0,
+                            isOpenByDefault: isVisible,
+                            node,
+                            isCard: false,
+                        }
+                        : id;
+                } else {
+                    card = node as Card
+                    const id = card.id;
+                    isOpened = yield refresh
+                        ? {
+                            id: card.id+card.updateAt,
+                            isCard: true,
+                            isOpenByDefault: isVisible,
+                            node,
+                            isLeaf: isLastCard,
+                        }
+                        : id;
+                }
+    
+                if (group && group.cards.length !== 0 && isOpened) {
+                    for (let i = group.cards.length - 1; i >= 0; i--) {
+                        stack.push({
+                            nestingLevel: nestingLevel + 1,
+                            node: group.cards[i],
+                            groupId: group.option.id,
+                            isLastCard: i === (group.cards.length - 1)
+                        });
+                    }
+                }
+            }
+        }
+    , [visibleGroups, activeView.fields.collapsedOptionIds])
+    
+
     return (
         <div className='Table'>
             <ColumnResizeProvider
@@ -188,62 +330,54 @@ const Table = (props: Props): JSX.Element => {
                     {/* Table rows */}
                     <div className='table-row-container'>
                         {activeView.fields.groupById &&
-                    visibleGroups.map((group) => {
-                        return (
-                            <TableGroup
-                                key={group.option.id}
-                                board={board}
-                                activeView={activeView}
-                                groupByProperty={groupByProperty}
-                                group={group}
-                                readonly={props.readonly || !canEditCards}
-                                selectedCardIds={props.selectedCardIds}
-                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                                hideGroup={hideGroup}
-                                addCard={props.addCard}
-                                showCard={props.showCard}
-                                propertyNameChanged={propertyNameChanged}
-                                onCardClicked={props.onCardClicked}
-                                onDropToGroupHeader={onDropToGroupHeader}
-                                onDropToCard={onDropToCard}
-                                onDropToGroup={onDropToGroup}
-                            />)
-                    })
+                            <AutoSizer disableWidth>
+                                {({ height }) => (
+                                    <FixedSizeTree
+                                        height={height}
+                                        treeWalker={treeWalker}
+                                        itemSize={44}
+                                        width={'100%'}
+                                    >
+                                        {Node}
+                                    </FixedSizeTree>
+                                )}
+                            </AutoSizer>
                         }
 
                         {/* No Grouping, Rows, one per card */}
                         {!activeView.fields.groupById &&
-                        <TableRows
-                            board={board}
-                            activeView={activeView}
-                            cards={cards}
-                            selectedCardIds={props.selectedCardIds}
-                            readonly={props.readonly || !canEditCards}
-                            cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                            showCard={props.showCard}
-                            addCard={props.addCard}
-                            onCardClicked={props.onCardClicked}
-                            onDrop={onDropToCard}
-                        />
+                            <TableRows
+                                board={board}
+                                activeView={activeView}
+                                cards={cards}
+                                selectedCardIds={props.selectedCardIds}
+                                readonly={props.readonly || !canEditCards}
+                                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                                showCard={props.showCard}
+                                addCard={props.addCard}
+                                onCardClicked={props.onCardClicked}
+                                onDrop={onDropToCard}
+                                useVirtualizedList={true}
+                            />
                         }
                     </div>
 
                     {/* Add New row */}
                     <div className='octo-table-footer'>
                         {!props.readonly && !activeView.fields.groupById &&
-                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                            <div
-                                className='octo-table-cell'
-                                onClick={() => {
-                                    props.addCard('')
-                                }}
-                            >
-                                <FormattedMessage
-                                    id='TableComponent.plus-new'
-                                    defaultMessage='+ New'
-                                />
-                            </div>
-                        </BoardPermissionGate>
+                            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                                <div
+                                    className='octo-table-cell'
+                                    onClick={() => {
+                                        props.addCard('')
+                                    }}
+                                >
+                                    <FormattedMessage
+                                        id='TableComponent.plus-new'
+                                        defaultMessage='+ New'
+                                    />
+                                </div>
+                            </BoardPermissionGate>
                         }
                     </div>
 
@@ -257,10 +391,10 @@ const Table = (props: Props): JSX.Element => {
             </ColumnResizeProvider>
 
             {hiddenCardsCount > 0 &&
-            <HiddenCardCount
-                showHiddenCardNotification={props.showHiddenCardCountNotification}
-                hiddenCardsCount={hiddenCardsCount}
-            />}
+                <HiddenCardCount
+                    showHiddenCardNotification={props.showHiddenCardCountNotification}
+                    hiddenCardsCount={hiddenCardsCount}
+                />}
         </div>
     )
 }

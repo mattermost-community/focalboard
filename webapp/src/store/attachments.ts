@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import {AttachmentBlock} from '../blocks/attachmentBlock'
 
@@ -79,11 +79,12 @@ const attachmentSlice = createSlice({
 export const {updateAttachments, updateUploadPrecent} = attachmentSlice.actions
 export const {reducer} = attachmentSlice
 
-export function getCardAttachments(cardId: string): (state: RootState) => AttachmentBlock[] {
-    return (state: RootState): AttachmentBlock[] => {
-        return (state.attachments?.attachmentsByCard && state.attachments.attachmentsByCard[cardId]) || []
-    }
-}
+export const getCardAttachments: (state: RootState, cardId: string) => AttachmentBlock[] = createSelector(
+    (state: RootState, cardId: string) => state.attachments.attachmentsByCard[cardId],
+    (attachments) => {
+        return attachments || []
+    },
+)
 
 export function getUploadPercent(blockId: string): (state: RootState) => number {
     return (state: RootState): number => {

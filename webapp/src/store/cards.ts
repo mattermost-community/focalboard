@@ -162,11 +162,10 @@ export const getSortedTemplates = createSelector(
     },
 )
 
-export function getCard(cardId: string): (state: RootState) => Card|undefined {
-    return (state: RootState): Card|undefined => {
-        return getCards(state)[cardId] || getTemplates(state)[cardId]
-    }
-}
+export const getCard: (state: RootState, cardId: string) => Card|undefined = createSelector(
+    (state: RootState, cardId: string) => getCards(state)[cardId] || getTemplates(state)[cardId],
+    (card) => card,
+)
 
 export const getCurrentBoardCards = createSelector(
     (state: RootState) => state.boards.current,

@@ -80,11 +80,13 @@ const commentsSlice = createSlice({
 export const {updateComments} = commentsSlice.actions
 export const {reducer} = commentsSlice
 
-export function getCardComments(cardId: string): (state: RootState) => CommentBlock[] {
-    return (state: RootState): CommentBlock[] => {
-        return (state.comments?.commentsByCard && state.comments.commentsByCard[cardId]) || []
-    }
-}
+export const getCardComments: (state: RootState, cardId: string) => CommentBlock[] = createSelector(
+    (state: RootState, cardId: string) => state.comments?.commentsByCard[cardId],
+    (comments) => {
+        console.log(comments)
+        return comments || []
+    },
+)
 
 export function getLastCardComment(cardId: string): (state: RootState) => CommentBlock|undefined {
     return (state: RootState): CommentBlock|undefined => {

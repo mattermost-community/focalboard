@@ -32,31 +32,9 @@ type Props = {
 
 const TableGroup = (props: Props): JSX.Element => {
     const {board, activeView, group, onDropToGroup, groupByProperty} = props
-    const groupId = group.option.id
-
-    const [{isOver}, drop] = useDrop(() => ({
-        accept: 'card',
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-        drop: (item: Card, monitor) => {
-            if (monitor.isOver({shallow: true})) {
-                onDropToGroup(item, groupId, '')
-            }
-        },
-    }), [onDropToGroup, groupId])
-
-    let className = 'octo-table-group'
-    if (isOver) {
-        className += ' dragover'
-    }
 
     return (
-        <div
-            ref={drop}
-            className={className}
-            key={group.option.id}
-        >
+        <>
             <TableGroupHeaderRow
                 group={group}
                 board={board}
@@ -67,6 +45,9 @@ const TableGroup = (props: Props): JSX.Element => {
                 readonly={props.readonly}
                 propertyNameChanged={props.propertyNameChanged}
                 onDrop={props.onDropToGroupHeader}
+                key={group.option.id}
+                onDropToGroup={onDropToGroup}
+                groupToggle={() => {}}
             />
 
             {(group.cards.length > 0) &&
@@ -81,8 +62,9 @@ const TableGroup = (props: Props): JSX.Element => {
                 addCard={props.addCard}
                 onCardClicked={props.onCardClicked}
                 onDrop={props.onDropToCard}
+                useVirtualizedList={false}
             />}
-        </div>
+        </>    
     )
 }
 

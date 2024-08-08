@@ -27,6 +27,7 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {getClientConfig} from '../store/clientConfig'
 
 import {IUser} from '../user'
+import {RootState} from '../store'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
 import {Block, createBlock} from '../blocks/block'
@@ -53,10 +54,10 @@ type Props = {
 
 const CardDialog = (props: Props): JSX.Element => {
     const {board, activeView, cards, views} = props
-    const card = useAppSelector(getCard(props.cardId))
-    const contents = useAppSelector(getCardContents(props.cardId))
-    const comments = useAppSelector(getCardComments(props.cardId))
-    const attachments = useAppSelector(getCardAttachments(props.cardId))
+    const card = useAppSelector((state: RootState) => getCard(state, props.cardId))
+    const contents = useAppSelector((state: RootState) => getCardContents(state, props.cardId))
+    const comments = useAppSelector((state: RootState) => getCardComments(state, props.cardId))
+    const attachments = useAppSelector((state: RootState) => getCardAttachments(state, props.cardId))
     const clientConfig = useAppSelector(getClientConfig)
     const intl = useIntl()
     const dispatch = useAppDispatch()
