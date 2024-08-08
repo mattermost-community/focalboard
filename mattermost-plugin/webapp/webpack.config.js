@@ -62,6 +62,10 @@ const config = {
         ],
         alias: {
             moment: path.resolve(__dirname, '../../webapp/node_modules/moment/'),
+            'react-intl': path.resolve(__dirname, '../../webapp/node_modules/react-intl/'),
+            'react-dnd': path.resolve(__dirname, '../../webapp/node_modules/react-dnd/'),
+            'react-dnd-html-backend': path.resolve(__dirname, '../../webapp/node_modules/react-dnd-html-backend/'),
+            'react-dnd-touch-backend': path.resolve(__dirname, '../../webapp/node_modules/react-dnd-touch-backend/'),
         },
         extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     },

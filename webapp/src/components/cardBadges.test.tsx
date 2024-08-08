@@ -40,6 +40,8 @@ describe('components/cardBadges', () => {
             cards: blocksById([card, emptyCard]),
             templates: {},
             cardHiddenWarning: true,
+            rhsCard: '',
+            rhsBoard: '',
         },
         comments: {
             comments: blocksById(comments),

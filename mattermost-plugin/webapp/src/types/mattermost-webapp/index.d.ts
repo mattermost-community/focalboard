@@ -15,7 +15,7 @@ export interface PluginRegistry {
     registerWebSocketEventHandler(event: string, handler: (e: any) => void)
     unregisterWebSocketEventHandler(event: string)
     registerAppBarComponent(iconURL: string, action: (channel: Channel, member: ChannelMembership) => void, tooltipText: React.ReactNode)
-    registerRightHandSidebarComponent(component: React.ElementType, title: React.Element)
+    registerRightHandSidebarComponent(component: React.ElementType, title: React.Element): {id: string; rhsId: string, showRHSPlugin: any; hideRHSPlugin: any; toggleRHSPlugin: any}
     registerRootComponent(component: React.ElementType)
     registerInsightsHandler(handler: (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => void)
     registerSiteStatisticsHandler(handler: () => void)

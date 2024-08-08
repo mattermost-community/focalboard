@@ -187,9 +187,10 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
             {!loading && card && board &&
                 <a
                     className='FocalboardUnfurl'
-                    href={`${baseURL}${originalPath}`}
+                    // href={`${baseURL}${originalPath}`}
                     rel='noopener noreferrer'
                     target='_blank'
+                    onClick={() => (window as any).showRHSCard(card.id, card.boardId)}
                 >
 
                     {/* Header of the Card*/}

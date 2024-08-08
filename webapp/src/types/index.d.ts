@@ -25,4 +25,8 @@ export type SuiteWindow = Window & {
     frontendBaseURL?: string
     isFocalboardPlugin?: boolean
     WebappUtils?: any
+    showRHSCard?: (cardID: string, boardID: string) => void
+    showRHSCardID?: string
+    showRHSBoardID?: string
+    hideRHSCard?: () => void
 }

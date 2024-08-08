@@ -24,6 +24,7 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import {setTeam} from '../../../webapp/src/store/teams'
+import {setRHSCard, setRHSBoard} from '../../../webapp/src/store/cards'
 import WithWebSockets from '../../../webapp/src/components/withWebSockets'
 import {setChannel} from '../../../webapp/src/store/channels'
 import {initialLoad} from '../../../webapp/src/store/initialLoad'
@@ -43,6 +44,7 @@ import {Board} from '../../../webapp/src/blocks/board'
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
+import RHSCard from './rhsCard'
 import RHSChannelBoards from './components/rhsChannelBoards'
 import RHSChannelBoardsHeader from './components/rhsChannelBoardsHeader'
 import BoardSelector from './components/boardSelector'
@@ -166,7 +168,6 @@ const MainApp = (props: Props) => {
         </ErrorBoundary>
     )
 }
-
 const HeaderComponent = () => {
     return (
         <ErrorBoundary>
@@ -177,9 +178,12 @@ const HeaderComponent = () => {
 
 export default class Plugin {
     channelHeaderButtonId?: string
+    rhsCardID?: string
     rhsId?: string
     boardSelectorId?: string
     registry?: PluginRegistry
+    showRHSCard?: (cardID: string, boardID: string) => void
+    hideRHSCard?: () => void
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action<Record<string, unknown>>>): Promise<void> {
@@ -195,6 +199,18 @@ export default class Plugin {
             messages: getMessages(getCurrentLanguage())
         }, cache)
 
+
+        const registerResult = registry.registerRightHandSidebarComponent(RHSCard, 'Card')
+        console.log(registerResult)
+        this.rhsCardID = registerResult.id
+        windowAny.showRHSCard = (cardID: string, boardID: string) => {
+            store.dispatch(setRHSCard(cardID))
+            store.dispatch(setRHSBoard(boardID))
+            windowAny.showRHSCardID = cardID
+            windowAny.showRHSBoardID = boardID
+            mmStore.dispatch(registerResult.showRHSPlugin)
+        }
+        windowAny.hideRHSCard = () => mmStore.dispatch(registerResult.hideRHSPlugin)
 
         this.registry = registry
 
@@ -445,6 +461,7 @@ export default class Plugin {
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
+            this.registry?.unregisterComponent(this.rhsCardID!)
         }
         if (this.rhsId) {
             this.registry?.unregisterComponent(this.rhsId)
