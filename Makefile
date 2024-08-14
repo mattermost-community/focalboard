@@ -142,11 +142,11 @@ server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
 
 server-test-mysql: ## Run server tests using mysql
 	@echo Starting docker container for mysql
-	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
-	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
+	docker compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mysql-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-mysql-profile.coverage
-	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 
 server-test-mariadb: export FOCALBOARD_UNIT_TESTING=1
 server-test-mariadb: export FOCALBOARD_STORE_TEST_DB_TYPE=mariadb
@@ -154,11 +154,11 @@ server-test-mariadb: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44445
 
 server-test-mariadb: templates-archive ## Run server tests using mysql
 	@echo Starting docker container for mariadb
-	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
-	docker-compose -f ./docker-testing/docker-compose-mariadb.yml run start_dependencies
+	docker compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mariadb.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mariadb-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-mariadb-profile.coverage
-	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
 
 server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
 server-test-postgres: export FOCALBOARD_STORE_TEST_DB_TYPE=postgres
@@ -166,11 +166,11 @@ server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44447
 
 server-test-postgres: ## Run server tests using postgres
 	@echo Starting docker container for postgres
-	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
-	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
+	docker compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-postgres-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-postgres-profile.coverage
-	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack
