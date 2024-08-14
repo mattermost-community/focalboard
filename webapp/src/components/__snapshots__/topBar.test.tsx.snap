@@ -7,22 +7,21 @@ exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = 
   >
     <a
       class="link"
-      href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
+      href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
       rel="noreferrer"
       target="_blank"
     >
       Give feedback
     </a>
-    <div
-      class="versionFrame"
+    <a
+      href="https://www.focalboard.com/guide/user?utm_source=webapp"
+      rel="noreferrer"
+      target="_blank"
     >
-      <div
-        class="version"
-        title="v1.0.0"
-      >
-        v1.0.0
-      </div>
-    </div>
+      <i
+        class="CompassIcon icon-help-circle-outline HelpIcon"
+      />
+    </a>
   </div>
 </div>
 `;

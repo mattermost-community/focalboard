@@ -46,8 +46,7 @@ jobs:
       with:
         path: "focalboard"
     - name: npm ci
-      run: |
-        cd focalboard/webapp && npm ci && cd -
+      run: cd focalboard/webapp && npm ci && cd -
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -97,7 +96,7 @@ jobs:
       run: cd focalboard; make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
-    runs-on: macos-11
+    runs-on: macos-12
 
     strategy:
       matrix:
