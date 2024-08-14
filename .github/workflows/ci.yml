@@ -96,7 +96,7 @@ jobs:
       run: cd focalboard; make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
-    runs-on: macos-12
+    runs-on: macos-11
 
     strategy:
       matrix:
