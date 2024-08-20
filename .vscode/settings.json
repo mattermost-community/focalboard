@@ -41,7 +41,7 @@
     },
     "[typescriptreact]": {
         "editor.codeActionsOnSave": {
-            // "source.organizeImports": true,
+            "source.organizeImports": true,
         },
     },
     "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,

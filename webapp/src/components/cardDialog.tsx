@@ -1,39 +1,39 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
-import octoClient from '../octoClient'
+import {sendFlashMessage} from '../components/flashMessages'
 import mutator from '../mutator'
+import octoClient from '../octoClient'
+import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
 import Menu from '../widgets/menu'
-import {sendFlashMessage} from '../components/flashMessages'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
 
 import Button from '../widgets/buttons/button'
 
-import {Permission} from '../constants'
-import {Block, createBlock} from '../blocks/block'
 import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
+import {Block, createBlock} from '../blocks/block'
+import {Permission} from '../constants'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 
-import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
+import './cardDialog.scss'
 
 type Props = {
     board: Board
@@ -224,12 +224,6 @@ const CardDialog = (props: Props): JSX.Element => {
         )
     }
 
-    const followActionButton = (): React.ReactNode => {
-        return (<>{attachBtn()}</>)
-    }
-
-    const toolbar = followActionButton()
-
     return (
         <>
             <Dialog
@@ -237,7 +231,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
-                toolbar={toolbar}
+                toolbar={attachBtn()}
             >
                 {isTemplate &&
                     <div className='banner'>
