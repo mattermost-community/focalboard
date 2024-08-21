@@ -41,13 +41,6 @@ exports[`components/cardDialog already following card 1`] = `
                   Attach
                 </span>
               </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Following
-                </span>
-              </button>
             </div>
             <div
               aria-label="menuwrapper"
@@ -499,13 +492,6 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
                   Attach
                 </span>
               </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Follow
-                </span>
-              </button>
             </div>
             <button
               aria-label="Close dialog"
@@ -628,13 +614,6 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                 />
                 <span>
                   Attach
-                </span>
-              </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Follow
                 </span>
               </button>
             </div>
@@ -979,13 +958,6 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
                   Attach
                 </span>
               </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Follow
-                </span>
-              </button>
             </div>
             <div
               aria-label="menuwrapper"
@@ -1191,13 +1163,6 @@ exports[`components/cardDialog should match snapshot 1`] = `
                   Attach
                 </span>
               </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Follow
-                </span>
-              </button>
             </div>
             <div
               aria-label="menuwrapper"
@@ -1392,15 +1357,7 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
           >
             <div
               class="d-flex"
-            >
-              <button
-                type="button"
-              >
-                <span>
-                  Follow
-                </span>
-              </button>
-            </div>
+            />
             <div
               aria-label="menuwrapper"
               class="MenuWrapper"

@@ -3,13 +3,13 @@
 exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy link menu  1`] = `
 <div>
   <div
-    class="KanbanCard false"
+    class="KanbanCard"
     draggable="true"
     style="opacity: 1;"
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper override menuOpened optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -185,13 +185,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
 exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete menu  1`] = `
 <div>
   <div
-    class="KanbanCard false"
+    class="KanbanCard"
     draggable="true"
     style="opacity: 1;"
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper override menuOpened optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -367,13 +367,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
 exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplicate menu  1`] = `
 <div>
   <div
-    class="KanbanCard false"
+    class="KanbanCard"
     draggable="true"
     style="opacity: 1;"
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper override menuOpened optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -549,13 +549,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
 exports[`src/components/kanban/kanbanCard should match snapshot 1`] = `
 <div>
   <div
-    class="KanbanCard false"
+    class="KanbanCard"
     draggable="true"
     style="opacity: 1;"
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper optionsMenu"
       role="button"
     >
       <button
@@ -595,7 +595,7 @@ exports[`src/components/kanban/kanbanCard should match snapshot 1`] = `
 exports[`src/components/kanban/kanbanCard should match snapshot with readonly 1`] = `
 <div>
   <div
-    class="KanbanCard false"
+    class="KanbanCard"
     draggable="false"
     style="opacity: 1;"
   >
