@@ -24,12 +24,12 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
         <img
           alt="Boards Welcome Image"
           class="WelcomePage__image WelcomePage__image--large"
-          src="test-file-stub"
+          src="http://localhost/test-file-stub"
         />
         <img
           alt="Boards Welcome Image"
           class="WelcomePage__image WelcomePage__image--small"
-          src="test-file-stub"
+          src="http://localhost/test-file-stub"
         />
         <div
           class="WelcomePage__buttons"
@@ -81,12 +81,12 @@ exports[`pages/welcome Welcome Page shows Explore Page with subpath 1`] = `
         <img
           alt="Boards Welcome Image"
           class="WelcomePage__image WelcomePage__image--large"
-          src="test-file-stub"
+          src="http://localhost/subpath/test-file-stub"
         />
         <img
           alt="Boards Welcome Image"
           class="WelcomePage__image WelcomePage__image--small"
-          src="test-file-stub"
+          src="http://localhost/subpath/test-file-stub"
         />
         <div
           class="WelcomePage__buttons"

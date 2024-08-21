@@ -35,7 +35,6 @@ all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
-	cd mattermost-plugin/webapp; npm install
 
 ci: webapp-ci server-test ## Simulate CI, locally.
 
@@ -108,7 +107,6 @@ server-lint: ## Run linters on server code.
 		exit 1; \
 	fi;
 	cd server; golangci-lint run ./...
-	cd mattermost-plugin; golangci-lint run ./...
 
 modd-precheck:
 	@if ! [ -x "$$(command -v modd)" ]; then \
@@ -144,13 +142,11 @@ server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
 
 server-test-mysql: ## Run server tests using mysql
 	@echo Starting docker container for mysql
-	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
-	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
+	docker compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mysql-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-mysql-profile.coverage
-	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-mysql-profile.coverage -count=1 -timeout=30m ./...
-	cd mattermost-plugin/server; go tool cover -func plugin-mysql-profile.coverage
-	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 
 server-test-mariadb: export FOCALBOARD_UNIT_TESTING=1
 server-test-mariadb: export FOCALBOARD_STORE_TEST_DB_TYPE=mariadb
@@ -158,13 +154,11 @@ server-test-mariadb: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44445
 
 server-test-mariadb: templates-archive ## Run server tests using mysql
 	@echo Starting docker container for mariadb
-	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
-	docker-compose -f ./docker-testing/docker-compose-mariadb.yml run start_dependencies
+	docker compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mariadb.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mariadb-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-mariadb-profile.coverage
-	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-mariadb-profile.coverage -count=1 -timeout=30m ./...
-	cd mattermost-plugin/server; go tool cover -func plugin-mariadb-profile.coverage
-	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
 
 server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
 server-test-postgres: export FOCALBOARD_STORE_TEST_DB_TYPE=postgres
@@ -172,32 +166,22 @@ server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44447
 
 server-test-postgres: ## Run server tests using postgres
 	@echo Starting docker container for postgres
-	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
-	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
+	docker compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-postgres-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-postgres-profile.coverage
-	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-postgres-profile.coverage -count=1 -timeout=30m ./...
-	cd mattermost-plugin/server; go tool cover -func plugin-postgres-profile.coverage
-	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
+	docker compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack
 
 webapp-ci: ## Webapp CI: linting & testing.
 	cd webapp; npm run check
-	cd mattermost-plugin/webapp; npm run lint
 	cd webapp; npm run test
-	cd mattermost-plugin/webapp; npm run test
 	cd webapp; npm run cypress:ci
 
 webapp-test: ## jest tests for webapp
 	cd webapp; npm run test
-
-watch-plugin: modd-precheck ## Run and upload the plugin to a development server
-	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-watchplugin.conf
-
-live-watch-plugin: modd-precheck ## Run and update locally the plugin in the development server
-	cd mattermost-plugin; make live-watch
 
 mac-app: server-mac webapp ## Build Mac application.
 	rm -rf mac/temp

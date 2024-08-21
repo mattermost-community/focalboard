@@ -360,13 +360,13 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="octo-board-column"
         >
           <div
-            class="KanbanCard false"
+            class="KanbanCard"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu "
+              class="MenuWrapper optionsMenu"
               role="button"
             >
               <button

@@ -218,9 +218,6 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
     <div
       class="user-item__content"
     >
-      <i
-        class="CompassIcon icon-mattermost user-item__img"
-      />
       <div
         class="ml-3"
       >
@@ -431,9 +428,6 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in t
     <div
       class="user-item__content"
     >
-      <i
-        class="CompassIcon icon-mattermost user-item__img"
-      />
       <div
         class="ml-3"
       >
