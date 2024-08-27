@@ -87,14 +87,16 @@
         height: 48px;
         align-items: center;
 
+        /*
         &:hover {
             background-color: rgba(var(--sidebar-text-rgb), 0.08);
         }
+        */
 
         > .heading {
             line-height: 30px;
             cursor: default;
-            flex-grow: 1;
+            /* flex-grow: 1; */
         }
 
         > .IconButton {

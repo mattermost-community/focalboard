@@ -1,0 +1,63 @@
+.ViewHeaderNew {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+
+    color: rgba(var(--center-channel-color-rgb), 0.64);
+    align-items: center;
+
+    @media (max-width: 768px) {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    > div {
+        margin-right: 12px;
+        white-space: nowrap;
+
+        &:last-child {
+            margin: 0;
+        }
+    }
+
+    #groupByLabel {
+        margin-left: 0.3em;
+    }
+
+    .IconButton {
+        background: none;
+        padding: 0;
+
+        .Icon {
+            width: 24px;
+            height: 24px;
+            margin: 0;
+        }
+
+        &:hover {
+            background: rgba(var(--center-channel-color-rgb), 0.1);
+        }
+    }
+
+    .viewSelector {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+
+        .MenuWrapper {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .Button {
+
+        .filter-button {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            font-size: 14px;
+            color: rgba(182, 194, 207, 1);            
+        }
+    }
+}

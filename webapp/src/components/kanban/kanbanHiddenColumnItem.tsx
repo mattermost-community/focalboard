@@ -28,6 +28,7 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
     const {activeView, intl, group} = props
     const hiddenCardGroupId = 'hidden-card-group-id'
 
+    /*
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
@@ -37,15 +38,17 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
             props.onDrop(item)
         },
     }), [props.onDrop])
+    */
 
     let className = 'octo-board-hidden-item'
+    /*
     if (isOver) {
         className += ' dragover'
     }
+    */
 
     return (
         <div
-            ref={drop}
             key={group.option.id || 'empty'}
             className={className}
         >

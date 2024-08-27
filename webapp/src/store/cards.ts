@@ -314,7 +314,13 @@ function sortCards(cards: Card[], lastCommentByCard: {[key: string]: CommentBloc
                         }).toString() : bValue
                     }
 
-                    result = (aValue as string).localeCompare(bValue as string)
+
+                    try {
+                        result = (aValue as string).localeCompare(bValue as string)
+                    } catch (e) {
+                        console.log((e as Error).message)
+                        result = 0
+                    }
                 }
 
                 if (result === 0) {

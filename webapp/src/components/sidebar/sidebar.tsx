@@ -3,7 +3,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
-
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
@@ -347,11 +346,6 @@ const Sidebar = (props: Props) => {
         <div className='Sidebar octo-sidebar'>
             {!Utils.isFocalboardPlugin() &&
                 <div className='octo-sidebar-header'>
-                    <div className='heading'>
-                        <SidebarUserMenu/>
-                    </div>
-
-                    <div className='octo-spacer'/>
                     <div className='sidebarSwitcher'>
                         <IconButton
                             onClick={() => {
@@ -361,6 +355,12 @@ const Sidebar = (props: Props) => {
                             icon={<HideSidebarIcon/>}
                         />
                     </div>
+                    <div className='heading'>
+                        <SidebarUserMenu/>
+                    </div>
+
+                    {/* <div className='octo-spacer'/> */}
+
                 </div>}
 
             {team && team.id !== Constants.globalTeamId &&

@@ -99,7 +99,7 @@ const SidebarSettingsMenu = (props: Props) => {
                     />
                 </div>
                 <Menu position='top'>
-                    <Menu.SubMenu
+                    {/* <Menu.SubMenu
                         id='import'
                         name={intl.formatMessage({id: 'Sidebar.import', defaultMessage: 'Import'})}
                         position='top'
@@ -125,7 +125,7 @@ const SidebarSettingsMenu = (props: Props) => {
                                 />
                             ))
                         }
-                    </Menu.SubMenu>
+                    </Menu.SubMenu> */}
                     <Menu.Text
                         id='export'
                         name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
