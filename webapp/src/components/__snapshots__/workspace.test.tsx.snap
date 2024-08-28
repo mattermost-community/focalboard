@@ -637,13 +637,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -680,13 +680,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -723,13 +723,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -998,7 +998,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1028,7 +1028,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1058,7 +1058,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1748,13 +1748,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -1791,13 +1791,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -1834,13 +1834,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu "
+                  class="MenuWrapper optionsMenu"
                   role="button"
                 >
                   <button
@@ -2109,7 +2109,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2139,7 +2139,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2169,7 +2169,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard false"
+                class="KanbanCard"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2301,184 +2301,6 @@ exports[`src/components/workspace show add new view tooltip 1`] = `
                 />
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="tippy-arrow"
-    style="position: absolute; left: 0px; transform: translate(3px, 0px);"
-  />
-</div>
-`;
-
-exports[`src/components/workspace show copy link tooltip 1`] = `
-<div
-  class="tippy-box tutorial-tour-tip__box CopyLinkTourStep"
-  data-animation="scale-subtle"
-  data-escaped=""
-  data-placement="right-start"
-  data-reference-hidden=""
-  data-state="visible"
-  role="tooltip"
-  style="max-width: 320px; transition-duration: 250ms;"
-  tabindex="-1"
->
-  <div
-    class="tippy-content"
-    data-state="visible"
-    style="transition-duration: 250ms;"
-  >
-    <div>
-      <div>
-        <div
-          class="tutorial-tour-tip__header"
-        >
-          <h4
-            class="tutorial-tour-tip__header__title"
-          >
-            Copy link
-          </h4>
-          <button
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
-        </div>
-        <div
-          class="tutorial-tour-tip__body"
-        >
-          You can share your cards with teammates by copying the link and pasting it in a channel, direct message, or group message.
-        </div>
-        <div
-          class="tutorial-tour-tip__footer"
-        >
-          <div
-            class="tutorial-tour-tip__footer-buttons"
-          >
-            <div
-              class="tutorial-tour-tip__circles-ctr"
-            >
-              <div
-                class="tutorial-tour-tip__circular-ring"
-              >
-                <a
-                  class="tutorial-tour-tip__circle"
-                  data-screen="0"
-                  href="#"
-                />
-              </div>
-              <div
-                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
-              >
-                <a
-                  class="tutorial-tour-tip__circle active"
-                  data-screen="1"
-                  href="#"
-                />
-              </div>
-              <div
-                class="tutorial-tour-tip__circular-ring"
-              >
-                <a
-                  class="tutorial-tour-tip__circle"
-                  data-screen="2"
-                  href="#"
-                />
-              </div>
-            </div>
-            <div
-              class="tutorial-tour-tip__btn-ctr"
-            >
-              <button
-                title="Previous"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-chevron-left icon"
-                />
-                <span>
-                  Previous
-                </span>
-              </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Next
-                </span>
-                <i
-                  class="CompassIcon icon-chevron-right icon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="tippy-arrow"
-    style="position: absolute; top: 0px; transform: translate(0px, 3px);"
-  />
-</div>
-`;
-
-exports[`src/components/workspace show open card tooltip 1`] = `
-<div
-  class="tippy-box tutorial-tour-tip__box OpenCardTourStep"
-  data-animation="scale-subtle"
-  data-escaped=""
-  data-placement="top"
-  data-reference-hidden=""
-  data-state="visible"
-  role="tooltip"
-  style="max-width: 320px; transition-duration: 250ms;"
-  tabindex="-1"
->
-  <div
-    class="tippy-content"
-    data-state="visible"
-    style="transition-duration: 250ms;"
-  >
-    <div>
-      <div>
-        <div
-          class="tutorial-tour-tip__header"
-        >
-          <h4
-            class="tutorial-tour-tip__header__title"
-          >
-            Open a card
-          </h4>
-          <button
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
-        </div>
-        <div
-          class="tutorial-tour-tip__body"
-        >
-          Open a card to explore the powerful ways that Boards can help you organize your work.
-        </div>
-        <div
-          class="tutorial-tour-tip__footer"
-        >
-          <div
-            class="tutorial-tour-tip__footer-buttons"
-          >
-            <div
-              class="tutorial-tour-tip__circles-ctr"
-            />
-            <div
-              class="tutorial-tour-tip__btn-ctr"
-            />
           </div>
         </div>
       </div>

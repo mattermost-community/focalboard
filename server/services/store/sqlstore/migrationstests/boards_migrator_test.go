@@ -210,7 +210,6 @@ func (bm *BoardsMigrator) Setup() error {
 		TablePrefix:      tablePrefix,
 		Logger:           logger,
 		DB:               bm.db,
-		IsPlugin:         bm.withMattermostMigrations,
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return nil, fmt.Errorf("not implemented")
 		},
@@ -247,7 +246,6 @@ func (bm *BoardsMigrator) MigrateToStep(step int) error {
 
 func (bm *BoardsMigrator) Interceptors() map[int]func() error {
 	return map[int]func() error{
-		18: bm.store.RunDeletedMembershipBoardsMigration,
 		35: func() error {
 			return bm.store.RunDeDuplicateCategoryBoardsMigration(35)
 		},

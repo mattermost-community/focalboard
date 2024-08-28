@@ -7,12 +7,10 @@ import thunk from 'redux-thunk'
 
 import React from 'react'
 import {MemoryRouter} from 'react-router'
-import {mocked} from 'jest-mock'
 
 import {IUser} from '../../user'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
-import {Utils} from '../../utils'
 
 import {MemberRole} from '../../blocks/board'
 
@@ -23,8 +21,6 @@ jest.useFakeTimers()
 const boardId = '1'
 
 jest.mock('../../utils')
-
-const mockedUtils = mocked(Utils, true)
 
 const board = TestBlockFactory.createBoard()
 board.id = boardId
@@ -78,7 +74,6 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
 
     test('should match snapshot', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(false)
         const store = mockStateStore([thunk], state)
         await act(async () => {
             const result = render(
@@ -100,7 +95,6 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
 
     test('should match snapshot in plugin mode', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const store = mockStateStore([thunk], state)
         await act(async () => {
             const result = render(
@@ -122,7 +116,6 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
 
     test('should match snapshot in template', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const testState = {
             ...state,
             boards: {

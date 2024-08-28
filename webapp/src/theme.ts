@@ -5,8 +5,6 @@ import {CSSObject} from '@emotion/serialize'
 import isEqual from 'lodash/isEqual'
 import color from 'color'
 
-import {Utils} from './utils'
-
 let activeThemeName: string
 
 import {UserSettings} from './userSettings'
@@ -124,66 +122,19 @@ export function setTheme(theme: Theme | null): Theme {
 
     setActiveThemeName(consolidatedTheme, theme)
 
-    if (Utils.isFocalboardPlugin()) {
-        // in plugin mode, Focalbaord reuses Mattermost's color pallet, so we don't really need to
-        // set the color variables here because in the app, Mattermost webapp would have already
-        // declared them.
-        // But,
-        // when testing the plugin mode in Jest unit test,
-        // since there is no Mattermost webapp, we need to ensure someone declares the variables.
-        // So here we set the variable if it wasn't already declared.
-        // In plugins, since Mattermost webapp renders always before the plugin/product,
-        // the variables are guaranteed to be set there.
-        //
-        // Fun fact - in a Jest test suite, if there are some non-plugin tests and a few plugin tests,
-        // if a non-plugin test ran first, it creates the variables in document, which is somehow
-        // shared to other tests as well. That's why the tests don't fail unless you run ONLY
-        // a plugin test.
-
-        const style = document.documentElement.style
-
-        style.setProperty('--center-channel-bg-rgb', style.getPropertyValue('--center-channel-bg-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--center-channel-color-rgb', style.getPropertyValue('--center-channel-color-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--button-bg-rgb', style.getPropertyValue('--button-bg-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--button-color-rgb', style.getPropertyValue('--button-color-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--sidebar-bg-rgb', style.getPropertyValue('--sidebar-bg-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--sidebar-text-rgb', style.getPropertyValue('--sidebar-text-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--link-color-rgb', style.getPropertyValue('--link-color-rgb') || consolidatedTheme.mainBg)
-        style.setProperty('--sidebar-text-active-border-rgb', style.getPropertyValue('--sidebar-text-active-border-rgb') || consolidatedTheme.mainBg)
-    } else {
-        // for personal server and desktop, Focalboard is responsible for managing the theme,
-        // so we set all the color variables here.
-        document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
-        document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
-        document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
-        document.documentElement.style.setProperty('--button-color-rgb', consolidatedTheme.buttonFg)
-        document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
-        document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
-        document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
-        document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
-    }
+    // for personal server and desktop, Focalboard is responsible for managing the theme,
+    // so we set all the color variables here.
+    document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
+    document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
+    document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
+    document.documentElement.style.setProperty('--button-color-rgb', consolidatedTheme.buttonFg)
+    document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
+    document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
+    document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
+    document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
 
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
     document.documentElement.style.setProperty('--link-visited-color-rgb', consolidatedTheme.linkVisited)
-
-    const mainBgColor = color(`rgb(${getComputedStyle(document.documentElement).getPropertyValue('--center-channel-bg-rgb')})`)
-
-    if (Utils.isFocalboardPlugin()) {
-        let fixedTheme = lightTheme
-        if (mainBgColor.isDark()) {
-            fixedTheme = darkTheme
-        }
-        consolidatedTheme.propDefault = fixedTheme.propDefault
-        consolidatedTheme.propGray = fixedTheme.propGray
-        consolidatedTheme.propBrown = fixedTheme.propBrown
-        consolidatedTheme.propOrange = fixedTheme.propOrange
-        consolidatedTheme.propYellow = fixedTheme.propYellow
-        consolidatedTheme.propGreen = fixedTheme.propGreen
-        consolidatedTheme.propBlue = fixedTheme.propBlue
-        consolidatedTheme.propPurple = fixedTheme.propPurple
-        consolidatedTheme.propPink = fixedTheme.propPink
-        consolidatedTheme.propRed = fixedTheme.propRed
-    }
 
     document.documentElement.style.setProperty('--prop-default', consolidatedTheme.propDefault)
     document.documentElement.style.setProperty('--prop-gray', consolidatedTheme.propGray)

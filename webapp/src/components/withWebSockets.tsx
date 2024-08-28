@@ -33,33 +33,15 @@ const WithWebSockets = (props: Props): React.ReactElement => {
             return
         }
 
-        if (!Utils.isFocalboardPlugin()) {
-            const token = localStorage.getItem('focalboardSessionId') || queryString.get('r') || ''
-            if (token) {
-                wsClient.authenticate(token)
-            }
-            wsClient.open()
-            return
+        const token = localStorage.getItem('focalboardSessionId') || queryString.get('r') || ''
+        if (token) {
+            wsClient.authenticate(token)
         }
-
-        if (!props.webSocketClient) {
-            Utils.logWarn('Trying to initialise Boards websocket in plugin mode without base connection. Aborting')
-            return
-        }
-
-        if (!props.manifest?.id || !props.manifest?.version) {
-            Utils.logError('Trying to initialise Boards websocket in plugin mode with an incomplete manifest. Aborting')
-            return
-        }
-
-        wsClient.initPlugin(props.manifest?.id, props.manifest?.version, props.webSocketClient)
         wsClient.open()
     }, [props.webSocketClient])
 
     useEffect(() => {
-        // if we're running on a plugin instance or we don't have a
-        // user yet, do nothing
-        if (Utils.isFocalboardPlugin() || !props.userId) {
+        if (!props.userId) {
             return
         }
 
