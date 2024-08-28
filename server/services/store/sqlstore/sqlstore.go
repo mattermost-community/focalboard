@@ -23,7 +23,6 @@ type SQLStore struct {
 	tablePrefix      string
 	connectionString string
 	dbPingAttempts   int
-	isPlugin         bool
 	isSingleUser     bool
 	logger           mlog.LoggerIFace
 	NewMutexFn       MutexFactory
@@ -39,9 +38,6 @@ type MutexFactory func(name string) (*cluster.Mutex, error)
 
 // New creates a new SQL implementation of the store.
 func New(params Params) (*SQLStore, error) {
-	if err := params.CheckValid(); err != nil {
-		return nil, err
-	}
 
 	params.Logger.Info("connectDatabase", mlog.String("dbType", params.DBType))
 	store := &SQLStore{
@@ -52,7 +48,6 @@ func New(params Params) (*SQLStore, error) {
 		tablePrefix:      params.TablePrefix,
 		connectionString: params.ConnectionString,
 		logger:           params.Logger,
-		isPlugin:         params.IsPlugin,
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		servicesAPI:      params.ServicesAPI,

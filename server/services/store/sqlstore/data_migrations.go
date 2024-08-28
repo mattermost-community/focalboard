@@ -154,22 +154,6 @@ func (s *SQLStore) RunCategoryUUIDIDMigration() error {
 		return txErr
 	}
 
-	if s.isPlugin {
-		if err := s.createCategories(tx); err != nil {
-			if rollbackErr := tx.Rollback(); rollbackErr != nil {
-				s.logger.Error("category UUIDs insert categories transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
-			}
-			return err
-		}
-
-		if err := s.createCategoryBoards(tx); err != nil {
-			if rollbackErr := tx.Rollback(); rollbackErr != nil {
-				s.logger.Error("category UUIDs insert category boards transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
-			}
-			return err
-		}
-	}
-
 	if err := s.setSystemSetting(tx, CategoryUUIDIDMigrationKey, strconv.FormatBool(true)); err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("category UUIDs transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
@@ -349,87 +333,6 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 	return nil
 }
 
-// We no longer support boards existing in DMs and private
-// group messages. This function migrates all boards
-// belonging to a DM to the best possible team.
-func (s *SQLStore) RunTeamLessBoardsMigration() error {
-	if !s.isPlugin {
-		return nil
-	}
-
-	setting, err := s.GetSystemSetting(TeamLessBoardsMigrationKey)
-	if err != nil {
-		return fmt.Errorf("cannot get teamless boards migration state: %w", err)
-	}
-
-	// If the migration is already completed, do not run it again.
-	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
-		return nil
-	}
-
-	boards, err := s.getDMBoards(s.db)
-	if err != nil {
-		return err
-	}
-
-	s.logger.Debug("Migrating teamless boards to a team", mlog.Int("count", len(boards)))
-
-	// cache for best suitable team for a DM. Since a DM can
-	// contain multiple boards, caching this avoids
-	// duplicate queries for the same DM.
-	channelToTeamCache := map[string]string{}
-
-	tx, err := s.db.BeginTx(context.Background(), nil)
-	if err != nil {
-		s.logger.Error("error starting transaction in runTeamLessBoardsMigration", mlog.Err(err))
-		return err
-	}
-
-	for i := range boards {
-		// check the cache first
-		teamID, ok := channelToTeamCache[boards[i].ChannelID]
-
-		// query DB if entry not found in cache
-		if !ok {
-			teamID, err = s.getBestTeamForBoard(s.db, boards[i])
-			if err != nil {
-				// don't let one board's error spoil
-				// the mood for others
-				s.logger.Error("could not find the best team for board during team less boards migration. Continuing", mlog.String("boardID", boards[i].ID))
-				continue
-			}
-		}
-
-		channelToTeamCache[boards[i].ChannelID] = teamID
-		boards[i].TeamID = teamID
-
-		query := s.getQueryBuilder(tx).
-			Update(s.tablePrefix+"boards").
-			Set("team_id", teamID).
-			Set("type", model.BoardTypePrivate).
-			Where(sq.Eq{"id": boards[i].ID})
-
-		if _, err := query.Exec(); err != nil {
-			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
-			return err
-		}
-	}
-
-	if err := s.setSystemSetting(tx, TeamLessBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "runTeamLessBoardsMigration"))
-		}
-		return fmt.Errorf("cannot mark migration as completed: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		s.logger.Error("failed to commit runTeamLessBoardsMigration transaction", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
 func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
 	conditions := sq.And{
 		sq.Eq{"team_id": ""},
@@ -554,79 +457,6 @@ func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[
 	return userTeams, nil
 }
 
-func (s *SQLStore) RunDeletedMembershipBoardsMigration() error {
-	if !s.isPlugin {
-		return nil
-	}
-
-	setting, err := s.GetSystemSetting(DeletedMembershipBoardsMigrationKey)
-	if err != nil {
-		return fmt.Errorf("cannot get deleted membership boards migration state: %w", err)
-	}
-
-	// If the migration is already completed, do not run it again.
-	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
-		return nil
-	}
-
-	boards, err := s.getDeletedMembershipBoards(s.db)
-	if err != nil {
-		return err
-	}
-
-	if len(boards) == 0 {
-		s.logger.Debug("No boards with owner not anymore on their team found, marking runDeletedMembershipBoardsMigration as done")
-		if sErr := s.SetSystemSetting(DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); sErr != nil {
-			return fmt.Errorf("cannot mark migration as completed: %w", sErr)
-		}
-		return nil
-	}
-
-	s.logger.Debug("Migrating boards with owner not anymore on their team", mlog.Int("count", len(boards)))
-
-	tx, err := s.db.BeginTx(context.Background(), nil)
-	if err != nil {
-		s.logger.Error("error starting transaction in runDeletedMembershipBoardsMigration", mlog.Err(err))
-		return err
-	}
-
-	for i := range boards {
-		teamID, err := s.getBestTeamForBoard(s.db, boards[i])
-		if err != nil {
-			// don't let one board's error spoil
-			// the mood for others
-			s.logger.Error("could not find the best team for board during deleted membership boards migration. Continuing", mlog.String("boardID", boards[i].ID))
-			continue
-		}
-
-		boards[i].TeamID = teamID
-
-		query := s.getQueryBuilder(tx).
-			Update(s.tablePrefix+"boards").
-			Set("team_id", teamID).
-			Where(sq.Eq{"id": boards[i].ID})
-
-		if _, err := query.Exec(); err != nil {
-			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
-			return err
-		}
-	}
-
-	if err := s.setSystemSetting(tx, DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "runDeletedMembershipBoardsMigration"))
-		}
-		return fmt.Errorf("cannot mark migration as completed: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		s.logger.Error("failed to commit runDeletedMembershipBoardsMigration transaction", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
 // getDeletedMembershipBoards retrieves those boards whose creator is
 // associated to the board's team with a deleted team membership.
 func (s *SQLStore) getDeletedMembershipBoards(tx sq.BaseRunner) ([]*model.Board, error) {
@@ -661,7 +491,7 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 	var collation string
 	var charSet string
 	var err error
-	if !s.isPlugin || os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
+	if os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
 		collation = "utf8mb4_general_ci"
 		charSet = "utf8mb4"
 	} else {
