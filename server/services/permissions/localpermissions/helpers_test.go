@@ -9,8 +9,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	permissionsMocks "github.com/mattermost/focalboard/server/services/permissions/mocks"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -30,7 +30,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 		t:           t,
 		ctrl:        ctrl,
 		store:       mockStore,
-		permissions: New(mockStore, mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)),
+		permissions: New(mockStore, mlog.CreateConsoleTestLogger(t)),
 	}
 }
 

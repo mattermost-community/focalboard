@@ -7,7 +7,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 const CardLimitTimestampSystemKey = "card_limit_timestamp"
@@ -163,15 +163,11 @@ type Store interface {
 	DBVersion() string
 
 	GetLicense() *mmModel.License
-	GetCloudLimits() (*mmModel.ProductLimits, error)
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	PostMessage(message, postType, channelID string) error
 	SendMessage(message, postType string, receipts []string) error
 
-	// Insights
-	GetTeamBoardsInsights(teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
-	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
 
 	// Compliance

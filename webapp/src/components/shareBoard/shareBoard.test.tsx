@@ -168,7 +168,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
                 teammateNameDisplay: 'username',
-                featureFlags: {},
             },
         },
         contents: {
@@ -495,7 +494,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users: IUser[] = [
@@ -589,50 +587,6 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('confirm unlinking linked channel', async () => {
-        const sharing: ISharing = {
-            id: '',
-            enabled: false,
-            token: '',
-        }
-        mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
-
-        let container: Element | DocumentFragment | null = null
-        await act(async () => {
-            const result = render(
-                wrapDNDIntl(
-                    <ReduxProvider store={store}>
-                        <ShareBoard
-                            onClose={jest.fn()}
-                            enableSharedBoards={true}
-                        />
-                    </ReduxProvider>),
-                {wrapper: MemoryRouter},
-            )
-            container = result.container
-        })
-
-        expect(container).toMatchSnapshot()
-
-        const channelMenuBtn = container!.querySelector('.user-item.channel-item .MenuWrapper')
-        expect(channelMenuBtn).not.toBeNull()
-        userEvent.click(channelMenuBtn as Element)
-
-        const unlinkOption = screen.getByText('Unlink')
-        expect(unlinkOption).not.toBeNull()
-        userEvent.click(unlinkOption)
-
-        const unlinkConfirmationBtn = screen.getByText('Unlink channel')
-        expect(unlinkConfirmationBtn).not.toBeNull()
-        userEvent.click(unlinkConfirmationBtn)
-
-        expect(mockedOctoClient.patchBoard).toBeCalled()
-
-        const closeButton = screen.getByRole('button', {name: 'Close dialog'})
-        expect(closeButton).toBeDefined()
-    })
-
     test('should match snapshot, with template', async () => {
         const sharing: ISharing = {
             id: '',
@@ -671,7 +625,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users: IUser[] = [

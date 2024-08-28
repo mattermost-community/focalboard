@@ -46,7 +46,7 @@ exports[`components/onboardingTour/addComments/CopyLinkTourStep after hover 1`] 
         >
           <img
             alt="tutorial tour tip product image"
-            src="test-file-stub"
+            src="http://localhost/test-file-stub"
           />
         </div>
         <div

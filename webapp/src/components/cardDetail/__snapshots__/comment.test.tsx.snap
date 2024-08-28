@@ -19,7 +19,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
       </div>
       <div
         class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        data-tooltip="October 01, 2020 at 12:00 AM"
       >
         <div
           class="comment-date"
@@ -147,7 +147,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
       </div>
       <div
         class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        data-tooltip="October 01, 2020 at 12:00 AM"
       >
         <div
           class="comment-date"
@@ -275,7 +275,7 @@ exports[`components/cardDetail/comment return comment readonly 1`] = `
       </div>
       <div
         class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        data-tooltip="October 01, 2020 at 12:00 AM"
       >
         <div
           class="comment-date"
@@ -323,7 +323,7 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
       </div>
       <div
         class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        data-tooltip="October 01, 2020 at 12:00 AM"
       >
         <div
           class="comment-date"
@@ -460,7 +460,7 @@ exports[`components/cardDetail/comment return guest comment and delete comment 1
       </div>
       <div
         class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        data-tooltip="October 01, 2020 at 12:00 AM"
       >
         <div
           class="comment-date"
@@ -597,7 +597,7 @@ exports[`components/cardDetail/comment return guest comment readonly 1`] = `
       </div>
       <div
         class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        data-tooltip="October 01, 2020 at 12:00 AM"
       >
         <div
           class="comment-date"

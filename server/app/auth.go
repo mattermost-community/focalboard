@@ -5,7 +5,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/pkg/errors"
 )

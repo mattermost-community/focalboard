@@ -10,7 +10,7 @@ import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
-import {Channel, ChannelTypeOpen, ChannelTypePrivate} from '../../store/channels'
+import {Channel} from '../../store/channels'
 import {getMe, getBoardUsersList} from '../../store/users'
 
 import {ClientConfig} from '../../config/clientConfig'
@@ -40,15 +40,12 @@ import {getSelectBaseStyle} from '../../theme'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchIcon from '../../widgets/icons/search'
-import PrivateIcon from '../../widgets/icons/lockOutline'
-import PublicIcon from '../../widgets/icons/globe'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import {useHasPermissions} from '../../hooks/permissions'
 
 import TeamPermissionsRow from './teamPermissionsRow'
-import ChannelPermissionsRow from './channelPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
 import './shareBoard.scss'
@@ -301,12 +298,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             const user = userOrChannel as IUser
             return (
                 <div className='user-item'>
-                    {Utils.isFocalboardPlugin() &&
-                        <img
-                            src={Utils.getProfilePicture(user.id)}
-                            className='user-item__img'
-                        />
-                    }
                     <div className='ml-3'>
                         <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                         <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
@@ -317,20 +308,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             )
         }
 
-        if (!Utils.isFocalboardPlugin()) {
-            return null
-        }
-
-        const channel = userOrChannel as Channel
-        return (
-            <div className='user-item'>
-                {channel.type === ChannelTypePrivate && <PrivateIcon/>}
-                {channel.type === ChannelTypeOpen && <PublicIcon/>}
-                <div className='ml-3'>
-                    <strong>{channel.display_name}</strong>
-                </div>
-            </div>
-        )
+        return null
     }
 
     let confirmSubtext
@@ -380,22 +358,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             }}
                             loadOptions={async (inputValue: string) => {
                                 const result = []
-                                if (Utils.isFocalboardPlugin()) {
-                                    const excludeBots = true
-                                    const users = await client.searchTeamUsers(inputValue, excludeBots)
-                                    if (users) {
-                                        result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
-                                    }
-                                    if (!board.isTemplate) {
-                                        const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
-                                        if (channels) {
-                                            result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
-                                        }
-                                    }
-                                } else {
-                                    const users = await client.searchTeamUsers(inputValue) || []
-                                    result.push(...users)
-                                }
+                                const users = await client.searchTeamUsers(inputValue) || []
+                                result.push(...users)
                                 return result
                             }}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
@@ -404,9 +368,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u: IUser|Channel) => (u as IUser).username || (u as Channel).display_name}
                             isMulti={false}
-                            placeholder={board.isTemplate ?
-                                intl.formatMessage({id: 'ShareTemplate.searchPlaceholder', defaultMessage: 'Search for people'}) :
-                                intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})
+                            placeholder={board.isTemplate ? intl.formatMessage({id: 'ShareTemplate.searchPlaceholder', defaultMessage: 'Search for people'}) : intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})
                             }
                             onChange={(newValue) => {
                                 if (newValue && (newValue as IUser).username) {
@@ -422,7 +384,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             </BoardPermissionGate>
             <div className='user-items'>
                 <TeamPermissionsRow/>
-                <ChannelPermissionsRow teammateNameDisplay={me?.props?.teammateNameDisplay || clientConfig.teammateNameDisplay}/>
 
                 {boardUsers.map((user) => {
                     if (!members[user.id]) {

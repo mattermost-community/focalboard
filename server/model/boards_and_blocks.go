@@ -8,7 +8,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 var ErrNoBoardsInBoardsAndBlocks = errors.New("at least one board is required")

@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 // servicesAPI is the interface required my the Params to interact with the mattermost-server.
@@ -18,22 +18,15 @@ type servicesAPI interface {
 type Params struct {
 	DBType           string
 	ConnectionString string
+	DBPingAttempts   int
 	TablePrefix      string
 	Logger           mlog.LoggerIFace
 	DB               *sql.DB
-	IsPlugin         bool
 	IsSingleUser     bool
 	NewMutexFn       MutexFactory
 	ServicesAPI      servicesAPI
 	SkipMigrations   bool
 	ConfigFn         func() *mmModel.Config
-}
-
-func (p Params) CheckValid() error {
-	if p.IsPlugin && p.NewMutexFn == nil {
-		return ErrStoreParam{name: "NewMutexFn", issue: "cannot be nil in plugin mode"}
-	}
-	return nil
 }
 
 type ErrStoreParam struct {

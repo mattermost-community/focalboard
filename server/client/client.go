@@ -12,7 +12,7 @@ import (
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 const (
@@ -213,36 +213,6 @@ func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	defer closeBody(r)
 
 	return model.TeamFromJSON(r.Body), BuildResponse(r)
-}
-
-func (c *Client) GetTeamBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
-	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v", timeRange, page, perPage)
-	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights"+query, "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	var boardInsightsList *model.BoardInsightsList
-	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
-		return nil, BuildErrorResponse(r, jsonErr)
-	}
-	return boardInsightsList, BuildResponse(r)
-}
-
-func (c *Client) GetUserBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
-	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v&team_id=%v", timeRange, page, perPage, teamID)
-	r, err := c.DoAPIGet(c.GetMeRoute()+"/boards/insights"+query, "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	var boardInsightsList *model.BoardInsightsList
-	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
-		return nil, BuildErrorResponse(r, jsonErr)
-	}
-	return boardInsightsList, BuildResponse(r)
 }
 
 func (c *Client) GetBlocksForBoard(boardID string) ([]*model.Block, *Response) {
@@ -973,22 +943,6 @@ func (c *Client) ImportArchive(teamID string, data io.Reader) *Response {
 	return BuildResponse(r)
 }
 
-func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
-	r, err := c.DoAPIGet("/limits", "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	var limits *model.BoardsCloudLimits
-	err = json.NewDecoder(r.Body).Decode(&limits)
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-
-	return limits, BuildResponse(r)
-}
-
 func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where string, userID string) (bool, *Response) {
 	r, err := c.DoAPIPost("/content-blocks/"+srcBlockID+"/moveto/"+where+"/"+dstBlockID, "")
 	if err != nil {
@@ -997,22 +951,6 @@ func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where st
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
-}
-
-func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
-	r, err := c.DoAPIGet("/statistics", "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	var stats *model.BoardsStatistics
-	err = json.NewDecoder(r.Body).Decode(&stats)
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-
-	return stats, BuildResponse(r)
 }
 
 func (c *Client) GetBoardsForCompliance(teamID string, page, perPage int) (*model.BoardsComplianceResponse, *Response) {

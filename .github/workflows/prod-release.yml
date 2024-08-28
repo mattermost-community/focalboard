@@ -20,14 +20,8 @@ jobs:
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
-    - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
-
     - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
-
-    - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm ci
       run: cd focalboard/webapp; npm ci --no-optional
@@ -35,12 +29,12 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: 16.1.0
+        node-version: 20.11.0
 
     - name: apt-get update
       run: sudo apt-get update
@@ -69,7 +63,7 @@ jobs:
         path: ${{ github.workspace }}/focalboard/linux/dist/focalboard-linux.tar.gz
 
   macos:
-    runs-on: macos-11
+    runs-on: macos-12
 
     steps:
 
@@ -81,14 +75,8 @@ jobs:
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
-    - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
-
     - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
-
-    - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm ci
       run: cd focalboard/webapp; npm ci --no-optional
@@ -96,7 +84,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: List Xcode versions
       run: ls -n /Applications/ | grep Xcode*
@@ -125,14 +113,8 @@ jobs:
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
-    - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
-
     - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
-
-    - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
@@ -143,7 +125,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19.5
+        go-version: 1.21
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v1
@@ -169,57 +151,4 @@ jobs:
       with:
         name: focalboard-win.zip
         path: ${{ github.workspace }}/focalboard/win-wpf/dist/focalboard-win.zip
-
-  plugin-release:
-    runs-on: ubuntu-20.04
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        path: "focalboard"
-
-    - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
-
-    - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
-
-    - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
-
-    - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
-
-    - name: npm ci
-      run: cd focalboard/webapp; npm ci --no-optional
-
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19.5
-
-    - name: Set up Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.1.0
-
-    - name: Build webapp
-      run: cd focalboard; make webapp
-
-    - name: npm ci plugin dependencies
-      run: cd focalboard/mattermost-plugin/webapp && npm ci
-
-    - name: Build plugin
-      run: cd focalboard/mattermost-plugin; make dist
-      env:
-        BUILD_NUMBER: ${{ github.run_id }}
-
-    - name: Rename plugin file
-      run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
-
-    - name: Upload plugin artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: mattermost-plugin-focalboard.tar.gz
-        path: ${{ github.workspace }}/focalboard/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz
+  

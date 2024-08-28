@@ -1167,13 +1167,13 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <div
-            class="KanbanCard false"
+            class="KanbanCard"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu "
+              class="MenuWrapper optionsMenu"
               role="button"
             >
               <button
@@ -1201,13 +1201,13 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
           <div
-            class="KanbanCard false"
+            class="KanbanCard"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu "
+              class="MenuWrapper optionsMenu"
               role="button"
             >
               <button
@@ -8974,13 +8974,13 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <div
-            class="KanbanCard false"
+            class="KanbanCard"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu "
+              class="MenuWrapper optionsMenu"
               role="button"
             >
               <button
@@ -9493,13 +9493,13 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-column"
         >
           <div
-            class="KanbanCard false"
+            class="KanbanCard"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu "
+              class="MenuWrapper optionsMenu"
               role="button"
             >
               <button

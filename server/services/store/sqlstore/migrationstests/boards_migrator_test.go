@@ -8,18 +8,17 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/mattermost/mattermost-plugin-api/cluster"
+	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 	"github.com/mattermost/morph"
 	"github.com/mattermost/morph/drivers"
 	"github.com/mattermost/morph/drivers/mysql"
 	"github.com/mattermost/morph/drivers/postgres"
 	"github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
-	"github.com/mgdelacroix/foundation"
 
-	"github.com/mattermost/mattermost-server/v6/db"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	mmSqlStore "github.com/mattermost/mattermost-server/v6/store/sqlstore"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	mmSqlStore "github.com/mattermost/mattermost/server/public/utils/sql"
+	"github.com/mattermost/mattermost/server/v8/channels/db"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -202,13 +201,15 @@ func (bm *BoardsMigrator) Setup() error {
 		}
 	}
 
+	logger, _ := mlog.NewLogger()
+
 	storeParams := sqlstore.Params{
 		DBType:           bm.driverName,
+		DBPingAttempts:   5,
 		ConnectionString: bm.connString,
 		TablePrefix:      tablePrefix,
-		Logger:           mlog.CreateConsoleTestLogger(false, mlog.LvlDebug),
+		Logger:           logger,
 		DB:               bm.db,
-		IsPlugin:         bm.withMattermostMigrations,
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return nil, fmt.Errorf("not implemented")
 		},
@@ -243,9 +244,8 @@ func (bm *BoardsMigrator) MigrateToStep(step int) error {
 	return nil
 }
 
-func (bm *BoardsMigrator) Interceptors() map[int]foundation.Interceptor {
-	return map[int]foundation.Interceptor{
-		18: bm.store.RunDeletedMembershipBoardsMigration,
+func (bm *BoardsMigrator) Interceptors() map[int]func() error {
+	return map[int]func() error{
 		35: func() error {
 			return bm.store.RunDeDuplicateCategoryBoardsMigration(35)
 		},

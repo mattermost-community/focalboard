@@ -160,6 +160,7 @@ func TestMoveContentBlock(t *testing.T) {
 
 	for _, tc := range ttCases {
 		t.Run(tc.name, func(t *testing.T) {
+			tc := tc
 			if tc.parentBlock != nil {
 				if tc.parentBlock.ID == "invalid-card" {
 					th.Store.EXPECT().GetBlock(tc.srcBlock.ParentID).Return(nil, model.NewErrNotFound("test"))

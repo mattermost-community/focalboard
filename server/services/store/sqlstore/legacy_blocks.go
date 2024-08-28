@@ -3,64 +3,18 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
-
-func legacyBoardFields(prefix string) []string {
-	// substitute new columns with `"\"\""` (empty string) so as to allow
-	// row scan to continue to work with new models.
-
-	fields := []string{
-		"id",
-		"team_id",
-		"COALESCE(channel_id, '')",
-		"COALESCE(created_by, '')",
-		"modified_by",
-		"type",
-		"''", // substitute for minimum_role column.
-		"title",
-		"description",
-		"icon",
-		"show_description",
-		"is_template",
-		"template_version",
-		"COALESCE(properties, '{}')",
-		"COALESCE(card_properties, '[]')",
-		"create_at",
-		"update_at",
-		"delete_at",
-	}
-
-	if prefix == "" {
-		return fields
-	}
-
-	prefixedFields := make([]string, len(fields))
-	for i, field := range fields {
-		switch {
-		case strings.HasPrefix(field, "COALESCE("):
-			prefixedFields[i] = strings.Replace(field, "COALESCE(", "COALESCE("+prefix, 1)
-		case field == "''":
-			prefixedFields[i] = field
-		default:
-			prefixedFields[i] = prefix + field
-		}
-	}
-	return prefixedFields
-}
 
 // legacyBlocksFromRows is the old getBlock version that still uses
 // the old block model. This method is kept to enable the unique IDs
 // data migration.
-//
-//nolint:unused
 func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]*model.Block, error) {
 	results := []*model.Block{}
 
@@ -113,8 +67,6 @@ func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]*model.Block, error) 
 // getLegacyBlock is the old getBlock version that still uses the old
 // block model. This method is kept to enable the unique IDs data
 // migration.
-//
-//nolint:unused
 func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(
@@ -158,8 +110,6 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID 
 // insertLegacyBlock is the old insertBlock version that still uses
 // the old block model. This method is kept to enable the unique IDs
 // data migration.
-//
-//nolint:unused
 func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block *model.Block, userID string) error {
 	if block.BoardID == "" {
 		return model.ErrBlockEmptyBoardID
@@ -252,8 +202,4 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 	}
 
 	return nil
-}
-
-func (s *SQLStore) getLegacyBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
-	return s.getBoardsFieldsByCondition(db, legacyBoardFields(""), conditions...)
 }

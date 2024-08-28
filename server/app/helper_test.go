@@ -17,8 +17,8 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore/mocks"
 )
 
 type TestHelper struct {
@@ -35,7 +35,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	store := mockstore.NewMockStore(ctrl)
 	filesBackend := &mocks.FileBackend{}
 	auth := auth.New(&cfg, store, nil)
-	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
+	logger, _ := mlog.NewLogger()
 	sessionToken := "TESTTOKEN"
 	wsserver := ws.NewServer(auth, sessionToken, false, logger, store)
 	webhook := webhook.NewClient(&cfg, logger)
@@ -43,7 +43,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 
 	mockStore := permissionsMocks.NewMockStore(ctrl)
 	mockAPI := mmpermissionsMocks.NewMockAPI(ctrl)
-	permissions := mmpermissions.New(mockStore, mockAPI, mlog.CreateConsoleTestLogger(true, mlog.LvlError))
+	permissions := mmpermissions.New(mockStore, mockAPI, mlog.CreateConsoleTestLogger(t))
 
 	appServices := Services{
 		Auth:             auth,

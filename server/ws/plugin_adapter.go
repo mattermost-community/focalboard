@@ -12,8 +12,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 const websocketMessagePrefix = "custom_focalboard_"
@@ -663,7 +663,7 @@ func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription
 
 func (pa *PluginAdapter) BroadcastCardLimitTimestampChange(cardLimitTimestamp int64) {
 	pa.logger.Debug("BroadcastCardLimitTimestampChange",
-		mlog.Int64("cardLimitTimestamp", cardLimitTimestamp),
+		mlog.Int("cardLimitTimestamp", cardLimitTimestamp),
 	)
 
 	message := UpdateCardLimitTimestamp{

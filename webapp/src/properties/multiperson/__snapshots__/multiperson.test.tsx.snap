@@ -14,18 +14,19 @@ exports[`properties/multiperson not readonly 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
+      role="log"
     />
     <div
       class="react-select__control css-18140j1-Control"
     >
       <div
-        class="react-select__value-container react-select__value-container--is-multi react-select__value-container--has-value css-o7cxt9-ValueContainer"
+        class="react-select__value-container react-select__value-container--is-multi react-select__value-container--has-value css-pcwdi-ValueContainer"
       >
         <div
-          class="css-1rhbuit-multiValue react-select__multi-value"
+          class="react-select__multi-value css-1p3m7a8-multiValue"
         >
           <div
-            class="css-12jo7m5 react-select__multi-value__label"
+            class="react-select__multi-value__label css-wsp0cs-MultiValueGeneric"
           >
             <div
               class="MultiPerson-item"
@@ -35,7 +36,7 @@ exports[`properties/multiperson not readonly 1`] = `
           </div>
           <div
             aria-label="Remove [object Object]"
-            class="css-xb97g8 react-select__multi-value__remove"
+            class="react-select__multi-value__remove css-12a83d4-MultiValueRemove"
             role="button"
           >
             <svg
@@ -53,10 +54,10 @@ exports[`properties/multiperson not readonly 1`] = `
           </div>
         </div>
         <div
-          class="css-1rhbuit-multiValue react-select__multi-value"
+          class="react-select__multi-value css-1p3m7a8-multiValue"
         >
           <div
-            class="css-12jo7m5 react-select__multi-value__label"
+            class="react-select__multi-value__label css-wsp0cs-MultiValueGeneric"
           >
             <div
               class="MultiPerson-item"
@@ -66,7 +67,7 @@ exports[`properties/multiperson not readonly 1`] = `
           </div>
           <div
             aria-label="Remove [object Object]"
-            class="css-xb97g8 react-select__multi-value__remove"
+            class="react-select__multi-value__remove css-12a83d4-MultiValueRemove"
             role="button"
           >
             <svg
@@ -84,10 +85,11 @@ exports[`properties/multiperson not readonly 1`] = `
           </div>
         </div>
         <div
-          class="react-select__input-container css-ox1y69-Input"
+          class="react-select__input-container css-1p5v8kp-Input"
           data-value=""
         >
           <input
+            aria-activedescendant=""
             aria-autocomplete="list"
             aria-expanded="false"
             aria-haspopup="true"
@@ -110,7 +112,7 @@ exports[`properties/multiperson not readonly 1`] = `
       >
         <div
           aria-hidden="true"
-          class="react-select__indicator react-select__clear-indicator css-tpaeio-indicatorContainer"
+          class="react-select__indicator react-select__clear-indicator css-31haax-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -126,11 +128,11 @@ exports[`properties/multiperson not readonly 1`] = `
           </svg>
         </div>
         <span
-          class="react-select__indicator-separator css-43ykx9-indicatorSeparator"
+          class="react-select__indicator-separator css-1uei4ir-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class="react-select__indicator react-select__dropdown-indicator css-19sxey8-indicatorContainer"
+          class="react-select__indicator react-select__dropdown-indicator css-uycnsi-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -165,24 +167,26 @@ exports[`properties/multiperson not readonly not existing user 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
+      role="log"
     />
     <div
       class="react-select__control css-18140j1-Control"
     >
       <div
-        class="react-select__value-container react-select__value-container--is-multi css-433wy7-ValueContainer"
+        class="react-select__value-container react-select__value-container--is-multi css-1gbdvdc-ValueContainer"
       >
         <div
-          class="react-select__placeholder css-14el2xx-placeholder"
+          class="react-select__placeholder css-1jqq78o-placeholder"
           id="react-select-2-placeholder"
         >
           Empty
         </div>
         <div
-          class="react-select__input-container css-ox1y69-Input"
+          class="react-select__input-container css-1p5v8kp-Input"
           data-value=""
         >
           <input
+            aria-activedescendant=""
             aria-autocomplete="list"
             aria-describedby="react-select-2-placeholder"
             aria-expanded="false"
@@ -205,11 +209,11 @@ exports[`properties/multiperson not readonly not existing user 1`] = `
         class="react-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <span
-          class="react-select__indicator-separator css-43ykx9-indicatorSeparator"
+          class="react-select__indicator-separator css-1uei4ir-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class="react-select__indicator react-select__dropdown-indicator css-19sxey8-indicatorContainer"
+          class="react-select__indicator react-select__dropdown-indicator css-uycnsi-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -263,27 +267,36 @@ exports[`properties/multiperson user dropdown open 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
+      role="log"
     >
       <span
         id="aria-selection"
       />
       <span
-        id="aria-context"
+        id="aria-focused"
+      />
+      <span
+        id="aria-results"
       >
-        option username-3 focused, 3 of 3. 1 result available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+        1 result available.
+      </span>
+      <span
+        id="aria-guidance"
+      >
+        Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
       class="react-select__control react-select__control--is-focused react-select__control--menu-is-open css-18140j1-Control"
     >
       <div
-        class="react-select__value-container react-select__value-container--is-multi react-select__value-container--has-value css-o7cxt9-ValueContainer"
+        class="react-select__value-container react-select__value-container--is-multi react-select__value-container--has-value css-pcwdi-ValueContainer"
       >
         <div
-          class="css-1rhbuit-multiValue react-select__multi-value"
+          class="react-select__multi-value css-1p3m7a8-multiValue"
         >
           <div
-            class="css-12jo7m5 react-select__multi-value__label"
+            class="react-select__multi-value__label css-wsp0cs-MultiValueGeneric"
           >
             <div
               class="MultiPerson-item"
@@ -293,7 +306,7 @@ exports[`properties/multiperson user dropdown open 1`] = `
           </div>
           <div
             aria-label="Remove [object Object]"
-            class="css-xb97g8 react-select__multi-value__remove"
+            class="react-select__multi-value__remove css-12a83d4-MultiValueRemove"
             role="button"
           >
             <svg
@@ -311,10 +324,10 @@ exports[`properties/multiperson user dropdown open 1`] = `
           </div>
         </div>
         <div
-          class="css-1rhbuit-multiValue react-select__multi-value"
+          class="react-select__multi-value css-1p3m7a8-multiValue"
         >
           <div
-            class="css-12jo7m5 react-select__multi-value__label"
+            class="react-select__multi-value__label css-wsp0cs-MultiValueGeneric"
           >
             <div
               class="MultiPerson-item"
@@ -324,7 +337,7 @@ exports[`properties/multiperson user dropdown open 1`] = `
           </div>
           <div
             aria-label="Remove [object Object]"
-            class="css-xb97g8 react-select__multi-value__remove"
+            class="react-select__multi-value__remove css-12a83d4-MultiValueRemove"
             role="button"
           >
             <svg
@@ -342,15 +355,15 @@ exports[`properties/multiperson user dropdown open 1`] = `
           </div>
         </div>
         <div
-          class="react-select__input-container css-ox1y69-Input"
+          class="react-select__input-container css-1p5v8kp-Input"
           data-value=""
         >
           <input
+            aria-activedescendant="react-select-4-option-2"
             aria-autocomplete="list"
             aria-controls="react-select-4-listbox"
             aria-expanded="true"
             aria-haspopup="true"
-            aria-owns="react-select-4-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
@@ -370,7 +383,7 @@ exports[`properties/multiperson user dropdown open 1`] = `
       >
         <div
           aria-hidden="true"
-          class="react-select__indicator react-select__clear-indicator css-13eygzs-indicatorContainer"
+          class="react-select__indicator react-select__clear-indicator css-3pqe01-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -386,11 +399,11 @@ exports[`properties/multiperson user dropdown open 1`] = `
           </svg>
         </div>
         <span
-          class="react-select__indicator-separator css-43ykx9-indicatorSeparator"
+          class="react-select__indicator-separator css-1uei4ir-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class="react-select__indicator react-select__dropdown-indicator css-hl9mox-indicatorContainer"
+          class="react-select__indicator react-select__dropdown-indicator css-zngtjc-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -408,16 +421,20 @@ exports[`properties/multiperson user dropdown open 1`] = `
       </div>
     </div>
     <div
-      class="react-select__menu css-10b6da7-menu"
-      id="react-select-4-listbox"
+      class="react-select__menu css-1slvcut-menu"
     >
       <div
-        class="react-select__menu-list react-select__menu-list--is-multi css-g29tl0-MenuList"
+        aria-multiselectable="true"
+        class="react-select__menu-list react-select__menu-list--is-multi css-1d1qzc4-MenuList"
+        id="react-select-4-listbox"
+        role="listbox"
       >
         <div
           aria-disabled="false"
-          class="react-select__option react-select__option--is-focused css-1bwtvog-option"
+          aria-selected="false"
+          class="react-select__option react-select__option--is-focused css-63bi6m-option"
           id="react-select-4-option-2"
+          role="option"
           tabindex="-1"
         >
           <div

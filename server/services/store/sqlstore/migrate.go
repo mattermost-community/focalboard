@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"embed"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -13,9 +12,9 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	sqlUtils "github.com/mattermost/mattermost/server/public/utils/sql"
 
 	"github.com/mattermost/morph"
 	drivers "github.com/mattermost/morph/drivers"
@@ -41,8 +40,6 @@ const (
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
 
-var errChannelCreatorNotInTeam = errors.New("channel creator not found in user teams")
-
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
@@ -50,12 +47,12 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
 	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = sqlstore.ResetReadTimeout(connectionString)
+		connectionString, err = sqlUtils.ResetReadTimeout(connectionString)
 		if err != nil {
 			return nil, err
 		}
 
-		connectionString, err = sqlstore.AppendMultipleStatementsFlag(connectionString)
+		connectionString, err = sqlUtils.AppendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
@@ -68,26 +65,12 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	}
 	*settings.DriverName = s.dbType
 
-	db := sqlstore.SetupConnection("master", connectionString, &settings)
+	db, _ := sqlUtils.SetupConnection(s.logger, "master", connectionString, &settings, s.dbPingAttempts)
 
 	return db, nil
 }
 
 func (s *SQLStore) Migrate() error {
-	if s.isPlugin {
-		mutex, mutexErr := s.NewMutexFn("Boards_dbMutex")
-		if mutexErr != nil {
-			return fmt.Errorf("error creating database mutex: %w", mutexErr)
-		}
-
-		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
-		mutex.Lock()
-		defer func() {
-			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
-			mutex.Unlock()
-		}()
-	}
-
 	if err := s.EnsureSchemaMigrationFormat(); err != nil {
 		return err
 	}
@@ -152,7 +135,6 @@ func (s *SQLStore) Migrate() error {
 		"postgres":   s.dbType == model.PostgresDBType,
 		"sqlite":     s.dbType == model.SqliteDBType,
 		"mysql":      s.dbType == model.MysqlDBType,
-		"plugin":     s.isPlugin,
 		"singleUser": s.isSingleUser,
 	}
 
@@ -228,14 +210,6 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 		return mErr
 	}
 
-	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
-		return fmt.Errorf("error running teamless boards migration: %w", mErr)
-	}
-
-	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
-		return fmt.Errorf("error running deleted membership boards migration: %w", mErr)
-	}
-
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
 		return mErr
 	}
@@ -293,7 +267,7 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 	}
 
 	for _, migration := range applied {
-		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
+		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint("version", migration.Version), mlog.String("name", migration.Name))
 	}
 
 	if _, err = engine.Apply(version - currentVersion); err != nil {

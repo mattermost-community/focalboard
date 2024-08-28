@@ -82,24 +82,26 @@ exports[`components/blocksEditor/editor should match snapshot on empty 1`] = `
         aria-live="polite"
         aria-relevant="additions text"
         class="css-1f43avz-a11yText-A11yText"
+        role="log"
       />
       <div
-        class=" css-4bb158-control"
+        class=" css-1haocjs-control"
       >
         <div
-          class=" css-30zlo3-ValueContainer"
+          class=" css-b2z5qd-ValueContainer"
         >
           <div
-            class=" css-14el2xx-placeholder"
+            class=" css-1jqq78o-placeholder"
             id="react-select-2-placeholder"
           >
             Introduce your text or your slash command
           </div>
           <div
-            class=" css-g5309v-Input"
+            class=" css-26cneq-Input"
             data-value=""
           >
             <input
+              aria-activedescendant=""
               aria-autocomplete="list"
               aria-describedby="react-select-2-placeholder"
               aria-expanded="false"

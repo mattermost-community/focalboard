@@ -13,7 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/permissions"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 const (
@@ -41,7 +41,6 @@ type API struct {
 	MattermostAuth  bool
 	logger          mlog.LoggerIFace
 	audit           *audit.Audit
-	isPlugin        bool
 }
 
 func NewAPI(
@@ -51,7 +50,6 @@ func NewAPI(
 	permissions permissions.PermissionsService,
 	logger mlog.LoggerIFace,
 	audit *audit.Audit,
-	isPlugin bool,
 ) *API {
 	return &API{
 		app:             app,
@@ -60,7 +58,6 @@ func NewAPI(
 		permissions:     permissions,
 		logger:          logger,
 		audit:           audit,
-		isPlugin:        isPlugin,
 	}
 }
 
@@ -85,8 +82,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerAchivesRoutes(apiv2)
 	a.registerSubscriptionsRoutes(apiv2)
 	a.registerFilesRoutes(apiv2)
-	a.registerLimitsRoutes(apiv2)
-	a.registerInsightsRoutes(apiv2)
 	a.registerOnboardingRoutes(apiv2)
 	a.registerSearchRoutes(apiv2)
 	a.registerConfigRoutes(apiv2)

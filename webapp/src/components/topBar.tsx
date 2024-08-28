@@ -7,10 +7,10 @@ import './topBar.scss'
 import {FormattedMessage} from 'react-intl'
 
 import HelpIcon from '../widgets/icons/help'
-import {Utils} from '../utils'
 import {Constants} from '../constants'
 
 const TopBar = (): JSX.Element => {
+    const focalboardFeedbackUrl = 'https://www.focalboard.com/fwlink/feedback-focalboard.html?v=' + Constants.versionString
     return (
         <div></div>
     )

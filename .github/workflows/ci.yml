@@ -15,7 +15,7 @@ env:
 jobs:
 
   ci-ubuntu-server:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
@@ -27,38 +27,36 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        path: "focalboard"
+      uses: actions/checkout@v4
+
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
-        go-version: 1.19.5
+        go-version-file: server/go.mod
 
     - name: "Test server: ${{matrix['db']}}"
-      run: cd focalboard; make server-test-${{matrix['db']}}
+      run: make server-test-${{matrix['db']}}
 
   ci-ubuntu-webapp:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: "focalboard"
+        
     - name: npm ci
-      run: |
-        cd focalboard/webapp && npm ci && cd -
-        cd focalboard/mattermost-plugin/webapp && npm ci
+      run: cd focalboard/webapp && npm ci && cd -
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
-        go-version: 1.19.5
+        go-version-file: focalboard/server/go.mod
 
     - name: Setup Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 16.1.0
+        node-version-file: focalboard/webapp/.nvmrc
 
     - name: Build Linux server
       run: cd focalboard; make server-linux-package
@@ -85,20 +83,20 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: "focalboard"
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
-        go-version: 1.19.5
+        go-version-file: focalboard/server/go.mod
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: cd focalboard; make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
-    runs-on: macos-11
+    runs-on: macos-12
 
     strategy:
       matrix:
@@ -107,14 +105,14 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: "focalboard"
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
-        go-version: 1.19.5
+        go-version-file: focalboard/server/go.mod
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: cd focalboard; make server-test-mini-${{matrix['db']}}

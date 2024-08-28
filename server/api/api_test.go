@@ -9,14 +9,12 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/stretchr/testify/require"
-
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 func TestErrorResponse(t *testing.T) {
-	testAPI := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
+	testAPI := API{logger: mlog.CreateConsoleTestLogger(t)}
 
 	testCases := []struct {
 		Name         string
@@ -47,7 +45,6 @@ func TestErrorResponse(t *testing.T) {
 		{"ErrNotFound", model.NewErrNotFound("board"), http.StatusNotFound, "board"},
 		{"ErrNotAllFound", model.NewErrNotAllFound("block", []string{"1", "2"}), http.StatusNotFound, "not all instances of {block} in {1, 2} found"},
 		{"sql.ErrNoRows", sql.ErrNoRows, http.StatusNotFound, "rows"},
-		{"mattermost-plugin-api/ErrNotFound", pluginapi.ErrNotFound, http.StatusNotFound, "not found"},
 		{"ErrNotFound", model.ErrCategoryDeleted, http.StatusNotFound, "category is deleted"},
 
 		// request entity too large

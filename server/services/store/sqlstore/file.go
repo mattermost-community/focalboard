@@ -8,8 +8,8 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *mmModel.FileInfo) error {
@@ -40,7 +40,7 @@ func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *mmModel.FileInfo) er
 		s.logger.Error(
 			"failed to save fileinfo",
 			mlog.String("file_name", fileInfo.Name),
-			mlog.Int64("size", fileInfo.Size),
+			mlog.Int("size", fileInfo.Size),
 			mlog.Err(err),
 		)
 		return err

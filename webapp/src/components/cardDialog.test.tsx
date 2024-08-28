@@ -27,7 +27,6 @@ const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
 const mockedOctoClient = mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
-mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
 beforeAll(() => {
     mockDOM()
@@ -45,11 +44,7 @@ describe('components/cardDialog', () => {
 
     const state = {
         clientConfig: {
-            value: {
-                featureFlags: {
-                    subscriptions: true,
-                },
-            },
+            value: {},
         },
         comments: {
             comments: {},
@@ -330,11 +325,7 @@ describe('components/cardDialog', () => {
         const newState = JSON.parse(JSON.stringify(state))
         newState.users.blockSubscriptions = [{blockId: card.id}]
         newState.clientConfig = {
-            value: {
-                featureFlags: {
-                    subscriptions: true,
-                },
-            },
+            value: {},
         }
 
         const newStore = mockStateStore([], newState)

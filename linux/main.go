@@ -71,13 +71,13 @@ func runServer(port int) (*server.Server, error) {
 	permissionsService := localpermissions.New(db, logger)
 
 	params := server.Params{
-		Cfg:             config,
-		SingleUserToken: sessionToken,
-		DBStore:         db,
-		Logger:          logger,
-		ServerID:        "",
-		WSAdapter:       nil,
-		NotifyBackends:  nil,
+		Cfg:                config,
+		SingleUserToken:    sessionToken,
+		DBStore:            db,
+		Logger:             logger,
+		ServerID:           "",
+		WSAdapter:          nil,
+		NotifyBackends:     nil,
 		PermissionsService: permissionsService,
 	}
 

@@ -8,7 +8,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 const (

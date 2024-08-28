@@ -91,9 +91,7 @@ describe('components/cardDetail/CardDetail', () => {
                 current: card.id,
             },
             clientConfig: {
-                value: {
-                    featureFlags: {},
-                },
+                value: {},
             },
         })
 
@@ -157,9 +155,7 @@ describe('components/cardDetail/CardDetail', () => {
                 },
             },
             clientConfig: {
-                value: {
-                    featureFlags: {},
-                },
+                value: {},
             },
         })
 
@@ -245,9 +241,7 @@ describe('components/cardDetail/CardDetail', () => {
                 current: welcomeCard.id,
             },
             clientConfig: {
-                value: {
-                    featureFlags: {},
-                },
+                value: {},
             },
         })
 
@@ -354,9 +348,7 @@ describe('components/cardDetail/CardDetail', () => {
                 current: welcomeCard.id,
             },
             clientConfig: {
-                value: {
-                    featureFlags: {},
-                },
+                value: {},
             },
         })
 
@@ -461,9 +453,7 @@ describe('components/cardDetail/CardDetail', () => {
                 current: welcomeCard.id,
             },
             clientConfig: {
-                value: {
-                    featureFlags: {},
-                },
+                value: {},
             },
         }
         const store = mockStore(state)
@@ -561,9 +551,7 @@ describe('components/cardDetail/CardDetail', () => {
                 current: limitedCard.id,
             },
             clientConfig: {
-                value: {
-                    featureFlags: {},
-                },
+                value: {},
             },
         })
 

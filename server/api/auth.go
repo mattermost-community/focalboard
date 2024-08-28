@@ -13,16 +13,22 @@ import (
 	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
 func (a *API) registerAuthRoutes(r *mux.Router) {
 	// personal-server specific routes. These are not needed in plugin mode.
-	if !a.isPlugin {
-		r.HandleFunc("/login", a.handleLogin).Methods("POST")
-		r.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
-		r.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
-	}
+	r.HandleFunc("/login", a.handleLogin).Methods("POST")
+	r.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
+	r.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+
+    /*
+	r.HandleFunc("/login", a.handleLogin).Methods("POST")
+	r.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
+	r.HandleFunc("/register", a.handleRegister).Methods("POST")
+	r.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
+	r.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+    */
 }
 
 func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {

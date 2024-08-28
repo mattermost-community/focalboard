@@ -158,7 +158,6 @@ describe('src/components/workspace', () => {
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
                 teammateNameDisplay: 'username',
-                featureFlags: {},
             },
         },
         contents: {
@@ -283,7 +282,6 @@ describe('src/components/workspace', () => {
                     telemetryid: 'telemetry',
                     enablePublicSharedBoards: true,
                     teammateNameDisplay: 'username',
-                    featureFlags: {},
                 },
             },
             sidebar: {
@@ -305,113 +303,6 @@ describe('src/components/workspace', () => {
         })
 
         expect(container).toMatchSnapshot()
-    })
-
-    test('show open card tooltip', async () => {
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
-
-        const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
-
-        const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
-        onboardingCard.id = 'card1'
-        onboardingCard.title = 'Create a new card'
-        onboardingCard.boardId = welcomeBoard.id
-
-        const localState = {
-            teams: {
-                current: {id: 'team-id', title: 'Test Team'},
-            },
-            users: {
-                me: {
-                    id: 'user-id-1',
-                    username: 'username_1',
-                    email: '',
-                    nickname: '',
-                    firstname: '',
-                    lastname: '',
-                    create_at: 0,
-                    update_at: 0,
-                    is_bot: false,
-                    roles: 'system_user',
-                },
-                boardUsers: {[me.id]: me},
-                blockSubscriptions: [],
-                myConfig: {
-                    welcomePageViewed: {value: '1'},
-                    onboardingTourStarted: {value: true},
-                    tourCategory: {value: 'onboarding'},
-                    onboardingTourStep: {value: '0'},
-                },
-            },
-            boards: {
-                current: welcomeBoard.id,
-                boards: {
-                    [welcomeBoard.id]: welcomeBoard,
-                },
-                templates: [],
-                myBoardMemberships: {
-                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
-                },
-            },
-            limits: {
-                limits: {
-                    cards: 0,
-                    used_cards: 0,
-                    card_limit_timestamp: 0,
-                    views: 0,
-                },
-            },
-            globalTemplates: {
-                value: [],
-            },
-            views: {
-                views: {
-                    [activeView.id]: activeView,
-                },
-                current: activeView.id,
-            },
-            cards: {
-                templates: [],
-                cards: [onboardingCard, card1, card2, card3],
-            },
-            searchText: {},
-            clientConfig: {
-                value: {
-                    telemetry: true,
-                    telemetryid: 'telemetry',
-                    enablePublicSharedBoards: true,
-                    teammateNameDisplay: 'username',
-                    featureFlags: {},
-                },
-            },
-            contents: {
-                contents: {},
-            },
-            comments: {
-                comments: {},
-            },
-            sidebar: {
-                categoryAttributes: [
-                    categoryAttribute1,
-                ],
-                hiddenBoardIDs: [],
-            },
-        }
-        const localStore = mockStateStore([thunk], localState)
-
-        await act(async () => {
-            render(wrapDNDIntl(
-                <ReduxProvider store={localStore}>
-                    <Workspace readonly={false}/>
-                </ReduxProvider>,
-            ), {wrapper: MemoryRouter})
-            jest.runOnlyPendingTimers()
-        })
-
-        const elements = document.querySelectorAll('.OpenCardTourStep')
-        expect(elements.length).toBe(2)
-        expect(elements[1]).toMatchSnapshot()
     })
 
     test('show add new view tooltip', async () => {
@@ -487,7 +378,6 @@ describe('src/components/workspace', () => {
                     telemetryid: 'telemetry',
                     enablePublicSharedBoards: true,
                     teammateNameDisplay: 'username',
-                    featureFlags: {},
                 },
             },
             contents: {
@@ -518,114 +408,6 @@ describe('src/components/workspace', () => {
         await waitFor(() => expect(document.querySelectorAll('.AddViewTourStep')).toBeDefined(), {timeout: 5000})
 
         const elements = document.querySelectorAll('.AddViewTourStep')
-        expect(elements.length).toBe(2)
-        expect(elements[1]).toMatchSnapshot()
-    })
-
-    test('show copy link tooltip', async () => {
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
-
-        const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
-
-        const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
-        onboardingCard.id = 'card1'
-        onboardingCard.title = 'Create a new card'
-        onboardingCard.boardId = welcomeBoard.id
-
-        const localState = {
-            teams: {
-                current: {id: 'team-id', title: 'Test Team'},
-            },
-            users: {
-                me: {
-                    id: 'user-id-1',
-                    username: 'username_1',
-                    email: '',
-                    nickname: '',
-                    firstname: '',
-                    lastname: '',
-                    create_at: 0,
-                    update_at: 0,
-                    is_bot: false,
-                    roles: 'system_user',
-                },
-                myConfig: {
-                    welcomePageViewed: {value: '1'},
-                    onboardingTourStarted: {value: true},
-                    tourCategory: {value: 'board'},
-                    onboardingTourStep: {value: '1'},
-                },
-                boardUsers: {[me.id]: me},
-                blockSubscriptions: [],
-            },
-            boards: {
-                current: welcomeBoard.id,
-                boards: {
-                    [welcomeBoard.id]: welcomeBoard,
-                },
-                templates: [],
-                myBoardMemberships: {
-                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
-                },
-            },
-            limits: {
-                limits: {
-                    cards: 0,
-                    used_cards: 0,
-                    card_limit_timestamp: 0,
-                    views: 0,
-                },
-            },
-            globalTemplates: {
-                value: [],
-            },
-            views: {
-                views: {
-                    [activeView.id]: activeView,
-                },
-                current: activeView.id,
-            },
-            cards: {
-                templates: [],
-                cards: [onboardingCard, card1, card2, card3],
-            },
-            searchText: {},
-            clientConfig: {
-                value: {
-                    telemetry: true,
-                    telemetryid: 'telemetry',
-                    enablePublicSharedBoards: true,
-                    teammateNameDisplay: 'username',
-                    featureFlags: {},
-                },
-            },
-            contents: {
-                contents: {},
-            },
-            comments: {
-                comments: {},
-            },
-            sidebar: {
-                categoryAttributes: [
-                    categoryAttribute1,
-                ],
-                hiddenBoardIDs: [],
-            },
-        }
-        const localStore = mockStateStore([thunk], localState)
-
-        await act(async () => {
-            render(wrapDNDIntl(
-                <ReduxProvider store={localStore}>
-                    <Workspace readonly={false}/>
-                </ReduxProvider>,
-            ), {wrapper: MemoryRouter})
-            jest.runOnlyPendingTimers()
-        })
-
-        const elements = document.querySelectorAll('.CopyLinkTourStep')
-        expect(elements).toBeDefined()
         expect(elements.length).toBe(2)
         expect(elements[1]).toMatchSnapshot()
     })

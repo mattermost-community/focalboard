@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 func (a *API) registerStatisticsRoutes(r *mux.Router) {
