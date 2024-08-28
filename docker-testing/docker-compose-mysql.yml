@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   mysql:
-    image: "mysql/mysql-server:5.7.12"
+    image: "mysql/mysql-server:8.0.32"
     restart: always
     environment:
       MYSQL_ROOT_HOST: "%"
