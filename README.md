@@ -51,7 +51,7 @@ Boards API docs can be found over at <https://htmlpreview.github.io/?https://git
 
 Our [developer guide](https://developers.mattermost.com/contribute/focalboard/personal-server-setup-guide) has detailed instructions on how to set up your development environment for the **Personal Server**. You can also join the [~Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to connect with other developers.
 
-Clone [mattermost-server](https://github.com/mattermost/mattermost-server) into sibling directory.
+Clone [mattermost](https://github.com/mattermost/mattermost) into sibling directory.
 
 Create an `.env` file in the focalboard directory that contains:
 
