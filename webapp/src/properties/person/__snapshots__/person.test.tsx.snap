@@ -14,6 +14,7 @@ exports[`properties/person not readOnly not existing user 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
+      role="log"
     />
     <div
       class="react-select__control css-18140j1-Control"

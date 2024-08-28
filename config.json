@@ -5,6 +5,7 @@
 	"dbconfig": "./focalboard.db?_busy_timeout=5000",
 	"dbtableprefix": "",
 	"postgres_dbconfig": "dbname=focalboard sslmode=disable",
+	"dbpingattempts": 5,
 	"useSSL": false,
 	"webpath": "./webapp/pack",
 	"filesdriver": "local",
