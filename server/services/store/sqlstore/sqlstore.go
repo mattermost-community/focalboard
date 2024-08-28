@@ -38,7 +38,6 @@ type MutexFactory func(name string) (*cluster.Mutex, error)
 
 // New creates a new SQL implementation of the store.
 func New(params Params) (*SQLStore, error) {
-
 	params.Logger.Info("connectDatabase", mlog.String("dbType", params.DBType))
 	store := &SQLStore{
 		// TODO: add replica DB support too.

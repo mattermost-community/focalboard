@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"embed"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -41,8 +40,6 @@ const (
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
 
-var errChannelCreatorNotInTeam = errors.New("channel creator not found in user teams")
-
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
@@ -74,7 +71,6 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 }
 
 func (s *SQLStore) Migrate() error {
-
 	if err := s.EnsureSchemaMigrationFormat(); err != nil {
 		return err
 	}
