@@ -239,7 +239,7 @@ exports[`components/cardDetail/CardDetail should show add comments tour tip 1`] 
         >
           <img
             alt="tutorial tour tip product image"
-            src="test-file-stub"
+            src="http://localhost/test-file-stub"
           />
         </div>
         <div
@@ -364,7 +364,7 @@ exports[`components/cardDetail/CardDetail should show add description tour tip 1
         >
           <img
             alt="tutorial tour tip product image"
-            src="test-file-stub"
+            src="http://localhost/test-file-stub"
           />
         </div>
         <div
@@ -487,7 +487,7 @@ exports[`components/cardDetail/CardDetail should show add properties tour tip 1`
         >
           <img
             alt="tutorial tour tip product image"
-            src="test-file-stub"
+            src="http://localhost/test-file-stub"
           />
         </div>
         <div

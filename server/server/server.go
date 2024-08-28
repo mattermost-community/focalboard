@@ -143,7 +143,7 @@ func New(params Params) (*Server, error) {
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
-	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService, params.IsPlugin)
+	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -228,7 +228,6 @@ func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.Logge
 		TablePrefix:      config.DBTablePrefix,
 		Logger:           logger,
 		DB:               sqlDB,
-		IsPlugin:         false,
 		IsSingleUser:     isSingleUser,
 	}
 

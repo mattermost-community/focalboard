@@ -15,7 +15,6 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeam} from '../../store/teams'
 import {getCurrentBoard} from '../../store/boards'
 import {Permission} from '../../constants'
-import {Utils} from '../../utils'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 import ConfirmationDialogBox from '../confirmationDialogBox'
@@ -93,12 +92,6 @@ const TeamPermissionsRow = (): JSX.Element => {
         <div className='user-item'>
             {changeRoleConfirmation && confirmationDialog}
             <div className='user-item__content'>
-                {Utils.isFocalboardPlugin() &&
-                    <CompassIcon
-                        icon='mattermost'
-                        className='user-item__img'
-                    />
-                }
                 <div className='ml-3'><strong>{intl.formatMessage({id: 'ShareBoard.teamPermissionsText', defaultMessage: 'Everyone at {teamName} Team'}, {teamName: team?.title})}</strong></div>
             </div>
             <div>

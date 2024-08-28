@@ -7,12 +7,8 @@ import {
 } from 'react-router-dom'
 
 import {Utils} from './utils'
-import {getLoggedIn, getMe, getMyConfig} from './store/users'
+import {getLoggedIn} from './store/users'
 import {useAppSelector} from './store/hooks'
-import {UserSettingKey} from './userSettings'
-import {IUser} from './user'
-import {getClientConfig} from './store/clientConfig'
-import {ClientConfig} from './config/clientConfig'
 
 type RouteProps = {
     path: string|string[]
@@ -26,30 +22,7 @@ type RouteProps = {
 
 function FBRoute(props: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
-    const me = useAppSelector<IUser|null>(getMe)
-    const myConfig = useAppSelector(getMyConfig)
-    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
-
     let redirect: React.ReactNode = null
-
-    // No FTUE for guests
-    const disableTour = me?.is_guest || clientConfig?.featureFlags?.disableTour || false
-
-    const showWelcomePage = !disableTour &&
-        Utils.isFocalboardPlugin() &&
-        (me?.id !== 'single-user') &&
-        props.path !== '/welcome' &&
-        loggedIn === true &&
-        !myConfig[UserSettingKey.WelcomePageViewed]
-
-    if (showWelcomePage) {
-        redirect = ({match}: any) => {
-            if (props.getOriginalPath) {
-                return <Redirect to={`/welcome?r=${props.getOriginalPath!(match)}`}/>
-            }
-            return <Redirect to='/welcome'/>
-        }
-    }
 
     if (redirect === null && loggedIn === false && props.loginRequired) {
         redirect = ({match}: any) => {

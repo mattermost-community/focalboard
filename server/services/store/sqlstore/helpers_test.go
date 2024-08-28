@@ -32,7 +32,6 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		TablePrefix:      "test_",
 		Logger:           logger,
 		DB:               sqlDB,
-		IsPlugin:         false,
 	}
 	store, err := New(storeParams)
 	require.NoError(t, err)

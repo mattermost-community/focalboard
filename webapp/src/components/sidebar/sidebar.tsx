@@ -345,47 +345,28 @@ const Sidebar = (props: Props) => {
 
     return (
         <div className='Sidebar octo-sidebar'>
-            {!Utils.isFocalboardPlugin() &&
-                <div className='octo-sidebar-header'>
-                    <div className='heading'>
-                        <SidebarUserMenu/>
-                    </div>
+            <div className='octo-sidebar-header'>
+                <div className='heading'>
+                    <SidebarUserMenu/>
+                </div>
 
-                    <div className='octo-spacer'/>
-                    <div className='sidebarSwitcher'>
-                        <IconButton
-                            onClick={() => {
-                                setUserHidden(true)
-                                setHidden(true)
-                            }}
-                            icon={<HideSidebarIcon/>}
-                        />
-                    </div>
-                </div>}
+                <div className='octo-spacer'/>
+                <div className='sidebarSwitcher'>
+                    <IconButton
+                        onClick={() => {
+                            setUserHidden(true)
+                            setHidden(true)
+                        }}
+                        icon={<HideSidebarIcon/>}
+                    />
+                </div>
+            </div>
 
             {team && team.id !== Constants.globalTeamId &&
-                <div className='WorkspaceTitle'>
-                    {Utils.isFocalboardPlugin() &&
-                    <>
-                        <div className='octo-spacer'/>
-                        <div className='sidebarSwitcher'>
-                            <IconButton
-                                onClick={() => {
-                                    setUserHidden(true)
-                                    setHidden(true)
-                                }}
-                                icon={<HideSidebarIcon/>}
-                            />
-                        </div>
-                    </>
-                    }
-                </div>
+                <div className='WorkspaceTitle'/>
             }
 
-            <BoardsSwitcher
-                onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
-                userIsGuest={me?.is_guest}
-            />
+            <BoardsSwitcher/>
 
             <DragDropContext
                 onDragEnd={onDragEnd}
@@ -426,21 +407,17 @@ const Sidebar = (props: Props) => {
 
             <div className='octo-spacer'/>
 
-            {
-                (!Utils.isFocalboardPlugin()) &&
-                <div
-                    className='add-board'
-                    onClick={props.onBoardTemplateSelectorOpen}
-                >
-                    <FormattedMessage
-                        id='Sidebar.add-board'
-                        defaultMessage='+ Add board'
-                    />
-                </div>
-            }
+            <div
+                className='add-board'
+                onClick={props.onBoardTemplateSelectorOpen}
+            >
+                <FormattedMessage
+                    id='Sidebar.add-board'
+                    defaultMessage='+ Add board'
+                />
+            </div>
 
-            {!Utils.isFocalboardPlugin() &&
-                <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
+            <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>
         </div>
     )
 }

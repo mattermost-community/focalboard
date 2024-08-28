@@ -41,7 +41,6 @@ type API struct {
 	MattermostAuth  bool
 	logger          mlog.LoggerIFace
 	audit           *audit.Audit
-	isPlugin        bool
 }
 
 func NewAPI(
@@ -51,7 +50,6 @@ func NewAPI(
 	permissions permissions.PermissionsService,
 	logger mlog.LoggerIFace,
 	audit *audit.Audit,
-	isPlugin bool,
 ) *API {
 	return &API{
 		app:             app,
@@ -60,7 +58,6 @@ func NewAPI(
 		permissions:     permissions,
 		logger:          logger,
 		audit:           audit,
-		isPlugin:        isPlugin,
 	}
 }
 

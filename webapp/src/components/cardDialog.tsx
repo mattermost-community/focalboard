@@ -1,44 +1,39 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
-import octoClient from '../octoClient'
+import {sendFlashMessage} from '../components/flashMessages'
 import mutator from '../mutator'
+import octoClient from '../octoClient'
+import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
 import Menu from '../widgets/menu'
-import {sendFlashMessage} from '../components/flashMessages'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
 
 import Button from '../widgets/buttons/button'
 
-import {getUserBlockSubscriptionList} from '../store/initialLoad'
-import {getClientConfig} from '../store/clientConfig'
-
-import {IUser} from '../user'
-import {getMe} from '../store/users'
-import {Permission} from '../constants'
-import {Block, createBlock} from '../blocks/block'
 import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
+import {Block, createBlock} from '../blocks/block'
+import {Permission} from '../constants'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 
-import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
+import './cardDialog.scss'
 
 type Props = {
     board: Board
@@ -57,10 +52,8 @@ const CardDialog = (props: Props): JSX.Element => {
     const contents = useAppSelector(getCardContents(props.cardId))
     const comments = useAppSelector(getCardComments(props.cardId))
     const attachments = useAppSelector(getCardAttachments(props.cardId))
-    const clientConfig = useAppSelector(getClientConfig)
     const intl = useIntl()
     const dispatch = useAppDispatch()
-    const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
@@ -159,36 +152,31 @@ const CardDialog = (props: Props): JSX.Element => {
                     const attachmentBlock = createAttachmentBlock(uploadingBlock)
                     attachmentBlock.isUploading = true
                     dispatch(updateAttachments([attachmentBlock]))
-                    if (attachment.size > clientConfig.maxFileSize && Utils.isFocalboardPlugin()) {
-                        removeUploadingAttachment(uploadingBlock)
-                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
-                    } else {
-                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
-                        const xhr = await octoClient.uploadAttachment(boardId, attachment)
-                        if (xhr) {
-                            xhr.upload.onprogress = (event) => {
-                                const percent = Math.floor((event.loaded / event.total) * 100)
-                                dispatch(updateUploadPrecent({
-                                    blockId: attachmentBlock.id,
-                                    uploadPercent: percent,
-                                }))
-                            }
+                    sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
+                    const xhr = await octoClient.uploadAttachment(boardId, attachment)
+                    if (xhr) {
+                        xhr.upload.onprogress = (event) => {
+                            const percent = Math.floor((event.loaded / event.total) * 100)
+                            dispatch(updateUploadPrecent({
+                                blockId: attachmentBlock.id,
+                                uploadPercent: percent,
+                            }))
+                        }
 
-                            xhr.onload = () => {
-                                if (xhr.status === 200 && xhr.readyState === 4) {
-                                    const json = JSON.parse(xhr.response)
-                                    const fileId = json.fileId
-                                    if (fileId) {
-                                        removeUploadingAttachment(uploadingBlock)
-                                        const block = createAttachmentBlock()
-                                        block.fields.fileId = fileId || ''
-                                        block.title = attachment.name
-                                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
-                                        resolve(block)
-                                    } else {
-                                        removeUploadingAttachment(uploadingBlock)
-                                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
-                                    }
+                        xhr.onload = () => {
+                            if (xhr.status === 200 && xhr.readyState === 4) {
+                                const json = JSON.parse(xhr.response)
+                                const fileId = json.fileId
+                                if (fileId) {
+                                    removeUploadingAttachment(uploadingBlock)
+                                    const block = createAttachmentBlock()
+                                    block.fields.fileId = fileId || ''
+                                    block.title = attachment.name
+                                    sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
+                                    resolve(block)
+                                } else {
+                                    removeUploadingAttachment(uploadingBlock)
+                                    sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                                 }
                             }
                         }
@@ -236,43 +224,6 @@ const CardDialog = (props: Props): JSX.Element => {
         )
     }
 
-    const followActionButton = (following: boolean): React.ReactNode => {
-        const followBtn = (
-            <>
-                <Button
-                    className='cardFollowBtn follow'
-                    emphasis='gray'
-                    size='medium'
-                    onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
-                >
-                    {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
-                </Button>
-            </>
-        )
-
-        const unfollowBtn = (
-            <>
-                <Button
-                    className='cardFollowBtn unfollow'
-                    emphasis='tertiary'
-                    size='medium'
-                    onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
-                >
-                    {intl.formatMessage({id: 'CardDetail.Following', defaultMessage: 'Following'})}
-                </Button>
-            </>
-        )
-
-        if (!isTemplate && Utils.isFocalboardPlugin() && !card?.limited) {
-            return (<>{attachBtn()}{following ? unfollowBtn : followBtn}</>)
-        }
-        return (<>{attachBtn()}</>)
-    }
-
-    const followingCards = useAppSelector(getUserBlockSubscriptionList)
-    const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
-    const toolbar = followActionButton(isFollowingCard)
-
     return (
         <>
             <Dialog
@@ -280,7 +231,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
-                toolbar={toolbar}
+                toolbar={attachBtn()}
             >
                 {isTemplate &&
                     <div className='banner'>
