@@ -28,15 +28,16 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      with:
-        path: "focalboard"
+      
+    - run: cat ./docker-testing/docker-compose-mysql.yml
+
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.21
+        go-version-file: server/go.mod
 
     - name: "Test server: ${{matrix['db']}}"
-      run: cd focalboard; make server-test-${{matrix['db']}}
+      run: make server-test-${{matrix['db']}}
 
   ci-ubuntu-webapp:
     runs-on: ubuntu-20.04
@@ -96,7 +97,7 @@ jobs:
       run: cd focalboard; make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
-    runs-on: macos-11
+    runs-on: macos-12
 
     strategy:
       matrix:
