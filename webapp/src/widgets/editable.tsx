@@ -131,6 +131,7 @@ const Editable = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element 
         <input
             {...elementProps}
             ref={elementRef}
+            dir='auto'
         />
     )
 }

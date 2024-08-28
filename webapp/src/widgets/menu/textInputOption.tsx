@@ -19,6 +19,7 @@ function TextInputOption(props: TextInputOptionProps): JSX.Element {
 
     return (
         <input
+            dir='auto'
             ref={nameTextbox}
             type='text'
             className='PropertyMenu menu-textbox menu-option'

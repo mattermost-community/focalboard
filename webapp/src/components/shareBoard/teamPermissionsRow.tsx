@@ -142,7 +142,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                     permissions={[Permission.ManageBoardType]}
                     invert={true}
                 >
-                    <span>{currentRoleName}</span>
+                    <span dir='auto'>{currentRoleName}</span>
                 </BoardPermissionGate>
             </div>
         </div>

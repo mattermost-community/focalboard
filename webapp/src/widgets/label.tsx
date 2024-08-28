@@ -21,6 +21,7 @@ function Label(props: Props): JSX.Element {
     }
     return (
         <span
+            dir='auto'
             className={`Label ${color} ${props.className ? props.className : ''}`}
             title={props.title}
         >

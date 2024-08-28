@@ -5,6 +5,9 @@
 >
 > ️💡 [Learn more](https://forum.mattermost.com/t/upcoming-product-changes-to-boards-and-various-plugins/16669)
 
+Improvements of this fork:
+- BiDi text (Persian, Arabic, Hebrew) support
+
 # Focalboard
 
 ![CI Status](https://github.com/mattermost/focalboard/actions/workflows/ci.yml/badge.svg)
@@ -48,7 +51,7 @@ Boards API docs can be found over at <https://htmlpreview.github.io/?https://git
 
 Our [developer guide](https://developers.mattermost.com/contribute/focalboard/personal-server-setup-guide) has detailed instructions on how to set up your development environment for the **Personal Server**. You can also join the [~Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to connect with other developers.
 
-Clone [mattermost-server](https://github.com/mattermost/mattermost-server) into sibling directory.
+Clone [mattermost](https://github.com/mattermost/mattermost) into sibling directory.
 
 Create an `.env` file in the focalboard directory that contains:
 

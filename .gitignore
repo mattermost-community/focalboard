@@ -15,7 +15,7 @@ pids
 .DS_Store
 
 # VSCode project files
-.vscode
+.vscode/
 *.code-workspace
 
 # golang

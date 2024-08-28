@@ -300,6 +300,7 @@ const SidebarBoardItem = (props: Props) => {
                         >
                             {iconForViewType(view.fields.viewType)}
                             <div
+                                dir='auto'
                                 className='octo-sidebar-title'
                                 title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                             >

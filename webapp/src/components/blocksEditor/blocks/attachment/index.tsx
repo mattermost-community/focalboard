@@ -57,6 +57,7 @@ const Attachment: ContentType<FileInfo> = {
 
         return (
             <input
+                dir='auto'
                 ref={ref}
                 className='Attachment'
                 data-testid='attachment-input'

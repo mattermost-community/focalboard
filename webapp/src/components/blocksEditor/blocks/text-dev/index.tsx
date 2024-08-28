@@ -30,6 +30,7 @@ const Text: ContentType = {
         }, [])
         return (
             <input
+                dir='auto'
                 ref={ref}
                 className='Text'
                 onChange={(e) => props.onChange(e.currentTarget.value)}

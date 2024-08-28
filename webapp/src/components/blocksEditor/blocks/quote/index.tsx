@@ -35,6 +35,7 @@ const Quote: ContentType = {
                 className='Quote'
             >
                 <input
+                    dir='auto'
                     ref={ref}
                     data-testid='quote'
                     onChange={(e) => props.onChange(e.currentTarget.value)}

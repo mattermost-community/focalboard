@@ -56,6 +56,7 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                     values={{
                         property: (
                             <span
+                                dir='auto'
                                 style={{color: 'rgb(var(--center-channel-color-rgb))'}}
                                 id='groupByLabel'
                             >

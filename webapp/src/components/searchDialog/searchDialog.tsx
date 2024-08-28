@@ -50,7 +50,7 @@ export const EmptyResults = (props: {query: string}): JSX.Element => (
                 }}
             />
         </h4>
-        <span>
+        <span dir='auto'>
             <FormattedMessage
                 id='FindBoardsDialog.NoResultsSubtext'
                 defaultMessage='Check the spelling or try another search.'
@@ -115,6 +115,7 @@ const SearchDialog = (props: Props): JSX.Element => {
                     <div className='queryWrapper'>
                         <Search/>
                         <input
+                            dir='auto'
                             className='searchQuery'
                             placeholder='Search for boards'
                             type='text'

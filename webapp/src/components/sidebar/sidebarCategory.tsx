@@ -289,6 +289,7 @@ const SidebarCategory = (props: Props) => {
                                             className={`octo-sidebar-item category ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
                                         >
                                             <div
+                                                dir='auto'
                                                 className='octo-sidebar-title category-title'
                                                 title={props.categoryBoards.name}
                                                 onClick={toggleCollapse}

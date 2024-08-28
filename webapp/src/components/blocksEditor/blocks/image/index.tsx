@@ -62,6 +62,7 @@ const Image: ContentType<FileInfo> = {
                     />
                 )}
                 <input
+                    dir='auto'
                     ref={ref}
                     className='Image'
                     data-testid='image-input'
