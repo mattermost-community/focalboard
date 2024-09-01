@@ -51,7 +51,7 @@ theme = "hugo-elate-theme"
 
   [[params.intro.item]]
     title = "Integrate"
-    description = "Integrate with Mattermsot through incoming and outgoing webhooks, slash commands, OAuth 2.0 and the REST API."
+    description = "Integrate with Mattermost through incoming and outgoing webhooks, slash commands, OAuth 2.0 and the REST API."
     url = "/integrate"
     button = "Start Integrating"
     icon = "icon-wrench"
