@@ -6,6 +6,7 @@ import {useIntl} from 'react-intl'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {useSortable} from '../../hooks/sortable'
+import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
@@ -35,6 +36,7 @@ type Props = {
 
 const KanbanCard = (props: Props) => {
     const {card, board} = props
+    const isCardEmpty = useIsCardEmpty(card)
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
@@ -68,12 +70,12 @@ const KanbanCard = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (card?.title === '' && card?.fields?.contentOrder?.length === 0) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [handleDeleteCard, card.title, card?.fields?.contentOrder?.length])
+    }, [handleDeleteCard, isCardEmpty])
 
     const handleOnClick = useCallback((e: React.MouseEvent) => {
         if (props.onClick) {

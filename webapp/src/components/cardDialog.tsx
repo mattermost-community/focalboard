@@ -11,6 +11,7 @@ import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import {getCard} from '../store/cards'
+import {useIsCardEmpty} from '../hooks/useIsCardEmpty'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -55,6 +56,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
     const isTemplate = card && card.fields.isTemplate
+    const isCardEmpty = useIsCardEmpty(card)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -102,7 +104,7 @@ const CardDialog = (props: Props): JSX.Element => {
         // use may be renaming a card title
         // and accidently delete the card
         // so adding des
-        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }
