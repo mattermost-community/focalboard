@@ -18,13 +18,19 @@ export function importNativeAppSettings(): void {
     const importedKeys = importUserSettingsBlob(NativeApp.settingsBlob)
     const messageType = importedKeys.length ? 'didImportUserSettings' : 'didNotImportUserSettings'
     postWebKitMessage({type: messageType, settingsBlob: exportUserSettingsBlob(), keys: importedKeys})
+    postWebViewMessage({type: messageType, settingsBlob: exportUserSettingsBlob(), keys: importedKeys})
     NativeApp.settingsBlob = null
 }
 
 export function notifySettingsChanged(key: string): void {
     postWebKitMessage({type: 'didChangeUserSettings', settingsBlob: exportUserSettingsBlob(), key})
+    postWebViewMessage({type: 'didChangeUserSettings', settingsBlob: exportUserSettingsBlob(), key})
 }
 
 function postWebKitMessage<T>(message: T) {
     window.webkit?.messageHandlers.nativeApp?.postMessage(message)
+}
+
+function postWebViewMessage<T>(message: T) {
+    window.chrome?.webview?.postMessage(message)
 }
