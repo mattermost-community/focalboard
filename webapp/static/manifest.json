@@ -1,0 +1,10 @@
+{
+  "name": "Focalboard",
+  "display": "standalone",
+    "icons": [
+    {
+      "src": "/static/favicon.svg",
+      "sizes": "any"
+    }
+  ]
+}
