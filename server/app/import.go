@@ -200,7 +200,9 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (*mo
 					if err2 := json.Unmarshal(archiveLine.Data, &board); err2 != nil {
 						return nil, fmt.Errorf("invalid board in archive line %d: %w", lineNum, err2)
 					}
-					board.ModifiedBy = userID
+					if board.ModifiedBy == "" {
+						board.ModifiedBy = userID
+					}
 					board.UpdateAt = now
 					board.TeamID = opt.TeamID
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, &board)
@@ -224,7 +226,9 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (*mo
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return nil, fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
 					}
-					block.ModifiedBy = userID
+					if block.ModifiedBy == "" {
+						block.ModifiedBy = userID
+					}
 					block.UpdateAt = now
 					block.BoardID = boardID
 					boardsAndBlocks.Blocks = append(boardsAndBlocks.Blocks, block)
