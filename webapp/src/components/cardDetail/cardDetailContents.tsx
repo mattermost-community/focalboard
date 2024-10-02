@@ -16,6 +16,9 @@ import {MarkdownEditor} from '../markdownEditor'
 
 import AddDescriptionTourStep from '../onboardingTour/addDescription/add_description'
 
+import {touchCard} from '../../store/cards'
+import {useAppDispatch} from '../../store/hooks'
+
 import {dragAndDropRearrange} from './cardDetailContentsUtility'
 
 export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belowRow'
@@ -161,6 +164,8 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
 const CardDetailContents = (props: Props) => {
     const intl = useIntl()
     const {contents, card, id} = props
+    const dispatch = useAppDispatch()
+
     if (contents.length) {
         return (
             <div className='octo-content'>
@@ -196,6 +201,7 @@ const CardDetailContents = (props: Props) => {
                                 addTextBlock(card, intl, text)
                             }
                         }}
+                        onChange={() => dispatch(touchCard(card.id))}
                     />
                 }
             </div>

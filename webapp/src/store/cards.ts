@@ -29,6 +29,7 @@ type CardsState = {
     cards: {[key: string]: Card}
     templates: {[key: string]: Card}
     cardHiddenWarning: boolean
+    touchedCardId?: string
 }
 
 export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}>(
@@ -106,6 +107,9 @@ const cardsSlice = createSlice({
                 }
             }
         },
+        touchCard: (state: CardsState, action: PayloadAction<string|undefined>) => {
+            state.touchedCardId = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(refreshCards.fulfilled, (state, action) => {
@@ -141,7 +145,7 @@ const cardsSlice = createSlice({
     },
 })
 
-export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
+export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning, touchCard} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
@@ -410,3 +414,4 @@ export const getCurrentCard = createSelector(
 
 export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
 export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning
+export const getTouchedCardId = (state: RootState): string|undefined => state.cards.touchedCardId

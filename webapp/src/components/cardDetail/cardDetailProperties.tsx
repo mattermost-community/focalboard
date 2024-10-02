@@ -23,6 +23,8 @@ import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import propRegistry from '../../properties'
 import {PropertyType} from '../../properties/types'
+import {touchCard} from '../../store/cards'
+import {useAppDispatch} from '../../store/hooks'
 
 type Props = {
     board: Board
@@ -39,6 +41,7 @@ const CardDetailProperties = (props: Props) => {
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const intl = useIntl()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         const newProperty = board.cardProperties.find((property) => property.id === newTemplateId)
@@ -51,6 +54,8 @@ const CardDetailProperties = (props: Props) => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
     function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate: IPropertyTemplate) {
+        dispatch(touchCard(card.id))
+
         const oldType = propRegistry.get(propertyTemplate.type)
 
         // do nothing if no change
@@ -101,6 +106,8 @@ const CardDetailProperties = (props: Props) => {
     }
 
     function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate: IPropertyTemplate) {
+        dispatch(touchCard(card.id))
+
         // set ConfirmationDialogBox Props
         setConfirmationDialogBox({
             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-delete-heading', defaultMessage: 'Confirm delete property'}),
@@ -179,6 +186,7 @@ const CardDetailProperties = (props: Props) => {
                             <PropertyTypes
                                 label={intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
                                 onTypeSelected={async (type) => {
+                                    dispatch(touchCard(card.id))
                                     const template: IPropertyTemplate = {
                                         id: Utils.createGuid(IDType.BlockID),
                                         name: type.displayName(intl),
