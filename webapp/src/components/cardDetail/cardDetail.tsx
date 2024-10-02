@@ -23,7 +23,7 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 import BlockIconSelector from '../blockIconSelector'
 
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {updateCards, setCurrent as setCurrentCard} from '../../store/cards'
+import {updateCards, setCurrent as setCurrentCard, touchCard} from '../../store/cards'
 import {updateContents} from '../../store/contents'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
@@ -225,7 +225,10 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     className='title'
                     value={title}
                     placeholderText='Untitled'
-                    onChange={(newTitle: string) => setTitle(newTitle)}
+                    onChange={(newTitle: string) => {
+                        setTitle(newTitle)
+                        dispatch(touchCard(card.id))
+                    }}
                     saveOnEsc={true}
                     onSave={saveTitle}
                     onCancel={() => setTitle(props.card.title)}
@@ -320,6 +323,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         boardId={card.boardId}
                         blocks={blocks}
                         onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
+                            dispatch(touchCard(card.id))
                             if (block.contentType === 'text' && block.value === '') {
                                 return null
                             }
@@ -335,6 +339,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             return {...block, id: newBlock.id}
                         }}
                         onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
+                            dispatch(touchCard(card.id))
                             const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
                             if (!originalContentBlock) {
                                 return null
@@ -359,6 +364,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             return block
                         }}
                         onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
+                            dispatch(touchCard(card.id))
                             if (block.id) {
                                 const idx = card.fields.contentOrder.indexOf(block.id)
                                 let sourceBlockId: string
