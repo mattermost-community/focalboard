@@ -427,8 +427,8 @@ func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modi
 
 	if fileID != "" {
 		deleteFileInfoQuery := s.getQueryBuilder(db).
-			Update("FileInfo").
-			Set("DeleteAt", model.GetMillis()).
+			Update("file_info").
+			Set("delete_at", model.GetMillis()).
 			Where(sq.Eq{"id": fileID})
 		if _, err := deleteFileInfoQuery.Exec(); err != nil {
 			return err
@@ -984,8 +984,8 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 
 	if len(fileIDs) > 0 {
 		deleteFileInfoQuery := s.getQueryBuilder(db).
-			Update("FileInfo").
-			Set("DeleteAt", model.GetMillis()).
+			Update("file_info").
+			Set("delete_at", model.GetMillis()).
 			Where(sq.Eq{"id": fileIDs})
 
 		if _, err := deleteFileInfoQuery.Exec(); err != nil {
