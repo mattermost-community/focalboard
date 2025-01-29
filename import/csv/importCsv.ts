@@ -1,3 +1,5 @@
+import archiver from 'archiver';
+import { customAlphabet } from 'nanoid';
 import csv from 'csvtojson'
 import * as fs from 'fs'
 import minimist from 'minimist'
@@ -54,7 +56,41 @@ async function main() {
 	const [boards, blocks] = convert(input, title, testrailFormat)
 	const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
 
-	fs.writeFileSync(outputFile, outputData)
+    // split output file of version line + boardLines into two fields
+    const [version, ...boardLines] = outputData.split('\n');
+    const boardData = boardLines.join('\n');
+
+    // Generate a UUID for the board directory
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const generateBase32Identifier = customAlphabet(alphabet, 27);
+
+    // Generate an identifier
+    const newIdentifier = generateBase32Identifier();
+
+    // Create a zip archive in memory
+    const output = fs.createWriteStream(outputFile);
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    output.on('close', () => {
+        console.log(`Archive created successfully: ${outputFile} (${archive.pointer()} total bytes)`);
+    });
+
+    archive.on('error', (err) => {
+        throw err;
+    });
+
+    archive.pipe(output);
+
+    // Add version.json to the root of the archive
+    archive.append(version, { name: 'version.json' });
+
+    // Add board.jsonl to a UUID-named directory within the archive
+    archive.append(boardData, { name: `${newIdentifier}/board.jsonl` });
+
+    // Finalize the archive
+    await archive.finalize();
+
+	// fs.writeFileSync(outputFile, outputData)
 	console.log(`Exported to ${outputFile}`)
 }
 
