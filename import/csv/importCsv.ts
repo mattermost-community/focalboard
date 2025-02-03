@@ -1,3 +1,5 @@
+import archiver from 'archiver';
+import { customAlphabet } from 'nanoid';
 import csv from 'csvtojson'
 import * as fs from 'fs'
 import minimist from 'minimist'
@@ -54,7 +56,41 @@ async function main() {
 	const [boards, blocks] = convert(input, title, testrailFormat)
 	const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
 
-	fs.writeFileSync(outputFile, outputData)
+    // split output file of version line + boardLines into two fields
+    const [version, ...boardLines] = outputData.split('\n');
+    const boardData = boardLines.join('\n');
+
+    // Generate a UUID for the board directory
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const generateBase32Identifier = customAlphabet(alphabet, 27);
+
+    // Generate an identifier
+    const newIdentifier = generateBase32Identifier();
+
+    // Create a zip archive in memory
+    const output = fs.createWriteStream(outputFile);
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    output.on('close', () => {
+        console.log(`Archive created successfully: ${outputFile} (${archive.pointer()} total bytes)`);
+    });
+
+    archive.on('error', (err) => {
+        throw err;
+    });
+
+    archive.pipe(output);
+
+    // Add version.json to the root of the archive
+    archive.append(version, { name: 'version.json' });
+
+    // Add board.jsonl to a UUID-named directory within the archive
+    archive.append(boardData, { name: `${newIdentifier}/board.jsonl` });
+
+    // Finalize the archive
+    await archive.finalize();
+
+	// fs.writeFileSync(outputFile, outputData)
 	console.log(`Exported to ${outputFile}`)
 }
 
@@ -70,7 +106,7 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
     // Each column is a card property
     const columns = getColumns(input)
     columns.forEach(column => {
-        if(column === "Steps" && testrailFormat) {
+        if(column === "Description" && testrailFormat) {
             return
         } else {
             const cardProperty: IPropertyTemplate = {
@@ -96,6 +132,10 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
     blocks.push(view)
 
     // Cards
+
+    // Card properties that shouldn't be read into options
+    const excludedProperties = ["URL", "Author", "Author Username", "Assignee", "Created At (UTC)", "Created At (UTC)", "Closed At (UTC)", "Issue ID", "Updated At (UTC)", "Labels" ];
+
     input.forEach(row => {
         const keys = Object.keys(row)
         console.log(keys)
@@ -116,7 +156,7 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
         // Card properties, skip first key which is the title
         for (const key of keys.slice(1)) {
             const value = row[key]
-            if(key === "Steps" && testrailFormat) {
+            if(key === "Description" && testrailFormat) {
                 const block = createTextBlock()
                 block.title = value
                 block.boardId = board.id
@@ -132,6 +172,11 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
             }
 
             const cardProperty = board.cardProperties.find((o) => o.name === key)!
+            // Check if the property is excluded from having options
+            if (excludedProperties.includes(cardProperty.name)) {
+                console.log(`Skipping options for property: ${cardProperty.name}`);
+                continue;
+            }
             let option = cardProperty.options.find((o) => o.value === value)
             if (!option) {
                 const color = optionColors[optionColorIndex % optionColors.length]
