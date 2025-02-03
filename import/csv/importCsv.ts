@@ -106,7 +106,7 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
     // Each column is a card property
     const columns = getColumns(input)
     columns.forEach(column => {
-        if(column === "Steps" && testrailFormat) {
+        if(column === "Description" && testrailFormat) {
             return
         } else {
             const cardProperty: IPropertyTemplate = {
@@ -132,6 +132,10 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
     blocks.push(view)
 
     // Cards
+
+    // Card properties that shouldn't be read into options
+    const excludedProperties = ["URL", "Author", "Author Username", "Assignee", "Created At (UTC)", "Created At (UTC)", "Closed At (UTC)", "Issue ID", "Updated At (UTC)", "Labels" ];
+
     input.forEach(row => {
         const keys = Object.keys(row)
         console.log(keys)
@@ -152,7 +156,7 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
         // Card properties, skip first key which is the title
         for (const key of keys.slice(1)) {
             const value = row[key]
-            if(key === "Steps" && testrailFormat) {
+            if(key === "Description" && testrailFormat) {
                 const block = createTextBlock()
                 block.title = value
                 block.boardId = board.id
@@ -168,6 +172,11 @@ function convert(input: any[], title: string, testrailFormat: boolean): [Board[]
             }
 
             const cardProperty = board.cardProperties.find((o) => o.name === key)!
+            // Check if the property is excluded from having options
+            if (excludedProperties.includes(cardProperty.name)) {
+                console.log(`Skipping options for property: ${cardProperty.name}`);
+                continue;
+            }
             let option = cardProperty.options.find((o) => o.value === value)
             if (!option) {
                 const color = optionColors[optionColorIndex % optionColors.length]
