@@ -27,12 +27,12 @@ func Test28RemoveTemplateChannelLink(t *testing.T) {
 			Channel_id  string
 		}{}
 
-		bErr := th.f.DB().Get(&board, "SELECT id, is_template, channel_id FROM focalboard_boards WHERE id = 'board-id'")
+		bErr := th.f.DB().Get(&board, "SELECT id, is_template, channel_id FROM karmaboard_boards WHERE id = 'board-id'")
 		require.NoError(t, bErr)
 		require.False(t, board.Is_template)
 		require.Equal(t, "linked-channel", board.Channel_id)
 
-		tErr := th.f.DB().Get(&template, "SELECT id, is_template, channel_id FROM focalboard_boards WHERE id = 'template-id'")
+		tErr := th.f.DB().Get(&template, "SELECT id, is_template, channel_id FROM karmaboard_boards WHERE id = 'template-id'")
 		require.NoError(t, tErr)
 		require.True(t, template.Is_template)
 		require.Equal(t, "linked-channel", template.Channel_id)
@@ -42,12 +42,12 @@ func Test28RemoveTemplateChannelLink(t *testing.T) {
 
 		// then we reuse the structs to load again the data and check
 		// that the changes were correctly applied
-		bErr = th.f.DB().Get(&board, "SELECT id, is_template, channel_id FROM focalboard_boards WHERE id = 'board-id'")
+		bErr = th.f.DB().Get(&board, "SELECT id, is_template, channel_id FROM karmaboard_boards WHERE id = 'board-id'")
 		require.NoError(t, bErr)
 		require.False(t, board.Is_template)
 		require.Equal(t, "linked-channel", board.Channel_id)
 
-		tErr = th.f.DB().Get(&template, "SELECT id, is_template, channel_id FROM focalboard_boards WHERE id = 'template-id'")
+		tErr = th.f.DB().Get(&template, "SELECT id, is_template, channel_id FROM karmaboard_boards WHERE id = 'template-id'")
 		require.NoError(t, tErr)
 		require.True(t, template.Is_template)
 		require.Empty(t, template.Channel_id)

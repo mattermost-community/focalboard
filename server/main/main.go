@@ -1,4 +1,4 @@
-// Server for Focalboard
+// Server for Karmaboard
 package main
 
 import (
@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/server"
-	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/server"
+	"github.com/mattermost/karmaboard/server/services/config"
+	"github.com/mattermost/karmaboard/server/services/permissions/localpermissions"
 )
 import (
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
@@ -100,9 +100,9 @@ func main() {
 
 	singleUserToken := ""
 	if singleUser {
-		singleUserToken = os.Getenv("FOCALBOARD_SINGLE_USER_TOKEN")
+		singleUserToken = os.Getenv("KARMABOARD_SINGLE_USER_TOKEN")
 		if len(singleUserToken) < 1 {
-			logger.Fatal("The FOCALBOARD_SINGLE_USER_TOKEN environment variable must be set for single user mode ")
+			logger.Fatal("The KARMABOARD_SINGLE_USER_TOKEN environment variable must be set for single user mode ")
 			return
 		}
 		logger.Info("Single user mode")

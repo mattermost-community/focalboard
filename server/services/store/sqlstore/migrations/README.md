@@ -1,13 +1,13 @@
 # Migration Scripts
 
-These scripts are executed against the current database on server start-up. Any scripts previously executed are skipped, however these scripts are designed to be idempotent for Postgres and MySQL. To correct common problems with schema and data migrations the `focalboard_schema_migrations` table can be cleared of all records and the server restarted.
+These scripts are executed against the current database on server start-up. Any scripts previously executed are skipped, however these scripts are designed to be idempotent for Postgres and MySQL. To correct common problems with schema and data migrations the `karmaboard_schema_migrations` table can be cleared of all records and the server restarted.
 
 The following built-in variables are available:
 
 | Name  | Syntax | Description |
 | ----- | -----  | -----       |
 | schemaName | {{ .schemaName }}     | Returns the database/schema name (e.g. `mattermost_`, `mattermost_test`, `public`, ...) |
-| prefix | {{ .prefix }}     | Returns the table name prefix (e.g. `focalbaord_`) |
+| prefix | {{ .prefix }}     | Returns the table name prefix (e.g. `karmaboard_`) |
 | postgres | {{if .postgres }} ... {{end}} | Returns true if the current database is Postgres. |
 | sqlite   | {{if .sqlite }} ... {{end}}   | Returns true if the current database is Sqlite3. |
 | mysql    | {{if .mysql }} ... {{end}}   | Returns true if the current database is MySQL. |

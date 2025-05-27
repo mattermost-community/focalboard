@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Focalboard Web Clipper",
+  "name": "Karmaboard Web Clipper",
   "version": "0.1.0",
-  "description": "Save websites directly into Focalboard",
+  "description": "Save websites directly into Karmaboard",
   "icons": {
     "48": "icons/48.png",
     "96": "icons/96.png"
@@ -13,7 +13,7 @@
       "19": "icons/19.png",
       "38": "icons/38.png"
     },
-    "default_title": "Save to Focalboard",
+    "default_title": "Save to Karmaboard",
     "default_popup": "src/views/popup.html",
     "show_matches": ["<all_urls>"]
   },
@@ -28,7 +28,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "focalboard-web-clipper@mattermost.com"
+      "id": "karmaboard-web-clipper@mattermost.com"
     }
   }
 }

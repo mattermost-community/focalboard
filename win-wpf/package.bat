@@ -10,10 +10,10 @@ echo Packaging...
 
 rd /s /q msix
 mkdir msix
-xcopy /e /i /y Focalboard\bin\x64\Release msix
+xcopy /e /i /y Karmaboard\bin\x64\Release msix
 mkdir msix\Assets
 copy art\StoreLogo.png msix\Assets
 copy art\icon150.png msix\Assets
 copy art\icon44.png msix\Assets
 copy AppxManifest.xml msix
-makeappx.exe pack /o /v /d msix /p Focalboard.msix
+makeappx.exe pack /o /v /d msix /p Karmaboard.msix

@@ -83,8 +83,8 @@ const BoardPage = (props: Props): JSX.Element => {
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
-    if (Utils.isFocalboardLegacy() && !props.readonly) {
-        window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
+    if (Utils.isKarmaboardLegacy() && !props.readonly) {
+        window.location.href = window.location.href.replace('/plugins/karmaboard', '/boards')
     }
 
     // TODO: Make this less brittle. This only works because this is the root render function

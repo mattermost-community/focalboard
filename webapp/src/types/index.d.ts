@@ -7,7 +7,7 @@ type TelemetryProps = {
 export interface IAppWindow extends Window {
     baseURL?: string
     frontendBaseURL?: string
-    isFocalboardPlugin?: boolean
+    isKarmaboardPlugin?: boolean
     getCurrentTeamId?: () => string
     msCrypto: Crypto
     openInNewBrowser?: ((href: string) => void) | null
@@ -23,6 +23,6 @@ export type SuiteWindow = Window & {
     getCurrentTeamId?: () => string
     baseURL?: string
     frontendBaseURL?: string
-    isFocalboardPlugin?: boolean
+    isKarmaboardPlugin?: boolean
     WebappUtils?: any
 }

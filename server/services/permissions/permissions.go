@@ -5,7 +5,7 @@
 package permissions
 
 import (
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )

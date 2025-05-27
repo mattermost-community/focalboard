@@ -1,6 +1,6 @@
 package app
 
-import "github.com/mattermost/focalboard/server/model"
+import "github.com/mattermost/karmaboard/server/model"
 
 func (a *App) GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions) ([]*model.Board, bool, error) {
 	return a.store.GetBoardsForCompliance(opts)

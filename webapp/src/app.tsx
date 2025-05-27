@@ -17,7 +17,7 @@ import {fetchMe, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 import {fetchClientConfig} from './store/clientConfig'
-import FocalboardRouter from './router'
+import KarmaboardRouter from './router'
 
 import {IUser} from './user'
 
@@ -52,7 +52,7 @@ const App = (props: Props): JSX.Element => {
                 <div id='frame'>
                     <div id='main'>
                         <NewVersionBanner/>
-                        <FocalboardRouter history={props.history}/>
+                        <KarmaboardRouter history={props.history}/>
                     </div>
                 </div>
             </DndProvider>

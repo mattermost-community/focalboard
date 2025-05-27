@@ -10,14 +10,14 @@ import HelpIcon from '../widgets/icons/help'
 import {Constants} from '../constants'
 
 const TopBar = (): JSX.Element => {
-    const focalboardFeedbackUrl = 'https://www.focalboard.com/fwlink/feedback-focalboard.html?v=' + Constants.versionString
+    const karmaboardFeedbackUrl = 'https://www.karmaboard.com/fwlink/feedback-karmaboard.html?v=' + Constants.versionString
     return (
         <div
             className='TopBar'
         >
             <a
                 className='link'
-                href={focalboardFeedbackUrl}
+                href={karmaboardFeedbackUrl}
                 target='_blank'
                 rel='noreferrer'
             >
@@ -27,7 +27,7 @@ const TopBar = (): JSX.Element => {
                 />
             </a>
             <a
-                href='https://www.focalboard.com/guide/user?utm_source=webapp'
+                href='https://www.karmaboard.com/guide/user?utm_source=webapp'
                 target='_blank'
                 rel='noreferrer'
             >

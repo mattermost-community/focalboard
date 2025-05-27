@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 package notifymentions
 
-import "github.com/mattermost/focalboard/server/model"
+import "github.com/mattermost/karmaboard/server/model"
 
 type AppAPI interface {
 	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)

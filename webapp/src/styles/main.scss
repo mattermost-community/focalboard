@@ -6,8 +6,8 @@ html {
     height: 100%;
 }
 
-.focalboard-body,
-#focalboard-app {
+.karmaboard-body,
+#karmaboard-app {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -20,11 +20,11 @@ html {
     margin: 0;
 }
 
-.focalboard-plugin-root {
+.karmaboard-plugin-root {
     height: 100%;
 }
 
-.focalboard-body {
+.karmaboard-body {
     --cursor-color: rgb(var(--center-channel-color-rgb));
 
     padding: 0;
@@ -73,7 +73,7 @@ html {
         margin-bottom: 8px;
     }
 
-    #focalboard-app {
+    #karmaboard-app {
         button {
             &.style--none {
                 background: transparent;

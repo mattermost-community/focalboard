@@ -5,9 +5,9 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
-    container_name: focalboard
+    container_name: karmaboard
     depends_on:
-      - focalboard-db
+      - karmaboard-db
     expose:
       - 8000
     environment:
@@ -15,8 +15,8 @@ services:
       - VIRTUAL_PORT=8000
       - VIRTUAL_PROTO=http
     volumes:
-      - "./config.json:/opt/focalboard/config.json"
-      - fbdata:/opt/focalboard/data
+      - "./config.json:/opt/karmaboard/config.json"
+      - fbdata:/opt/karmaboard/data
     restart: always
     networks:
       - proxy
@@ -24,7 +24,7 @@ services:
 
   proxy:
     image: jwilder/nginx-proxy:latest
-    container_name: focalboard-proxy
+    container_name: karmaboard-proxy
     restart: always
     ports:
       - 80:80
@@ -33,9 +33,9 @@ services:
     networks:
       - proxy
 
-  focalboard-db:
+  karmaboard-db:
     image: postgres:latest
-    container_name: focalboard-postgres
+    container_name: karmaboard-postgres
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data

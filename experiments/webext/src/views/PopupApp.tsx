@@ -44,7 +44,7 @@ export default function OptionsApp() {
   return <div className="PopupApp">
     <div className="status">
       {inProgress && <div className="in-progress">
-        Saving to Focalboard...
+        Saving to Karmaboard...
       </div>}
       {!inProgress && !error && <div className="success">
         Saved to <a href={board} target="_blank">board</a>

@@ -10,8 +10,8 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -270,7 +270,7 @@ func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch m
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: model.PreferencesCategoryFocalboard,
+				Category: model.PreferencesCategoryKarmaboard,
 				Name:     key,
 				Value:    value,
 			}
@@ -294,7 +294,7 @@ func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch m
 		for _, key := range patch.DeletedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: model.PreferencesCategoryFocalboard,
+				Category: model.PreferencesCategoryKarmaboard,
 				Name:     key,
 			}
 
@@ -375,7 +375,7 @@ func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) (mmModel.
 		From(s.tablePrefix + "preferences").
 		Where(sq.Eq{
 			"userid":   userID,
-			"category": model.PreferencesCategoryFocalboard,
+			"category": model.PreferencesCategoryKarmaboard,
 		})
 
 	rows, err := query.Query()

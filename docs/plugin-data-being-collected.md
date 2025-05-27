@@ -1,6 +1,6 @@
 # Plugin data being collected
 
-Boards metadata is collected and sent to Mattermost every 24 hours. Visit the [Focalboard telemetry file](https://github.com/mattermost/focalboard/blob/main/webapp/src/telemetry/telemetryClient.ts) for information about the action and event data collected.
+Boards metadata is collected and sent to Mattermost every 24 hours. Visit the [Karmaboard telemetry file](https://github.com/mattermost/karmaboard/blob/main/webapp/src/telemetry/telemetryClient.ts) for information about the action and event data collected.
 
 Other telemetry information that Mattermost collects includes:
 

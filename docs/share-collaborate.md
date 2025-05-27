@@ -21,7 +21,7 @@ After you've copied the link, paste it into any channel or direct message to sha
 
 Boards belong to teams, and any member of a team can be granted access to a board.
 
-**Note**: If you're using a Focalboard plugin version prior to v7.2, boards are tied to channel workspaces and board membership is determined by channel membership. In this case, roles and permissions information on this page won't be applicable to you.
+**Note**: If you're using a Karmaboard plugin version prior to v7.2, boards are tied to channel workspaces and board membership is determined by channel membership. In this case, roles and permissions information on this page won't be applicable to you.
 
 ### Board roles
 
@@ -82,7 +82,7 @@ Remember, a board can only be linked to one channel at a time. Linking another c
 
 ## Guest accounts
 
-From version v7.4 of the Focalboard plugin, [Mattermost guest accounts](https://docs.mattermost.com/onboard/guest-accounts.html#guest-accounts) are supported. If you're not able to access this functionality, you may be on an earlier version of the Focalboard plugin.
+From version v7.4 of the Karmaboard plugin, [Mattermost guest accounts](https://docs.mattermost.com/onboard/guest-accounts.html#guest-accounts) are supported. If you're not able to access this functionality, you may be on an earlier version of the Karmaboard plugin.
 
 Guests can:
 

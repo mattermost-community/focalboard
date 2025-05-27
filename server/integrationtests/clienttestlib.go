@@ -8,16 +8,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattermost/focalboard/server/client"
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/server"
-	"github.com/mattermost/focalboard/server/services/auth"
-	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
-	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/client"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/server"
+	"github.com/mattermost/karmaboard/server/services/auth"
+	"github.com/mattermost/karmaboard/server/services/config"
+	"github.com/mattermost/karmaboard/server/services/permissions/localpermissions"
+	"github.com/mattermost/karmaboard/server/services/permissions/mmpermissions"
+	"github.com/mattermost/karmaboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/services/store/sqlstore"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
@@ -262,8 +262,8 @@ func newTestServerLocalMode() *server.Server {
 }
 
 func SetupTestHelperWithToken(t *testing.T) *TestHelper {
-	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
-	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+	origUnitTesting := os.Getenv("KARMABOARD_UNIT_TESTING")
+	os.Setenv("KARMABOARD_UNIT_TESTING", "1")
 
 	sessionToken := "TESTTOKEN"
 
@@ -283,8 +283,8 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
-	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
-	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+	origUnitTesting := os.Getenv("KARMABOARD_UNIT_TESTING")
+	os.Setenv("KARMABOARD_UNIT_TESTING", "1")
 
 	th := &TestHelper{
 		T:                  t,
@@ -297,8 +297,8 @@ func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
-	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
-	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+	origUnitTesting := os.Getenv("KARMABOARD_UNIT_TESTING")
+	os.Setenv("KARMABOARD_UNIT_TESTING", "1")
 
 	th := &TestHelper{
 		T:                  t,
@@ -311,8 +311,8 @@ func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
-	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
-	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+	origUnitTesting := os.Getenv("KARMABOARD_UNIT_TESTING")
+	os.Setenv("KARMABOARD_UNIT_TESTING", "1")
 
 	th := &TestHelper{
 		T:                  t,
@@ -386,7 +386,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 var ErrRegisterFail = errors.New("register failed")
 
 func (th *TestHelper) TearDown() {
-	os.Setenv("FOCALBOARD_UNIT_TESTING", th.origEnvUnitTesting)
+	os.Setenv("KARMABOARD_UNIT_TESTING", th.origEnvUnitTesting)
 
 	logger := th.Server.Logger()
 

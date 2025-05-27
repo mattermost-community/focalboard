@@ -6,7 +6,7 @@ package plugindelivery
 import (
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 )
 
 const (

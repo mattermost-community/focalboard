@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 	"github.com/stretchr/testify/require"
 )
 

@@ -12,9 +12,9 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -116,19 +116,19 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 }
 
 func (s *MattermostAuthLayer) CreateUser(user *model.User) (*model.User, error) {
-	return nil, store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
+	return nil, store.NewNotSupportedError("no user creation allowed from karmaboard, create it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUser(user *model.User) (*model.User, error) {
-	return nil, store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return nil, store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
@@ -142,7 +142,7 @@ func (s *MattermostAuthLayer) PatchUserPreferences(userID string, patch model.Us
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: model.PreferencesCategoryFocalboard,
+				Category: model.PreferencesCategoryKarmaboard,
 				Name:     key,
 				Value:    value,
 			}
@@ -180,7 +180,7 @@ func (s *MattermostAuthLayer) PatchUserPreferences(userID string, patch model.Us
 		for _, key := range patch.DeletedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: model.PreferencesCategoryFocalboard,
+				Category: model.PreferencesCategoryKarmaboard,
 				Name:     key,
 			}
 
@@ -241,23 +241,23 @@ func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model
 }
 
 func (s *MattermostAuthLayer) CreateSession(session *model.Session) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) RefreshSession(session *model.Session) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateSession(session *model.Session) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) DeleteSession(sessionID string) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+	return store.NewNotSupportedError("no update allowed from karmaboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
@@ -1211,7 +1211,7 @@ func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Cha
 func (s *MattermostAuthLayer) getBoardsBotID() (string, error) {
 	if boardsBotID == "" {
 		var err error
-		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
+		boardsBotID, err = s.servicesAPI.EnsureBot(model.KarmaboardBot)
 		if err != nil {
 			s.logger.Error("failed to ensure boards bot", mlog.Err(err))
 			return "", err

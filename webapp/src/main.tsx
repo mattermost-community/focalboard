@@ -45,5 +45,5 @@ ReactDOM.render(
             <MainApp/>
         </ReduxProvider>
     ),
-    document.getElementById('focalboard-app'),
+    document.getElementById('karmaboard-app'),
 )

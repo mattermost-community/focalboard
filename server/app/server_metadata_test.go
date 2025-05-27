@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 )
 
 func TestGetServerMetadata(t *testing.T) {

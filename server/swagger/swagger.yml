@@ -4,121 +4,121 @@ consumes:
 definitions:
     Block:
         description: Block is the basic data unit
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BlockPatch:
         description: BlockPatch is a patch for modify blocks
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BlockPatchBatch:
         description: BlockPatchBatch is a batch of IDs and patches for modify blocks
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Board:
         description: Board groups a set of blocks and its layout
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardInsight:
         description: BoardInsight gives insight into activities in a Board
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardMember:
         description: BoardMember stores the information of the membership of a user on a board
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardMemberHistoryEntry:
         description: BoardMemberHistoryEntry stores the information of the membership of a user on a board
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardMetadata:
         description: BoardMetadata contains metadata for a Board
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardPatch:
         description: BoardPatch is a patch for modify boards
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardsAndBlocks:
         description: |-
             BoardsAndBlocks is used to operate over boards and blocks at the
             same time
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardsCloudLimits:
         description: |-
             BoardsCloudLimits is the representation of the limits for the
             Boards server
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     BoardsStatistics:
         description: BoardsStatistics is the representation of the statistics for the Boards server
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Card:
         title: Card represents a group of content blocks and properties.
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     CardPatch:
         description: CardPatch is a patch for modifying cards
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Category:
         description: Category is a board category
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     CategoryBoards:
         description: CategoryBoards is a board category and associated boards
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     ChangePasswordRequest:
         description: ChangePasswordRequest is a user password change request
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     ClientConfig:
         description: ClientConfig is the client configuration
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     DeleteBoardsAndBlocks:
         description: |-
             DeleteBoardsAndBlocks is used to list the boards and blocks to
             delete on a request
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     ErrorResponse:
         description: ErrorResponse is an error response
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     FileUploadResponse:
         description: FileUploadResponse is the response to a file upload
-        x-go-package: github.com/mattermost/focalboard/server/api
+        x-go-package: github.com/mattermost/karmaboard/server/api
     LoginRequest:
         description: LoginRequest is a login request
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     LoginResponse:
         description: LoginResponse is a login response
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     NotificationHint:
         description: |-
             NotificationHint provides a hint that a block has been modified and has subscribers that
             should be notified.
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     PatchBoardsAndBlocks:
         description: |-
             PatchBoardsAndBlocks is used to patch multiple boards and blocks on
             a single request
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     RegisterRequest:
         description: RegisterRequest is a user registration request
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Sharing:
         description: Sharing is sharing information for a root block
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Subscriber:
         description: Subscriber is an entity (e.g. user, channel) that can subscribe to events from boards, cards, etc
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Subscription:
         title: Subscription is a subscription to a board, card, etc, for a user or channel.
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     Team:
         description: Team is information global to a team
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     User:
         description: User is a user
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
     UserPreferencesPatch:
         description: UserPreferencesPatch is a user property patch
-        x-go-package: github.com/mattermost/focalboard/server/model
+        x-go-package: github.com/mattermost/karmaboard/server/model
 host: localhost
 info:
     contact:
-        email: api@focalboard.com
-        name: Focalboard
-        url: https://www.focalboard.com
-    description: Focalboard Server
+        email: api@karmaboard.com
+        name: Karmaboard
+        url: https://www.karmaboard.com
+    description: Karmaboard Server
     license:
         name: Custom
-        url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
-    title: Focalboard Server
+        url: https://github.com/mattermost/karmaboard/blob/main/LICENSE.txt
+    title: Karmaboard Server
     version: 2.0.0
 paths:
     /api/v2/teams/{teamID}/notifyadminupgrade:

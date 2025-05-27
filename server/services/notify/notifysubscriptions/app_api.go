@@ -6,7 +6,7 @@ package notifysubscriptions
 import (
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 )
 
 type AppAPI interface {

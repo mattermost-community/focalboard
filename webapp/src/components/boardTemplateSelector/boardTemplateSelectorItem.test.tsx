@@ -230,7 +230,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         const onEdit = jest.fn()
 
         const root = document.createElement('div')
-        root.setAttribute('id', 'focalboard-root-portal')
+        root.setAttribute('id', 'karmaboard-root-portal')
         render(wrapDNDIntl(
             <ReduxProvider store={store}>
                 <BoardTemplateSelectorItem

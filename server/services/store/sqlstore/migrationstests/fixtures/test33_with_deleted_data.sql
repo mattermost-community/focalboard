@@ -1,4 +1,4 @@
-INSERT INTO focalboard_category_boards
+INSERT INTO karmaboard_category_boards
 (id, user_id, category_id, board_id, create_at, update_at, delete_at, sort_order)
 values
 ('id-1', 'user_id-1', 'category-id-1', 'board-id-1', 1672988834402, 1672988834402, 0, 0),

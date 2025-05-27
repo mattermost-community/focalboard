@@ -6,8 +6,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 
-	"github.com/mattermost/focalboard/server/model"
-	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
+	"github.com/mattermost/karmaboard/server/model"
+	mockservicesapi "github.com/mattermost/karmaboard/server/model/mocks"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/stretchr/testify/require"
@@ -20,11 +20,11 @@ func TestGetBoardsBotID(t *testing.T) {
 	servicesAPI := mockservicesapi.NewMockServicesAPI(ctrl)
 	mmAuthLayer, _ := New("test", nil, nil, mlog.CreateConsoleTestLogger(t), servicesAPI, "")
 
-	servicesAPI.EXPECT().EnsureBot(model.FocalboardBot).Return("", errTest)
+	servicesAPI.EXPECT().EnsureBot(model.KarmaboardBot).Return("", errTest)
 	_, err := mmAuthLayer.getBoardsBotID()
 	require.NotEmpty(t, err)
 
-	servicesAPI.EXPECT().EnsureBot(model.FocalboardBot).Return("TestBotID", nil).Times(1)
+	servicesAPI.EXPECT().EnsureBot(model.KarmaboardBot).Return("TestBotID", nil).Times(1)
 	botID, err := mmAuthLayer.getBoardsBotID()
 	require.Empty(t, err)
 	require.NotEmpty(t, botID)

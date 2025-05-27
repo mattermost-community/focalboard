@@ -555,11 +555,11 @@ class WSClient {
             return
         }
 
-        const focalboardStatusChange = data.plugin_statuses.find((s: any) => s.plugin_id === this.pluginId)
-        if (focalboardStatusChange) {
+        const karmaboardStatusChange = data.plugin_statuses.find((s: any) => s.plugin_id === this.pluginId)
+        if (karmaboardStatusChange) {
             // if the plugin version is greater than the current one,
             // show the new version banner
-            if (Utils.compareVersions(this.pluginVersion, focalboardStatusChange.version) > 0) {
+            if (Utils.compareVersions(this.pluginVersion, karmaboardStatusChange.version) > 0) {
                 Utils.log('Boards plugin has been updated')
                 this.onAppVersionChangeHandler(true)
             }
@@ -567,7 +567,7 @@ class WSClient {
             // if the plugin version is greater or equal, trigger a
             // reconnect to resubscribe in case the interface hasn't
             // been reloaded
-            if (Utils.compareVersions(this.pluginVersion, focalboardStatusChange.version) >= 0) {
+            if (Utils.compareVersions(this.pluginVersion, karmaboardStatusChange.version) >= 0) {
                 // this is a temporal solution that leaves a second
                 // between the message and the reconnect so the server
                 // has time to register the WS handler

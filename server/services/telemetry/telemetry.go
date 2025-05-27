@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/scheduler"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/scheduler"
 	rudder "github.com/rudderlabs/analytics-go"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

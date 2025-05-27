@@ -1,10 +1,10 @@
 # Core Committers
 
-A core committer is a maintainer on the Focalboard project who has merge access to the repositories. They are responsible for reviewing pull requests, cultivating the developer community, and guiding the technical vision of Focalboard. If you have a question or need some help, these are the people to ask.
+A core committer is a maintainer on the Karmaboard project who has merge access to the repositories. They are responsible for reviewing pull requests, cultivating the developer community, and guiding the technical vision of Karmaboard. If you have a question or need some help, these are the people to ask.
 
 ## Core Committers
 
-Below is the list of core committers working on Focalboard:
+Below is the list of core committers working on Karmaboard:
 
 - **<a name="scott.bishel">Scott Bishel</a>**
     - @scott.bishel on [community.mattermost.com](https://community.mattermost.com/core/messages/@scott.bishel) and [@sbishel](https://github.com/sbishel) on GitHub

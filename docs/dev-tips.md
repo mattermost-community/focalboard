@@ -1,8 +1,8 @@
 # Developer Tips and Tricks
 
-These tips and tricks apply to developing the standalone Personal Server of Focalboard. For most features, this is the easiest way to get started working against code that ships across editions.
+These tips and tricks apply to developing the standalone Personal Server of Karmaboard. For most features, this is the easiest way to get started working against code that ships across editions.
 
-For working with the Focalboard plugin, refer to the [Focalboard Plugin Developer's Guide](focalboard-dev-guide.md).
+For working with the Karmaboard plugin, refer to the [Karmaboard Plugin Developer's Guide](karmaboard-dev-guide.md).
 
 ## Installation prerequisites
 
@@ -26,16 +26,16 @@ On Linux, to build the Linux app:
 
 ## Fork and clone the project source code
 
-Fork the [Focalboard GitHub repo](https://github.com/mattermost/focalboard), and clone it locally.
+Fork the [Karmaboard GitHub repo](https://github.com/mattermost/karmaboard), and clone it locally.
 
 ## Build and run from the terminal
 
-Follow the steps in the [main readme file](https://github.com/mattermost/focalboard#building-the-server). In summary, to build and run the server:
+Follow the steps in the [main readme file](https://github.com/mattermost/karmaboard#building-the-server). In summary, to build and run the server:
 
 ```
 make prebuild
 make
- ./bin/focalboard-server
+ ./bin/karmaboard-server
 ```
 
 Then open a browser to `http://localhost:8000` to access it. The port is configured in `config.json`.
@@ -81,7 +81,7 @@ Translated strings are stored in other json files under `webapp/i18n`, e.g. `es.
 
 ## Database
 
-By default, data is stored in a sqlite database `focalboard.db`. You can view and edit this directly using `sqlite3 focalboard.db` from bash.
+By default, data is stored in a sqlite database `karmaboard.db`. You can view and edit this directly using `sqlite3 karmaboard.db` from bash.
 
 ## Unit tests
 
@@ -93,7 +93,7 @@ Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workfl
 
 ## Running into problems or have questions?
 
-If you run into any issues with the steps here, or have any general questions, please don't hesitate to reach out either on [GitHub](https://github.com/mattermost/focalboard) or our [Mattermost community channel](https://community.mattermost.com/core/channels/focalboard).
+If you run into any issues with the steps here, or have any general questions, please don't hesitate to reach out either on [GitHub](https://github.com/mattermost/karmaboard) or our [Mattermost community channel](https://community.mattermost.com/core/channels/karmaboard).
 
 We welcome everyone, and appreciate any feedback.
 

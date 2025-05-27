@@ -10,7 +10,7 @@ type Props = {
 
 const RootPortal = (props: Props): JSX.Element => {
     const [el] = useState(document.createElement('div'))
-    const rootPortal = document.getElementById('focalboard-root-portal')
+    const rootPortal = document.getElementById('karmaboard-root-portal')
 
     useLayoutEffect(() => {
         if (rootPortal) {

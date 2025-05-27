@@ -22,7 +22,7 @@ func Test33RemoveDeletedCategoryBoards(t *testing.T) {
 
 		// cound total records
 		var count int
-		err := th.f.DB().Get(&count, "SELECT COUNT(*) FROM focalboard_category_boards")
+		err := th.f.DB().Get(&count, "SELECT COUNT(*) FROM karmaboard_category_boards")
 		require.NoError(t, err)
 		require.Equal(t, 5, count)
 
@@ -31,7 +31,7 @@ func Test33RemoveDeletedCategoryBoards(t *testing.T) {
 
 		// and verify record count again.
 		// The soft deleted records should have been removed from the DB now
-		err = th.f.DB().Get(&count, "SELECT COUNT(*) FROM focalboard_category_boards")
+		err = th.f.DB().Get(&count, "SELECT COUNT(*) FROM karmaboard_category_boards")
 		require.NoError(t, err)
 		require.Equal(t, 3, count)
 	})
@@ -45,7 +45,7 @@ func Test33RemoveDeletedCategoryBoards(t *testing.T) {
 
 		// cound total records
 		var count int
-		err := th.f.DB().Get(&count, "SELECT COUNT(*) FROM focalboard_category_boards")
+		err := th.f.DB().Get(&count, "SELECT COUNT(*) FROM karmaboard_category_boards")
 		require.NoError(t, err)
 		require.Equal(t, 5, count)
 
@@ -55,7 +55,7 @@ func Test33RemoveDeletedCategoryBoards(t *testing.T) {
 		// and verify record count again.
 		// Since there were no soft-deleted records, nothing should have been
 		// deleted from the database.
-		err = th.f.DB().Get(&count, "SELECT COUNT(*) FROM focalboard_category_boards")
+		err = th.f.DB().Get(&count, "SELECT COUNT(*) FROM karmaboard_category_boards")
 		require.NoError(t, err)
 		require.Equal(t, 5, count)
 

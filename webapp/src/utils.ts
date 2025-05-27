@@ -599,8 +599,8 @@ class Utils {
     // this is a temporary solution while we're using legacy routes
     // for shared boards as a way to check if we're accessing the
     // legacy routes inside the plugin
-    static isFocalboardLegacy(): boolean {
-        return window.location.pathname.includes('/plugins/focalboard')
+    static isKarmaboardLegacy(): boolean {
+        return window.location.pathname.includes('/plugins/karmaboard')
     }
 
     static fixWSData(message: WSMessage): [WSMessagePayloads, ChangeHandlerType] {

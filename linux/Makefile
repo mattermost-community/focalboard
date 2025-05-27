@@ -5,4 +5,4 @@ run:
 
 build:
 	mkdir -p bin
-	go build -tags "json1 sqlite3" -o bin/focalboard-app
+	go build -tags "json1 sqlite3" -o bin/karmaboard-app

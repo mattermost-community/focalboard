@@ -54,7 +54,7 @@ describe('properties/link', () => {
         const {container} = render(wrapIntl((
             <Url
                 {...baseData}
-                propertyValue='https://github.com/mattermost/focalboard'
+                propertyValue='https://github.com/mattermost/karmaboard'
             />
         )))
         expect(container).toMatchSnapshot()
@@ -64,7 +64,7 @@ describe('properties/link', () => {
         const {container} = render(wrapIntl((
             <Url
                 {...baseData}
-                propertyValue='https://github.com/mattermost/focalboard'
+                propertyValue='https://github.com/mattermost/karmaboard'
                 readOnly={true}
             />
         )))

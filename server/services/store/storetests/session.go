@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/store"
 	"github.com/stretchr/testify/require"
 )
 

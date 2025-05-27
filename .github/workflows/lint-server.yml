@@ -17,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: "focalboard"
+          path: "karmaboard"
       - name: assert that down migrations are SELECT 1 scripts
         run: |
-          cd focalboard
+          cd karmaboard
           echo 'SELECT 1;' > downmigration
           for file in server/services/store/sqlstore/migrations/*.down.sql; do diff -Bw downmigration $file; done
 
@@ -33,10 +33,10 @@ jobs:
           go-version: 1.21
       - uses: actions/checkout@v3
         with:
-          path: "focalboard"
+          path: "karmaboard"
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.0
       - name: lint
         run: |
-          cd focalboard
+          cd karmaboard
           make server-lint

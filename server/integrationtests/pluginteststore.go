@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/store"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
@@ -160,7 +160,7 @@ func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences
 	if userID == userTeamMember {
 		return mmModel.Preferences{{
 			UserId:   userTeamMember,
-			Category: "focalboard",
+			Category: "karmaboard",
 			Name:     "test",
 			Value:    "test",
 		}}, nil
@@ -321,7 +321,7 @@ func (s *PluginTestStore) GetLicense() *mmModel.License {
 		license.Features.SetDefaults()
 	}
 
-	complianceLicense := os.Getenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE")
+	complianceLicense := os.Getenv("KARMABOARD_UNIT_TESTING_COMPLIANCE")
 	if complianceLicense != "" {
 		if val, err := strconv.ParseBool(complianceLicense); err == nil {
 			license.Features.Compliance = mmModel.NewBool(val)

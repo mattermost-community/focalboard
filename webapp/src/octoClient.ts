@@ -45,10 +45,10 @@ class OctoClient {
     }
 
     get token(): string {
-        return localStorage.getItem('focalboardSessionId') || ''
+        return localStorage.getItem('karmaboardSessionId') || ''
     }
     set token(value: string) {
-        localStorage.setItem('focalboardSessionId', value)
+        localStorage.setItem('karmaboardSessionId', value)
     }
 
     constructor(serverUrl?: string, public teamId = Constants.globalTeamId, public channelId = Constants.noChannelID) {
@@ -79,7 +79,7 @@ class OctoClient {
 
         const responseJson = (await this.getJson(response, {})) as {token?: string}
         if (responseJson.token) {
-            localStorage.setItem('focalboardSessionId', responseJson.token)
+            localStorage.setItem('karmaboardSessionId', responseJson.token)
             return true
         }
         return false
@@ -91,7 +91,7 @@ class OctoClient {
             method: 'POST',
             headers: this.headers(),
         })
-        localStorage.removeItem('focalboardSessionId')
+        localStorage.removeItem('karmaboardSessionId')
 
         if (response.status !== 200) {
             return false

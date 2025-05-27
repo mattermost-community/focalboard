@@ -20,7 +20,7 @@ func TestRunDeDuplicateCategoryBoardsMigration(t *testing.T) {
 
 	// verifying count of rows
 	var count int
-	countQuery := "SELECT COUNT(*) FROM focalboard_category_boards"
+	countQuery := "SELECT COUNT(*) FROM karmaboard_category_boards"
 	row := th.f.DB().QueryRow(countQuery)
 	err := row.Scan(&count)
 	assert.NoError(t, err)

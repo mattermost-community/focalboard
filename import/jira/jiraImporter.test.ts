@@ -6,7 +6,7 @@ import * as fs from 'fs'
 import {ArchiveUtils} from '../util/archive'
 
 const inputFile = './test/jira-export.xml'
-const outputFile = './test/jira.focalboard'
+const outputFile = './test/jira.karmaboard'
 
 describe('import from Jira', () => {
     test('import', async () => {

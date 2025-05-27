@@ -12,8 +12,8 @@ RUN CPPFLAGS="-DPNG_ARM_NEON_OPT=0" npm install --no-optional && \
 ### Go build
 FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be40540381838d75eebef AS gobuild
 
-WORKDIR /go/src/focalboard
-ADD . /go/src/focalboard
+WORKDIR /go/src/karmaboard
+ADD . /go/src/karmaboard
 
 # Get target architecture 
 ARG TARGETOS
@@ -24,15 +24,15 @@ RUN EXCLUDE_PLUGIN=true EXCLUDE_SERVER=true EXCLUDE_ENTERPRISE=true make server-
 ## Final image
 FROM debian:buster-slim@sha256:5b0b1a9a54651bbe9d4d3ee96bbda2b2a1da3d2fa198ddebbced46dfdca7f216
 
-RUN mkdir -p /opt/focalboard/data/files
-RUN chown -R nobody:nogroup /opt/focalboard
+RUN mkdir -p /opt/karmaboard/data/files
+RUN chown -R nobody:nogroup /opt/karmaboard
 
-WORKDIR /opt/focalboard
+WORKDIR /opt/karmaboard
 
 COPY --from=nodebuild --chown=nobody:nogroup /webapp/pack pack/
-COPY --from=gobuild --chown=nobody:nogroup /go/src/focalboard/bin/docker/focalboard-server bin/
-COPY --from=gobuild --chown=nobody:nogroup /go/src/focalboard/LICENSE.txt LICENSE.txt
-COPY --from=gobuild --chown=nobody:nogroup /go/src/focalboard/docker/server_config.json config.json
+COPY --from=gobuild --chown=nobody:nogroup /go/src/karmaboard/bin/docker/karmaboard-server bin/
+COPY --from=gobuild --chown=nobody:nogroup /go/src/karmaboard/LICENSE.txt LICENSE.txt
+COPY --from=gobuild --chown=nobody:nogroup /go/src/karmaboard/docker/server_config.json config.json
 
 USER nobody
 
@@ -40,6 +40,6 @@ EXPOSE 8000/tcp
 
 EXPOSE 8000/tcp 9092/tcp
 
-VOLUME /opt/focalboard/data
+VOLUME /opt/karmaboard/data
 
-CMD ["/opt/focalboard/bin/focalboard-server"]
+CMD ["/opt/karmaboard/bin/karmaboard-server"]

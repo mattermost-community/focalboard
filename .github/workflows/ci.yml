@@ -43,35 +43,35 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        path: "focalboard"
+        path: "karmaboard"
         
     - name: npm ci
-      run: cd focalboard/webapp && npm ci && cd -
+      run: cd karmaboard/webapp && npm ci && cd -
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version-file: focalboard/server/go.mod
+        go-version-file: karmaboard/server/go.mod
 
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version-file: focalboard/webapp/.nvmrc
+        node-version-file: karmaboard/webapp/.nvmrc
 
     - name: Build Linux server
-      run: cd focalboard; make server-linux-package
+      run: cd karmaboard; make server-linux-package
 
     - name: Copy server binary for Cypress
-      run: cp focalboard/bin/linux/focalboard-server focalboard/bin/
+      run: cp karmaboard/bin/linux/karmaboard-server karmaboard/bin/
 
     - name: Upload server package
       uses: actions/upload-artifact@v1
       with:
-        name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
+        name: karmaboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/karmaboard/dist/karmaboard-server-linux-amd64.tar.gz
 
     - name: Lint & test webapp
-      run: cd focalboard; make webapp-ci
+      run: cd karmaboard; make webapp-ci
 
   ci-windows-server:
     runs-on: windows-2022
@@ -85,15 +85,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        path: "focalboard"
+        path: "karmaboard"
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version-file: focalboard/server/go.mod
+        go-version-file: karmaboard/server/go.mod
 
     - name: "Test server (minimum): ${{matrix['db']}}"
-      run: cd focalboard; make server-test-mini-${{matrix['db']}}
+      run: cd karmaboard; make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
     runs-on: macos-12
@@ -107,12 +107,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        path: "focalboard"
+        path: "karmaboard"
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version-file: focalboard/server/go.mod
+        go-version-file: karmaboard/server/go.mod
 
     - name: "Test server (minimum): ${{matrix['db']}}"
-      run: cd focalboard; make server-test-mini-${{matrix['db']}}
+      run: cd karmaboard; make server-test-mini-${{matrix['db']}}

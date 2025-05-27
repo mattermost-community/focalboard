@@ -7,6 +7,6 @@ variables:
   IMAGE_BUILDER: $CI_REGISTRY/mattermost/ci/images/builder:go-1.19.5-node-16.15.0-1
 
 include:
-  - project: mattermost/ci/focalboard
+  - project: mattermost/ci/karmaboard
     ref: main
     file: private.yml

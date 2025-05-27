@@ -2,8 +2,8 @@
     "serverRoot": "http://localhost:8000",
     "port": 8000,
     "dbtype": "sqlite3",
-    "dbconfig": "./focalboard.db",
-    "postgres_dbconfig": "dbname=focalboard sslmode=disable",
+    "dbconfig": "./karmaboard.db",
+    "postgres_dbconfig": "dbname=karmaboard sslmode=disable",
     "useSSL": false,
     "webpath": "./pack",
     "filespath": "./files",
@@ -13,5 +13,5 @@
     "session_refresh_time": 18000,
     "localOnly": false,
     "enableLocalMode": true,
-    "localModeSocketLocation": "/var/tmp/focalboard_local.socket"
+    "localModeSocketLocation": "/var/tmp/karmaboard_local.socket"
 }

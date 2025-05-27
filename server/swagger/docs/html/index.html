@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Focalboard Server</title>
+  <title>Karmaboard Server</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
@@ -1100,7 +1100,7 @@ ul.nav-tabs {
       <div id="content">
         <div id="project">
           <div class="pull-left">
-            <h1>Focalboard Server</h1>
+            <h1>Karmaboard Server</h1>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -1110,7 +1110,7 @@ ul.nav-tabs {
               <div class="app-desc">Version: 2.0.0</div>
             <hr>
             <div id="app-description" class="app-desc">
-                Focalboard Server
+                Karmaboard Server
             </div>
           </div>
         </div>
@@ -1245,8 +1245,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-addMember-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -1255,7 +1255,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var body = Object; // {Object} 
 
@@ -1515,7 +1515,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-addMember-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=BoardMember stores the information of the membership of a user on a board, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=BoardMember stores the information of the membership of a user on a board, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -1599,7 +1599,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-addMember-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -1752,8 +1752,8 @@ String *boardID = boardID_example; // Id of board to export (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-archiveExportBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -1762,7 +1762,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Id of board to export
 
 var callback = function(error, data, response) {
@@ -1989,7 +1989,7 @@ Id of board to export
                                   <div id="responses-Default-archiveExportBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -2142,8 +2142,8 @@ String *teamID = teamID_example; // Id of team (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-archiveExportTeam-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -2152,7 +2152,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Id of team
 
 var callback = function(error, data, response) {
@@ -2379,7 +2379,7 @@ Id of team
                                   <div id="responses-Default-archiveExportTeam-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -2537,8 +2537,8 @@ File *file = BINARY_DATA_HERE; // archive file to import (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-archiveImport-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -2547,7 +2547,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var file = BINARY_DATA_HERE; // {File} archive file to import
 
@@ -2813,7 +2813,7 @@ archive file to import
                                   <div id="responses-Default-archiveImport-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -2971,8 +2971,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-changePassword-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -2981,7 +2981,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var userID = userID_example; // {String} User ID
 var body = Object; // {Object} 
 
@@ -3259,7 +3259,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-changePassword-schema-400" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -3321,7 +3321,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-changePassword-schema-500" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -3476,8 +3476,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-cloudLimits-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -3486,7 +3486,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -3659,7 +3659,7 @@ pub fn main() {
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {description=BoardsCloudLimits is the representation of the limits for the
-Boards server, x-go-package=github.com/mattermost/focalboard/server/model};
+Boards server, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -3721,7 +3721,7 @@ Boards server, x-go-package=github.com/mattermost/focalboard/server/model};
                                   <div id="responses-Default-cloudLimits-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -3880,8 +3880,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-createBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -3890,7 +3890,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -4114,7 +4114,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-createBoard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Board groups a set of blocks and its layout, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Board groups a set of blocks and its layout, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -4176,7 +4176,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-createBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -4344,8 +4344,8 @@ oas_any_type_not_mapped *disableNotify = ; // Disables notifications (for bulk d
                             </div>
 
                             <div class="tab-pane" id="examples-Default-createCard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -4354,7 +4354,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var body = Object; // {Object} 
 var opts = {
@@ -4651,7 +4651,7 @@ Disables notifications (for bulk data inserting)
                                   <div id="responses-Default-createCard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {title=Card represents a group of content blocks and properties., x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {title=Card represents a group of content blocks and properties., x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -4713,7 +4713,7 @@ Disables notifications (for bulk data inserting)
                                   <div id="responses-Default-createCard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -4876,8 +4876,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-createCategory-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -4886,7 +4886,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var body = Object; // {Object} 
 
@@ -5146,7 +5146,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-createCategory-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Category is a board category, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Category is a board category, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -5208,7 +5208,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-createCategory-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -5368,8 +5368,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-createSubscription-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -5378,7 +5378,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -5604,7 +5604,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-createSubscription-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -5666,7 +5666,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-createSubscription-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -5826,8 +5826,8 @@ oas_any_type_not_mapped *disableNotify = ; // Disables notifications (for bulk d
                             </div>
 
                             <div class="tab-pane" id="examples-Default-deleteBlock-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -5836,7 +5836,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var blockID = blockID_example; // {String} ID of block to delete
 var opts = {
@@ -6147,7 +6147,7 @@ Disables notifications (for bulk deletion)
                                   <div id="responses-Default-deleteBlock-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -6299,8 +6299,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-deleteBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -6309,7 +6309,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -6556,7 +6556,7 @@ Board ID
                                   <div id="responses-Default-deleteBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -6710,8 +6710,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-deleteBoardsAndBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -6720,7 +6720,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -6962,7 +6962,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-deleteBoardsAndBlocks-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -7118,8 +7118,8 @@ String *categoryID = categoryID_example; // Category ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-deleteCategory-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -7128,7 +7128,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var categoryID = categoryID_example; // {String} Category ID
 
@@ -7382,7 +7382,7 @@ Category ID
                                   <div id="responses-Default-deleteCategory-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -7538,8 +7538,8 @@ String *userID = userID_example; // User ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-deleteMember-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -7548,7 +7548,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var userID = userID_example; // {String} User ID
 
@@ -7824,7 +7824,7 @@ User ID
                                   <div id="responses-Default-deleteMember-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -7981,8 +7981,8 @@ String *subscriberID = subscriberID_example; // Subscriber ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-deleteSubscription-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -7991,7 +7991,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var blockID = blockID_example; // {String} Block ID
 var subscriberID = subscriberID_example; // {String} Subscriber ID
 
@@ -8247,7 +8247,7 @@ Subscriber ID
                                   <div id="responses-Default-deleteSubscription-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -8408,8 +8408,8 @@ String *blockID = blockID_example; // Block ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-duplicateBlock-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -8418,7 +8418,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var blockID = blockID_example; // {String} Block ID
 
@@ -8738,7 +8738,7 @@ Block ID
                                   <div id="responses-Default-duplicateBlock-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -8895,8 +8895,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-duplicateBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -8905,7 +8905,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -9113,7 +9113,7 @@ Board ID
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {description=BoardsAndBlocks is used to operate over boards and blocks at the
-same time, x-go-package=github.com/mattermost/focalboard/server/model};
+same time, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -9197,7 +9197,7 @@ same time, x-go-package=github.com/mattermost/focalboard/server/model};
                                   <div id="responses-Default-duplicateBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -9362,8 +9362,8 @@ String *type = type_example; // Type of blocks to return, omit to specify all ty
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -9372,7 +9372,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var opts = {
   'parentId': parentId_example, // {String} ID of parent block, omit to specify all blocks
@@ -9724,7 +9724,7 @@ Type of blocks to return, omit to specify all types
                                   <div id="responses-Default-getBlocks-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -9881,8 +9881,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -9891,7 +9891,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -10098,7 +10098,7 @@ Board ID
                                   <div id="responses-Default-getBoard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Board groups a set of blocks and its layout, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Board groups a set of blocks and its layout, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -10182,7 +10182,7 @@ Board ID
                                   <div id="responses-Default-getBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -10339,8 +10339,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getBoardMetadata-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -10349,7 +10349,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -10556,7 +10556,7 @@ Board ID
                                   <div id="responses-Default-getBoardMetadata-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=BoardMetadata contains metadata for a Board, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=BoardMetadata contains metadata for a Board, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -10662,7 +10662,7 @@ Board ID
                                   <div id="responses-Default-getBoardMetadata-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -10819,8 +10819,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getBoards-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -10829,7 +10829,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -11098,7 +11098,7 @@ Team ID
                                   <div id="responses-Default-getBoards-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -11256,8 +11256,8 @@ String *cardID = cardID_example; // Card ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getCard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -11266,7 +11266,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var cardID = cardID_example; // {String} Card ID
 
 var callback = function(error, data, response) {
@@ -11475,7 +11475,7 @@ Card ID
                                   <div id="responses-Default-getCard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {title=Card represents a group of content blocks and properties., x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {title=Card represents a group of content blocks and properties., x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -11537,7 +11537,7 @@ Card ID
                                   <div id="responses-Default-getCard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -11703,8 +11703,8 @@ Integer *perPage = 56; // Number of cards to return per page(default=100) (optio
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getCards-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -11713,7 +11713,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var opts = {
   'page': 56, // {Integer} The page to select (default=0)
@@ -12045,7 +12045,7 @@ Number of cards to return per page(default&#x3D;100)
                                   <div id="responses-Default-getCards-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -12206,8 +12206,8 @@ String *channelID = channelID_example; // Channel ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getChannel-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -12216,7 +12216,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var channelID = channelID_example; // {String} Channel ID
 
@@ -12514,7 +12514,7 @@ Channel ID
                                   <div id="responses-Default-getChannel-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -12654,10 +12654,10 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getClientConfig-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -12808,7 +12808,7 @@ pub fn main() {
                                   <div id="responses-Default-getClientConfig-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ClientConfig is the client configuration, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ClientConfig is the client configuration, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -12870,7 +12870,7 @@ pub fn main() {
                                   <div id="responses-Default-getClientConfig-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -13030,8 +13030,8 @@ String *filename = filename_example; // name of the file (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getFile-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -13040,7 +13040,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var boardID = boardID_example; // {String} Board ID
 var filename = filename_example; // {String} name of the file
@@ -13345,7 +13345,7 @@ name of the file
                                   <div id="responses-Default-getFile-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -13499,8 +13499,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getMe-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -13509,7 +13509,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -13679,7 +13679,7 @@ pub fn main() {
                                   <div id="responses-Default-getMe-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -13741,7 +13741,7 @@ pub fn main() {
                                   <div id="responses-Default-getMe-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -13898,8 +13898,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getMembersForBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -13908,7 +13908,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -14177,7 +14177,7 @@ Board ID
                                   <div id="responses-Default-getMembersForBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -14331,8 +14331,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getMyMemberships-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -14341,7 +14341,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -14573,7 +14573,7 @@ pub fn main() {
                                   <div id="responses-Default-getMyMemberships-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -14730,8 +14730,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getSharing-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -14740,7 +14740,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -14947,7 +14947,7 @@ Board ID
                                   <div id="responses-Default-getSharing-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Sharing is sharing information for a root block, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Sharing is sharing information for a root block, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -15031,7 +15031,7 @@ Board ID
                                   <div id="responses-Default-getSharing-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -15189,8 +15189,8 @@ String *subscriberID = subscriberID_example; // Subscriber ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getSubscriptions-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -15199,7 +15199,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var subscriberID = subscriberID_example; // {String} Subscriber ID
 
 var callback = function(error, data, response) {
@@ -15470,7 +15470,7 @@ Subscriber ID
                                   <div id="responses-Default-getSubscriptions-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -15627,8 +15627,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getTeam-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -15637,7 +15637,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -15844,7 +15844,7 @@ Team ID
                                   <div id="responses-Default-getTeam-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Team is information global to a team, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Team is information global to a team, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -15906,7 +15906,7 @@ Team ID
                                   <div id="responses-Default-getTeam-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -16071,8 +16071,8 @@ Boolean *excludeBots = true; // exclude bot users (optional) (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getTeamUsers-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -16081,7 +16081,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var opts = {
   'search': search_example, // {String} string to filter users list
@@ -16411,7 +16411,7 @@ exclude bot users
                                   <div id="responses-Default-getTeamUsers-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -16565,8 +16565,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getTeams-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -16575,7 +16575,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -16807,7 +16807,7 @@ pub fn main() {
                                   <div id="responses-Default-getTeams-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -16964,8 +16964,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getTemplates-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -16974,7 +16974,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -17243,7 +17243,7 @@ Team ID
                                   <div id="responses-Default-getTemplates-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -17400,8 +17400,8 @@ String *userID = userID_example; // User ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getUser-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -17410,7 +17410,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var userID = userID_example; // {String} User ID
 
 var callback = function(error, data, response) {
@@ -17617,7 +17617,7 @@ User ID
                                   <div id="responses-Default-getUser-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -17679,7 +17679,7 @@ User ID
                                   <div id="responses-Default-getUser-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -17848,8 +17848,8 @@ String *perPage = perPage_example; // limit for boards in a page. (default to nu
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getUserBoardsInsights-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -17858,7 +17858,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var timeRange = timeRange_example; // {String} duration of data to calculate insights for
 var page = page_example; // {String} page offset for top boards
@@ -18221,7 +18221,7 @@ limit for boards in a page.
                                   <div id="responses-Default-getUserBoardsInsights-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -18378,8 +18378,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -18388,7 +18388,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -18657,7 +18657,7 @@ Team ID
                                   <div id="responses-Default-getUserCategoryBoards-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -18811,8 +18811,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getUserConfig-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -18821,7 +18821,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -19053,7 +19053,7 @@ pub fn main() {
                                   <div id="responses-Default-getUserConfig-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -19210,8 +19210,8 @@ String *userID = userID_example; // User ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-getUsersList-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -19220,7 +19220,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var userID = userID_example; // {String} User ID
 
 var callback = function(error, data, response) {
@@ -19427,7 +19427,7 @@ User ID
                                   <div id="responses-Default-getUsersList-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=User is a user, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -19489,7 +19489,7 @@ User ID
                                   <div id="responses-Default-getUsersList-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -19642,8 +19642,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-handleNotifyAdminUpgrade-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -19652,7 +19652,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -19879,7 +19879,7 @@ Team ID
                                   <div id="responses-Default-handleNotifyAdminUpgrade-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -20034,8 +20034,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-handleStatistics-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -20044,7 +20044,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -20278,7 +20278,7 @@ pub fn main() {
                                   <div id="responses-Default-handleStatistics-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -20447,8 +20447,8 @@ String *perPage = perPage_example; // limit for boards in a page. (default to nu
                             </div>
 
                             <div class="tab-pane" id="examples-Default-handleTeamBoardsInsights-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -20457,7 +20457,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var timeRange = timeRange_example; // {String} duration of data to calculate insights for
 var page = page_example; // {String} page offset for top boards
@@ -20820,7 +20820,7 @@ limit for boards in a page.
                                   <div id="responses-Default-handleTeamBoardsInsights-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -20955,10 +20955,10 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-hello-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -21226,8 +21226,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-insertBoardsAndBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -21236,7 +21236,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -21461,7 +21461,7 @@ $(document).ready(function() {
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {description=BoardsAndBlocks is used to operate over boards and blocks at the
-same time, x-go-package=github.com/mattermost/focalboard/server/model};
+same time, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -21523,7 +21523,7 @@ same time, x-go-package=github.com/mattermost/focalboard/server/model};
                                   <div id="responses-Default-insertBoardsAndBlocks-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -21680,8 +21680,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-joinBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -21690,7 +21690,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -21897,7 +21897,7 @@ Board ID
                                   <div id="responses-Default-joinBoard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=BoardMember stores the information of the membership of a user on a board, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=BoardMember stores the information of the membership of a user on a board, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -22003,7 +22003,7 @@ Board ID
                                   <div id="responses-Default-joinBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -22155,8 +22155,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-leaveBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -22165,7 +22165,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 
 var callback = function(error, data, response) {
@@ -22434,7 +22434,7 @@ Board ID
                                   <div id="responses-Default-leaveBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -22579,10 +22579,10 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-login-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -22787,7 +22787,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-login-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=LoginResponse is a login response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=LoginResponse is a login response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -22849,7 +22849,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-login-schema-401" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -22911,7 +22911,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-login-schema-500" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -23060,8 +23060,8 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-logout-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -23070,7 +23070,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -23258,7 +23258,7 @@ pub fn main() {
                                   <div id="responses-Default-logout-schema-500" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -23416,8 +23416,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-onboard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -23426,7 +23426,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -23697,7 +23697,7 @@ Team ID
                                   <div id="responses-Default-onboard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -23863,8 +23863,8 @@ oas_any_type_not_mapped *disableNotify = ; // Disables notifications (for bulk p
                             </div>
 
                             <div class="tab-pane" id="examples-Default-patchBlock-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -23873,7 +23873,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var blockID = blockID_example; // {String} ID of block to patch
 var body = Object; // {Object} 
@@ -24237,7 +24237,7 @@ Disables notifications (for bulk patching)
                                   <div id="responses-Default-patchBlock-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -24399,8 +24399,8 @@ oas_any_type_not_mapped *disableNotify = ; // Disables notifications (for bulk p
                             </div>
 
                             <div class="tab-pane" id="examples-Default-patchBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -24409,7 +24409,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Workspace ID
 var body = Object; // {Object} 
 var opts = {
@@ -24722,7 +24722,7 @@ Disables notifications (for bulk patching)
                                   <div id="responses-Default-patchBlocks-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -24885,8 +24885,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-patchBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -24895,7 +24895,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var body = Object; // {Object} 
 
@@ -25155,7 +25155,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-patchBoard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Board groups a set of blocks and its layout, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Board groups a set of blocks and its layout, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -25239,7 +25239,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-patchBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -25398,8 +25398,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-patchBoardsAndBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -25408,7 +25408,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -25633,7 +25633,7 @@ $(document).ready(function() {
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {description=BoardsAndBlocks is used to operate over boards and blocks at the
-same time, x-go-package=github.com/mattermost/focalboard/server/model};
+same time, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -25695,7 +25695,7 @@ same time, x-go-package=github.com/mattermost/focalboard/server/model};
                                   <div id="responses-Default-patchBoardsAndBlocks-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -25863,8 +25863,8 @@ oas_any_type_not_mapped *disableNotify = ; // Disables notifications (for bulk d
                             </div>
 
                             <div class="tab-pane" id="examples-Default-patchCard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -25873,7 +25873,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var cardID = cardID_example; // {String} Card ID
 var body = Object; // {Object} 
 var opts = {
@@ -26170,7 +26170,7 @@ Disables notifications (for bulk data patching)
                                   <div id="responses-Default-patchCard-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {title=Card represents a group of content blocks and properties., x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {title=Card represents a group of content blocks and properties., x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -26232,7 +26232,7 @@ Disables notifications (for bulk data patching)
                                   <div id="responses-Default-patchCard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -26367,10 +26367,10 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-ping-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -26637,8 +26637,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-postSharing-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -26647,7 +26647,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var body = Object; // {Object} 
 
@@ -26925,7 +26925,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-postSharing-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -27077,8 +27077,8 @@ String *teamID = teamID_example; // Team ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-regenerateSignupToken-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -27087,7 +27087,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 
 var callback = function(error, data, response) {
@@ -27312,7 +27312,7 @@ Team ID
                                   <div id="responses-Default-regenerateSignupToken-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -27452,10 +27452,10 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-register-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var body = Object; // {Object} 
 
 var callback = function(error, data, response) {
@@ -27700,7 +27700,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-register-schema-500" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -27857,8 +27857,8 @@ String *q = q_example; // The search term. Must have at least one character (def
                             </div>
 
                             <div class="tab-pane" id="examples-Default-searchAllBoards-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -27867,7 +27867,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var q = q_example; // {String} The search term. Must have at least one character
 
 var callback = function(error, data, response) {
@@ -28136,7 +28136,7 @@ The search term. Must have at least one character
                                   <div id="responses-Default-searchAllBoards-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -28297,8 +28297,8 @@ String *q = q_example; // The search term. Must have at least one character (def
                             </div>
 
                             <div class="tab-pane" id="examples-Default-searchBoards-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -28307,7 +28307,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var q = q_example; // {String} The search term. Must have at least one character
 
@@ -28612,7 +28612,7 @@ The search term. Must have at least one character
                                   <div id="responses-Default-searchBoards-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -28774,8 +28774,8 @@ String *q = q_example; // The search term. Must have at least one character (def
                             </div>
 
                             <div class="tab-pane" id="examples-Default-searchLinkableBoards-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -28784,7 +28784,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var q = q_example; // {String} The search term. Must have at least one character
 
@@ -29089,7 +29089,7 @@ The search term. Must have at least one character
                                   <div id="responses-Default-searchLinkableBoards-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -29250,8 +29250,8 @@ String *search = search_example; // string to filter channels list (optional) (d
                             </div>
 
                             <div class="tab-pane" id="examples-Default-searchMyChannels-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -29260,7 +29260,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var opts = {
   'search': search_example // {String} string to filter channels list
@@ -29564,7 +29564,7 @@ string to filter channels list
                                   <div id="responses-Default-searchMyChannels-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -29725,8 +29725,8 @@ String *blockID = blockID_example; // ID of block to undelete (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-undeleteBlock-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -29735,7 +29735,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var blockID = blockID_example; // {String} ID of block to undelete
 
@@ -29971,7 +29971,7 @@ ID of block to undelete
                                   <div id="responses-Default-undeleteBlock-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=BlockPatch is a patch for modify blocks, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=BlockPatch is a patch for modify blocks, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -30055,7 +30055,7 @@ ID of block to undelete
                                   <div id="responses-Default-undeleteBlock-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -30207,8 +30207,8 @@ String *boardID = boardID_example; // ID of board to undelete (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-undeleteBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -30217,7 +30217,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} ID of board to undelete
 
 var callback = function(error, data, response) {
@@ -30442,7 +30442,7 @@ ID of board to undelete
                                   <div id="responses-Default-undeleteBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -30611,8 +30611,8 @@ oas_any_type_not_mapped *disableNotify = ; // Disables notifications (for bulk i
                             </div>
 
                             <div class="tab-pane" id="examples-Default-updateBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -30621,7 +30621,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var body = ; // {array[Object]} 
 var opts = {
@@ -30981,7 +30981,7 @@ Disables notifications (for bulk inserting)
                                   <div id="responses-Default-updateBlocks-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -31148,8 +31148,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-updateCategory-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -31158,7 +31158,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var categoryID = categoryID_example; // {String} Category ID
 var body = Object; // {Object} 
@@ -31447,7 +31447,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-updateCategory-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=Category is a board category, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=Category is a board category, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -31509,7 +31509,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-updateCategory-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -31669,8 +31669,8 @@ String *boardID = boardID_example; // Board ID (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -31679,7 +31679,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var categoryID = categoryID_example; // {String} Category ID
 var boardID = boardID_example; // {String} Board ID
@@ -31962,7 +31962,7 @@ Board ID
                                   <div id="responses-Default-updateCategoryBoard-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -32129,8 +32129,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-updateMember-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -32139,7 +32139,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var boardID = boardID_example; // {String} Board ID
 var userID = userID_example; // {String} User ID
 var body = Object; // {Object} 
@@ -32428,7 +32428,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-updateMember-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=BoardMember stores the information of the membership of a user on a board, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=BoardMember stores the information of the membership of a user on a board, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -32490,7 +32490,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-updateMember-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -32648,8 +32648,8 @@ Object *body = Object; //
                             </div>
 
                             <div class="tab-pane" id="examples-Default-updateUserConfig-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -32658,7 +32658,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var userID = userID_example; // {String} User ID
 var body = Object; // {Object} 
 
@@ -32936,7 +32936,7 @@ $(document).ready(function() {
                                   <div id="responses-Default-updateUserConfig-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -33102,8 +33102,8 @@ File *uploaded file = BINARY_DATA_HERE; // The file to upload (optional) (defaul
                             </div>
 
                             <div class="tab-pane" id="examples-Default-uploadFile-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var KarmaboardServer = require('karmaboard_server');
+var defaultClient = KarmaboardServer.ApiClient.instance;
 
 // Configure API key authorization: BearerAuth
 var BearerAuth = defaultClient.authentications['BearerAuth'];
@@ -33112,7 +33112,7 @@ BearerAuth.apiKey = "YOUR API KEY";
 //BearerAuth.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
+var api = new KarmaboardServer.DefaultApi()
 var teamID = teamID_example; // {String} ID of the team
 var boardID = boardID_example; // {String} Board ID
 var opts = {
@@ -33386,7 +33386,7 @@ The file to upload
                                   <div id="responses-Default-uploadFile-schema-200" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=FileUploadResponse is the response to a file upload, x-go-package=github.com/mattermost/focalboard/server/api};
+                                        var schemaWrapper = {description=FileUploadResponse is the response to a file upload, x-go-package=github.com/mattermost/karmaboard/server/api};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -33470,7 +33470,7 @@ The file to upload
                                   <div id="responses-Default-uploadFile-schema-default" class="exampleStyle">
                                     <script>
                                       $(document).ready(function() {
-                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/focalboard/server/model};
+                                        var schemaWrapper = {description=ErrorResponse is an error response, x-go-package=github.com/mattermost/karmaboard/server/model};
                                         var schema = findNode('schema',schemaWrapper).schema;
                                         if (!schema) {
                                           schema = schemaWrapper.schema;
@@ -33510,11 +33510,11 @@ The file to upload
           <div id="footer">
             <div id="api-_footer">
               <p>Suggestions, contact, support and error reporting;
-                  <div class="app-desc">Information URL: <a href="https://www.focalboard.com">https://www.focalboard.com</a></div>
-                  <div class="app-desc">Contact Info: <a href="api@focalboard.com">api@focalboard.com</a></div>
+                  <div class="app-desc">Information URL: <a href="https://www.karmaboard.com">https://www.karmaboard.com</a></div>
+                  <div class="app-desc">Contact Info: <a href="api@karmaboard.com">api@karmaboard.com</a></div>
               </p>
                 <div class="license-info">Custom</div>
-                <div class="license-url">https://github.com/mattermost/focalboard/blob/main/LICENSE.txt</div>
+                <div class="license-url">https://github.com/mattermost/karmaboard/blob/main/LICENSE.txt</div>
             </div>
           </div>
       </div>

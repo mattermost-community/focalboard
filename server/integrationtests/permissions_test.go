@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/client"
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/client"
+	"github.com/mattermost/karmaboard/server/model"
 	"github.com/stretchr/testify/require"
 )
 

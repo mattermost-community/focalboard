@@ -9,7 +9,7 @@ Currently, all changes to the product must be reviewed by a [core committer](cor
 2. Wait for a reviewer to be assigned.
     * Product managers are on the lookout for new pull requests and usually handle this for you automatically.
     * If you have been working alongside a core committer, feel free to message them for help.
-    * When in doubt, ask for help in the [Focalboard](https://community.mattermost.com/core/channels/focalboard) channel on our community server.
+    * When in doubt, ask for help in the [Karmaboard](https://community.mattermost.com/core/channels/karmaboard) channel on our community server.
     * If you are still stuck, please message Chen Lim (@chenilim on GitHub).
 3. [Wait for a review](#if-you-are-awaiting-a-review).
     * Expect some interaction with at least one reviewer within 5 business days (weekdays, Monday through Friday, excluding [statutory holidays](https://docs.mattermost.com/process/working-at-mattermost.html#holidays)).

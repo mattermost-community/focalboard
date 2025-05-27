@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 )
 
 func (a *App) GetSharing(boardID string) (*model.Sharing, error) {

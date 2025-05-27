@@ -79,13 +79,13 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 		viper.SetConfigFile(configFilePath)
 	}
 
-	viper.SetEnvPrefix("focalboard")
-	viper.AutomaticEnv() // read config values from env like FOCALBOARD_SERVERROOT=...
+	viper.SetEnvPrefix("karmaboard")
+	viper.AutomaticEnv() // read config values from env like KARMABOARD_SERVERROOT=...
 	viper.SetDefault("ServerRoot", DefaultServerRoot)
 	viper.SetDefault("DBPingAttempts", DBPingAttempts)
 	viper.SetDefault("Port", DefaultPort)
 	viper.SetDefault("DBType", "sqlite3")
-	viper.SetDefault("DBConfigString", "./focalboard.db")
+	viper.SetDefault("DBConfigString", "./karmaboard.db")
 	viper.SetDefault("DBTablePrefix", "")
 	viper.SetDefault("SecureCookie", false)
 	viper.SetDefault("WebPath", "./pack")
@@ -98,7 +98,7 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("SessionRefreshTime", 60*60*5)    // 5 minutes session refresh
 	viper.SetDefault("LocalOnly", false)
 	viper.SetDefault("EnableLocalMode", false)
-	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
+	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/karmaboard_local.socket")
 	viper.SetDefault("EnablePublicSharedBoards", false)
 	viper.SetDefault("AuthMode", "native")
 	viper.SetDefault("NotifyFreqCardSeconds", 120)    // 2 minutes after last card edit

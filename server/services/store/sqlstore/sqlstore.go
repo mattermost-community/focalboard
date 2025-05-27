@@ -8,8 +8,8 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/store"
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"

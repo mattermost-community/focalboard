@@ -10,8 +10,8 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/wiggin77/merror"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -180,7 +180,7 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 	var collation string
 	var charSet string
 	var err error
-	if os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
+	if os.Getenv("KARMABOARD_UNIT_TESTING") == "1" {
 		collation = "utf8mb4_general_ci"
 		charSet = "utf8mb4"
 	} else {
@@ -190,8 +190,8 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 		}
 	}
 
-	// get all FocalBoard tables
-	tableNames, err := s.getFocalBoardTableNames()
+	// get all KarmaBoard tables
+	tableNames, err := s.getKarmaBoardTableNames()
 	if err != nil {
 		return err
 	}
@@ -238,9 +238,9 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 	return merr.ErrorOrNil()
 }
 
-func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
+func (s *SQLStore) getKarmaBoardTableNames() ([]string, error) {
 	if s.dbType != model.MysqlDBType {
-		return nil, newErrInvalidDBType("getFocalBoardTableNames requires MySQL")
+		return nil, newErrInvalidDBType("getKarmaBoardTableNames requires MySQL")
 	}
 
 	query := s.getQueryBuilder(s.db).
@@ -251,7 +251,7 @@ func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
 
 	rows, err := query.Query()
 	if err != nil {
-		return nil, fmt.Errorf("error fetching FocalBoard table names: %w", err)
+		return nil, fmt.Errorf("error fetching KarmaBoard table names: %w", err)
 	}
 	defer rows.Close()
 

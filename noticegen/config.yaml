@@ -1,8 +1,8 @@
 ---
 
-title: "Mattermost Focalboard"
+title: "Mattermost Karmaboard"
 copyright: "©2015-present Mattermost,Inc. All Rights Reserved. See LICENSE for license information."
-description: "This document includes a list of open source components used in Mattermost Focalboard, including those that have been modified."
+description: "This document includes a list of open source components used in Mattermost Karmaboard, including those that have been modified."
 search:
   - "server/go.mod"
   - "linux/go.mod"

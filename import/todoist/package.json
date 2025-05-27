@@ -1,5 +1,5 @@
 {
-  "name": "focalboard-todoist-importer",
+  "name": "karmaboard-todoist-importer",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "eslint --ext .tsx,.ts . --quiet --cache",
     "fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-    "test": "ts-node importTodoist.ts -i test/todoist.json -o test/todoist-import.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importTodoist.ts -i test/todoist.json -o test/todoist-import.focalboard"
+    "test": "ts-node importTodoist.ts -i test/todoist.json -o test/todoist-import.karmaboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importTodoist.ts -i test/todoist.json -o test/todoist-import.karmaboard"
   },
   "keywords": [],
   "author": "",

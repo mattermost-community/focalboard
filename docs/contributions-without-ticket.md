@@ -12,4 +12,4 @@ All pull requests submitted without a corresponding ticket will first be reviewe
 
 **Note:** For pull requests greater than 20 lines of code, a `Help Wanted` ticket should be opened by the core team. This helps ensure that everything going into the project aligns with a unified vision. Core committers who review the PR are entitled to reject it if there isn't a `Help Wanted` ticket and feel it significantly changes behavior or user expectations.
 
-The best way to discuss opening a `Help Wanted` ticket with the core team is by [starting a conversation in Contributors channel](https://community.mattermost.com/core/channels/focalboard) or [opening an issue in the GitHub repository](https://github.com/mattermost/focalboard/issues/new).
+The best way to discuss opening a `Help Wanted` ticket with the core team is by [starting a conversation in Contributors channel](https://community.mattermost.com/core/channels/karmaboard) or [opening an issue in the GitHub repository](https://github.com/mattermost/karmaboard/issues/new).

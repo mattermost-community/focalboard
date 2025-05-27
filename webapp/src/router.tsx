@@ -66,7 +66,7 @@ type Props = {
     history?: History<unknown>
 }
 
-const FocalboardRouter = (props: Props): JSX.Element => {
+const KarmaboardRouter = (props: Props): JSX.Element => {
     let browserHistory: History<unknown>
     if (props.history) {
         browserHistory = props.history
@@ -142,4 +142,4 @@ const FocalboardRouter = (props: Props): JSX.Element => {
     )
 }
 
-export default React.memo(FocalboardRouter)
+export default React.memo(KarmaboardRouter)

@@ -59,7 +59,7 @@ export default function RootInput(props: Props) {
             placeholder={'Introduce your text or your slash command'}
             autoFocus={true}
             menuIsOpen={showMenu}
-            menuPortalTarget={document.getElementById('focalboard-root-portal')}
+            menuPortalTarget={document.getElementById('karmaboard-root-portal')}
             menuPosition={'fixed'}
             options={registry.list()}
             getOptionValue={(ct: ContentType) => ct.slashCommand}

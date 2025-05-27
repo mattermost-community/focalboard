@@ -85,7 +85,7 @@ export default function OptionsApp() {
   }
 
   return <div className="OptionsApp">
-    <label>Focalboard host</label>
+    <label>Karmaboard host</label>
     <input type="text" value={host} onChange={e => setHost(e.target.value)}/>
     <label>Username</label>
     <input type="text" value={username} onChange={e => setUsername(e.target.value)}/>
@@ -94,7 +94,7 @@ export default function OptionsApp() {
     <input type="submit" value="Authenticate" onClick={onAuthenticateButtonClicked}/>
     <div className="status">
       {inProgress && <div className="in-progress">
-        Connecting to Focalboard server...
+        Connecting to Karmaboard server...
       </div>}
       {!inProgress && !error && <div className="success">
         Token: <span>{token}</span>

@@ -3,7 +3,7 @@ package storetests
 import (
 	"testing"
 
-	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/services/store"
 	"github.com/stretchr/testify/require"
 )
 

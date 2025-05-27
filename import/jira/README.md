@@ -1,13 +1,13 @@
 # Jira importer
 
-This node app converts a Jira xml export into a Focalboard archive. To use:
+This node app converts a Jira xml export into a Karmaboard archive. To use:
 1. Open Jira advanced search, and search for all the items to export
 2. Select `Export`, then `Export XML`
 3. Save it locally, e.g. to `jira_export.xml`
-4. Run `npm install` from within `focalboard/webapp`
-5. Run `npm install` from within `focalboard/import/jira`
-6. Run `npx ts-node importJira.ts -i <path-to-jira.xml> -o archive.boardarchive` (also from within `focalboard/import/jira`)
-7. In Focalboard, click `Settings`, then `Import archive` and select `archive.boardarchive`
+4. Run `npm install` from within `karmaboard/webapp`
+5. Run `npm install` from within `karmaboard/import/jira`
+6. Run `npx ts-node importJira.ts -i <path-to-jira.xml> -o archive.boardarchive` (also from within `karmaboard/import/jira`)
+7. In Karmaboard, click `Settings`, then `Import archive` and select `archive.boardarchive`
 
 ## Import scope and known limitations
 
@@ -20,4 +20,4 @@ The following aren't currently imported:
 * Comments
 * Embedded files
 
-[Contribute code](https://mattermost.github.io/focalboard/) to expand this.
+[Contribute code](https://mattermost.github.io/karmaboard/) to expand this.

@@ -1,14 +1,14 @@
-module github.com/mattermost/focalboard/linux
+module github.com/mattermost/karmaboard/linux
 
 go 1.21
 
 toolchain go1.21.8
 
-replace github.com/mattermost/focalboard/server => ../server
+replace github.com/mattermost/karmaboard/server => ../server
 
 require (
 	github.com/google/uuid v1.6.0
-	github.com/mattermost/focalboard/server v0.0.0-20230104182634-f909c2552e37
+	github.com/mattermost/karmaboard/server v0.0.0-20230104182634-f909c2552e37
 	github.com/mattermost/mattermost/server/public v0.1.3
 	github.com/webview/webview v0.0.0-20220314230258-a2b7746141c3
 )

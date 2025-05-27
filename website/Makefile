@@ -1,5 +1,5 @@
 
-BASE_URL?=https://www.focalboard.com
+BASE_URL?=https://www.karmaboard.com
 
 .PHONY: dist
 dist:

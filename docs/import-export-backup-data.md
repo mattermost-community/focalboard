@@ -1,8 +1,8 @@
 # Import, export, and back up data
 
-## Import data into Focalboard
+## Import data into Karmaboard
 
-You can import data from other tools to use with Focalboard.
+You can import data from other tools to use with Karmaboard.
 
 ### Import from Asana
 
@@ -11,10 +11,10 @@ This node app converts an Asana JSON archive into a ``.boardarchive`` file. The 
 1. Log into your Asana account.
 2. Select the drop-down menu next to the Asana board's name. Then select **Export/Print > JSON**. This will create an archive file.
 3. Save the file locally, e.g. to ``asana.json``.
-4. Open a terminal window on your local machine and clone the focalboard repository to a local directory, e.g. to ``focalboard``: ``git clone https://github.com/mattermost/focalboard focalboard``
-5. Navigate to ``focalboard/webapp``.
+4. Open a terminal window on your local machine and clone the karmaboard repository to a local directory, e.g. to ``karmaboard``: ``git clone https://github.com/mattermost/karmaboard karmaboard``
+5. Navigate to ``karmaboard/webapp``.
 6. Run ``npm install``.
-7. Change directory to ``focalboard/import/asana``.
+7. Change directory to ``karmaboard/import/asana``.
 8. Run ``npm install``.
 9. From within the same folder, run ``npx ts-node importAsana.ts -i <asana.json> -o archive.boardarchive``. This generates the following data:
 
@@ -31,7 +31,7 @@ This node app converts an Asana JSON archive into a ``.boardarchive`` file. The 
     Exported to archive.boardarchive
     ```
 
-10. In Focalboard, open the board you want to use for the export.
+10. In Karmaboard, open the board you want to use for the export.
 11. Select **Settings > Import archive** and select ``archive.boardarchive``.
 12. Select **Upload**.
 13. Return to your board and confirm that your Asana data is now displaying.
@@ -42,18 +42,18 @@ If you don't see your Asana data, an error should be displayed. You can also che
 
 This node app converts a Notion CSV and markdown export into a ``.boardarchive`` file. The script imports all cards from a single board, including their properties and markdown content.
 
-**Note**: The Notion export format does not preserve property types, so the script currently imports all card properties as a Select type. You can change the type after importing into Focalboard.
+**Note**: The Notion export format does not preserve property types, so the script currently imports all card properties as a Select type. You can change the type after importing into Karmaboard.
 
 1. From a Notion Board, open the **...** menu at the top right corner of the board.
 2. Select `Export` and pick `Markdown & CSV` as the export format.
 3. Save the generated file locally, and unzip the folder.
-4. Open a terminal window on your local machine and clone the focalboard repository to a local directory, e.g. to ``focalboard``: ``git clone https://github.com/mattermost/focalboard focalboard``
-5. Navigate to ``focalboard/webapp``.
+4. Open a terminal window on your local machine and clone the karmaboard repository to a local directory, e.g. to ``karmaboard``: ``git clone https://github.com/mattermost/karmaboard karmaboard``
+5. Navigate to ``karmaboard/webapp``.
 6. Run ``npm install``.
-7. Change directory to ``focalboard/import/notion``.
+7. Change directory to ``karmaboard/import/notion``.
 8. Run ``npm install``.
 9. From within the same folder, run ``npx ts-node importNotion.ts -i <path to the notion-export folder> -o archive.boardarchive``.
-10. In Focalboard, open the board you want to use for the export.
+10. In Karmaboard, open the board you want to use for the export.
 11. Select **Settings > Import archive** and select ``archive.boardarchive``.
 12. Select **Upload**.
 13. Return to your board and confirm that your Notion data is now displaying.
@@ -69,13 +69,13 @@ This node app converts a Jira ``.XML`` export into a ``.boardarchive`` file. The
 1. Open Jira advanced search, and search for all the items to export.
 2. Select **Export > Export XML**.
 3. Save the generated file locally, e.g. to ``jira_export.xml``.
-4. Open a terminal window on your local machine and clone the focalboard repository to a local directory, e.g. to ``focalboard``: ``git clone https://github.com/mattermost/focalboard focalboard``
-5. Navigate to ``focalboard/webapp``.
+4. Open a terminal window on your local machine and clone the karmaboard repository to a local directory, e.g. to ``karmaboard``: ``git clone https://github.com/mattermost/karmaboard karmaboard``
+5. Navigate to ``karmaboard/webapp``.
 6. Run ``npm install``.
-7. Change directory to ``focalboard/import/jira`.
+7. Change directory to ``karmaboard/import/jira`.
 8. Run ``npm install``.
 9. From within the same folder, run ``npx ts-node importJira.ts -i <path-to-jira.xml> -o archive.boardarchive``.
-10. In Focalboard, open the board you want to use for the export.
+10. In Karmaboard, open the board you want to use for the export.
 11. Select **Settings > Import archive** and select ``archive.boardarchive``.
 12. Select **Upload**.
 13. Return to your board and confirm that your Jira data is now displaying.
@@ -87,13 +87,13 @@ This node app converts a Trello ``.json`` archive into a ``.boardarchive`` file.
 1. From the Trello Board Menu, select **...Show Menu**.
 2. Select **More > Print and Export > Export to JSON**.
 3. Save the generated file locally, e.g. to ``trello.json``.
-4. Open a terminal window on your local machine and clone the focalboard repository to a local directory, e.g. to ``focalboard``: ``git clone https://github.com/mattermost/focalboard focalboard``
-5. Navigate to ``focalboard/webapp``.
+4. Open a terminal window on your local machine and clone the karmaboard repository to a local directory, e.g. to ``karmaboard``: ``git clone https://github.com/mattermost/karmaboard karmaboard``
+5. Navigate to ``karmaboard/webapp``.
 6. Run ``npm install``.
-7. Change directory to ``focalboard/import/trello``.
+7. Change directory to ``karmaboard/import/trello``.
 8. Run ``npm install``.
 9. From within the same folder, run ``npx ts-node importTrello.ts -i <path-to-trello.json> -o archive.boardarchive``.
-10. In Focalboard, open the board you want to use for the export.
+10. In Karmaboard, open the board you want to use for the export.
 11. Select **Settings > Import archive** and select ``archive.boardarchive``.
 12. Select **Upload**.
 13. Return to your board and confirm that your Trello data is now displaying.
@@ -107,18 +107,18 @@ This node app converts a Todoist ``.json`` archive into a ``.boardarchive`` file
 3. Uncheck the **Archived** option if checked.
 4. Select **Authorize and Backup**. This will take you to your Todoist account. Follow the instructions on screen.
 5. Note the name and location of the downloaded ``.json`` file.
-6. Open a terminal window on your local machine and clone the focalboard repository to a local directory, e.g. to ``focalboard``: ``git clone https://github.com/mattermost/focalboard focalboard``
-7. Navigate to ``focalboard/webapp``.
+6. Open a terminal window on your local machine and clone the karmaboard repository to a local directory, e.g. to ``karmaboard``: ``git clone https://github.com/mattermost/karmaboard karmaboard``
+7. Navigate to ``karmaboard/webapp``.
 8. Run ``npm install``.
-9. Change directory to ``focalboard/import/todoist``.
+9. Change directory to ``karmaboard/import/todoist``.
 10. Run ``npm install``.
 11. From within the same folder, run ``npx ts-node importTodoist.ts -i <path-to-todoist.json> -o archive.boardarchive``.
-12. In Focalboard, open the board you want to use for the export.
+12. In Karmaboard, open the board you want to use for the export.
 13. Select **Settings > Import archive** and select ``archive.boardarchive``.
 14. Select **Upload**.
 15. Return to your board and confirm that your Todoist data is now displaying.
 
-## Export from Focalboard
+## Export from Karmaboard
 
 You can export your boards data as a CSV file.
 
@@ -129,9 +129,9 @@ You can export your boards data as a CSV file.
 **Notes**:
 
 - If you only see a single entry in the CSV export when the board contains multiple cards, you may have a specific card in context when you exported the file because you were performing a card search. If you have searched for a card, and that card is in context, that’s the only card that will be exported into the CSV file. Clear your search and try exporting to CSV again.
-- After importing CSV Focalboard data from one Mattermost instance into another (such as during a migration from Mattermost Cloud to self-hosted), card timestamps will be updated based on the import date, and cards won't correctly identify users whose user IDs differ across Mattermost instances.
+- After importing CSV Karmaboard data from one Mattermost instance into another (such as during a migration from Mattermost Cloud to self-hosted), card timestamps will be updated based on the import date, and cards won't correctly identify users whose user IDs differ across Mattermost instances.
 
-## Back up your Focalboard data
+## Back up your Karmaboard data
 
 If you’d like to back up a board, you can export it as an archive file. You can import that board to another Mattermost team within the same Mattermost instance. Exported and imported board archives include all card content such as properties, comments, descriptions, and image attachments.
 
@@ -143,5 +143,5 @@ If you’d like to back up a board, you can export it as an archive file. You ca
 
 **Notes**:
 
-- If you're using a version of the Focalboard plugin older than v6.4, backing up a board results in a ``.focalboard`` file, rather than a ``.boardarchive`` file. When importing a board backup, select the **Select all files** option to select ``.focalboard`` files.
-- After importing a Focalboard backup from one Mattermost instance into another (such as during a migration from Mattermost Cloud to self-hosted), card timestamps will be updated based on the import date, and cards won't correctly identify users whose user IDs differ across Mattermost instances.
+- If you're using a version of the Karmaboard plugin older than v6.4, backing up a board results in a ``.karmaboard`` file, rather than a ``.boardarchive`` file. When importing a board backup, select the **Select all files** option to select ``.karmaboard`` files.
+- After importing a Karmaboard backup from one Mattermost instance into another (such as during a migration from Mattermost Cloud to self-hosted), card timestamps will be updated based on the import date, and cards won't correctly identify users whose user IDs differ across Mattermost instances.

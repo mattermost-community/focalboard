@@ -52,7 +52,7 @@ debug
 __debug_bin
 files
 octo*.db
-focalboard*.db
+karmaboard*.db
 *.boardarchive
 .eslintcache
 .vscode/settings.json

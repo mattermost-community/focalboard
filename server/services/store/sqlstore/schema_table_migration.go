@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 	"github.com/mattermost/morph/models"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

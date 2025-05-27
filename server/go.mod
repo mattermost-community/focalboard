@@ -1,4 +1,4 @@
-module github.com/mattermost/focalboard/server
+module github.com/mattermost/karmaboard/server
 
 go 1.21
 

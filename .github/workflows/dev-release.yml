@@ -18,16 +18,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        path: "focalboard"
+        path: "karmaboard"
 
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/karmaboard/server/services/telemetry/telemetry.go
   
     - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/karmaboard/server/services/telemetry/telemetry.go
    
     - name: npm ci
-      run: cd focalboard/webapp; npm ci --no-optional
+      run: cd karmaboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -49,21 +49,21 @@ jobs:
       run: sudo apt-get install -y libwebkit2gtk-4.0-dev
 
     - name: Build Linux server and app
-      run: cd focalboard/; make server-linux-package linux-app
+      run: cd karmaboard/; make server-linux-package linux-app
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload server package
       uses: actions/upload-artifact@v3
       with:
-        name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
+        name: karmaboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/karmaboard/dist/karmaboard-server-linux-amd64.tar.gz
 
     - name: Upload app package
       uses: actions/upload-artifact@v3
       with:
-        name: focalboard-linux.tar.gz
-        path: ${{ github.workspace }}/focalboard/linux/dist/focalboard-linux.tar.gz
+        name: karmaboard-linux.tar.gz
+        path: ${{ github.workspace }}/karmaboard/linux/dist/karmaboard-linux.tar.gz
 
   macos:
     runs-on: macos-12
@@ -73,15 +73,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        path: "focalboard"
+        path: "karmaboard"
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/karmaboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/karmaboard/server/services/telemetry/telemetry.go
 
     - name: npm ci
-      run: cd focalboard/webapp; npm ci --no-optional
+      run: cd karmaboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -92,7 +92,7 @@ jobs:
       run: ls -n /Applications/ | grep Xcode*
 
     - name: Build macOS
-      run: cd focalboard; make mac-app
+      run: cd karmaboard; make mac-app
       env:
         DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
         BUILD_NUMBER: ${{ github.run_id }}
@@ -100,8 +100,8 @@ jobs:
     - name: Upload macOS package
       uses: actions/upload-artifact@v3
       with:
-        name: focalboard-mac.zip
-        path: ${{ github.workspace }}/focalboard/mac/dist/focalboard-mac.zip
+        name: karmaboard-mac.zip
+        path: ${{ github.workspace }}/karmaboard/mac/dist/karmaboard-mac.zip
 
   windows:
     runs-on: windows-2022
@@ -110,15 +110,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        path: "focalboard"
+        path: "karmaboard"
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/karmaboard/server/services/telemetry/telemetry.go
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
     - name: npm ci
-      run: cd focalboard/webapp; npm ci --no-optional
+      run: cd karmaboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -131,21 +131,21 @@ jobs:
         nuget-version: '5.x'
 
     - name: NuGet Restore
-      run: nuget restore focalboard\win-wpf\Focalboard.sln
+      run: nuget restore karmaboard\win-wpf\Karmaboard.sln
 
     - name: Build Windows WPF app
-      run: cd focalboard; make win-wpf-app
+      run: cd karmaboard; make win-wpf-app
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload app msix package
       uses: actions/upload-artifact@v3
       with:
-        name: focalboard.msix
-        path: ${{ github.workspace }}/focalboard/win-wpf/focalboard.msix
+        name: karmaboard.msix
+        path: ${{ github.workspace }}/karmaboard/win-wpf/karmaboard.msix
 
     - name: Upload app zip package
       uses: actions/upload-artifact@v3
       with:
-        name: focalboard-win.zip
-        path: ${{ github.workspace }}/focalboard/win-wpf/dist/focalboard-win.zip
+        name: karmaboard-win.zip
+        path: ${{ github.workspace }}/karmaboard/win-wpf/dist/karmaboard-win.zip

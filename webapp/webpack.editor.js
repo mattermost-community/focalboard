@@ -28,7 +28,7 @@ const config = merge.merge(commonConfig, {
         }),
         new HtmlWebpackPlugin({
             inject: true,
-            title: 'Focalboard',
+            title: 'Karmaboard',
             chunks: ['main'],
             template: 'html-templates/deveditor.ejs',
             filename: 'editor.html',
@@ -42,7 +42,7 @@ module.exports = [
     merge.merge(config, {
         devtool: 'source-map',
         output: {
-            devtoolNamespace: 'focalboard',
+            devtoolNamespace: 'karmaboard',
         },
     }),
 ];

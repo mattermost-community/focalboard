@@ -27,7 +27,7 @@ func Test38RemoveHiddenBoardIDsFromPreferences(t *testing.T) {
 
 		// verify existing data count
 		var count int
-		countQuery := "SELECT COUNT(*) FROM focalboard_preferences"
+		countQuery := "SELECT COUNT(*) FROM karmaboard_preferences"
 		err := th.f.DB().Get(&count, countQuery)
 		require.NoError(t, err)
 		require.Equal(t, 4, count)

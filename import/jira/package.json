@@ -1,5 +1,5 @@
 {
-  "name": "focalboard-jira-importer",
+  "name": "karmaboard-jira-importer",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -8,8 +8,8 @@
     "lint": "eslint --ext .tsx,.ts . --quiet --cache",
     "fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
     "test": "jest",
-    "testRun": "ts-node importJira.ts -i test/jira_export.xml -o test/jira-import.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importJira.ts -i test/jira_export.xml -o test/jira-import.focalboard"
+    "testRun": "ts-node importJira.ts -i test/jira_export.xml -o test/jira-import.karmaboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importJira.ts -i test/jira_export.xml -o test/jira-import.karmaboard"
   },
   "keywords": [],
   "author": "",

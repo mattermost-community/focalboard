@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -243,7 +243,7 @@ func TestCheckForMismatchedCollation(t *testing.T) {
 	}
 
 	// make sure all collations are consistent.
-	tableNames, err := sqlStore.getFocalBoardTableNames()
+	tableNames, err := sqlStore.getKarmaBoardTableNames()
 	require.NoError(t, err)
 
 	sqlCollation := "SELECT table_collation FROM information_schema.tables WHERE table_name=? and table_schema=(SELECT DATABASE())"

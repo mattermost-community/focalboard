@@ -157,7 +157,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         store = mockStateStore([], state)
         jest.useRealTimers()
     })
-    describe('not a focalboard Plugin', () => {
+    describe('not a karmaboard Plugin', () => {
         test('should match snapshot', () => {
             const {container} = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
@@ -168,7 +168,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             expect(container).toMatchSnapshot()
         })
     })
-    describe('a focalboard Plugin', () => {
+    describe('a karmaboard Plugin', () => {
         test('should match snapshot', () => {
             const {container} = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
@@ -243,7 +243,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         })
         test('return BoardTemplateSelector and click delete template icon', async () => {
             const root = document.createElement('div')
-            root.setAttribute('id', 'focalboard-root-portal')
+            root.setAttribute('id', 'karmaboard-root-portal')
             render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BoardTemplateSelector onClose={jest.fn()}/>

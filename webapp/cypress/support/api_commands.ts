@@ -33,14 +33,14 @@ Cypress.Commands.add('apiLoginUser', (data: Cypress.LoginData) => {
         },
     }).then((response) => {
         expect(response.body).to.have.property('token')
-        localStorage.setItem('focalboardSessionId', response.body.token)
+        localStorage.setItem('karmaboardSessionId', response.body.token)
     })
 })
 
 const headers = () => ({
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
-        Authorization: `Bearer ${localStorage.getItem('focalboardSessionId')}`,
+        Authorization: `Bearer ${localStorage.getItem('karmaboardSessionId')}`,
     },
 })
 

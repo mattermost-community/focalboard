@@ -34,7 +34,7 @@ describe('components/sidebar/DeleteBoardDialog', () => {
 
     function renderTest() {
         const rootPortalDiv = document.createElement('div')
-        rootPortalDiv.id = 'focalboard-root-portal'
+        rootPortalDiv.id = 'karmaboard-root-portal'
 
         const {container} = render(<TestComponent/>, {container: document.body.appendChild(rootPortalDiv)})
         return container

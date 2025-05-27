@@ -1,6 +1,6 @@
-# Focalboard Web Clipper Browser Extension ✂️
+# Karmaboard Web Clipper Browser Extension ✂️
 
-This is the Focalboard Web Clipper browser extension. It aims at supporting various use cases around converting web content from your browser directly into Focalboard cards.
+This is the Karmaboard Web Clipper browser extension. It aims at supporting various use cases around converting web content from your browser directly into Karmaboard cards.
 
 ⚠️ **Warning:** The extension is currently in an early and experimental state. Use it at your own risk only. Don't expect any eye candy.
 
@@ -8,7 +8,7 @@ This is the Focalboard Web Clipper browser extension. It aims at supporting vari
 
 The extension currently is in a proof-of-concept state with minimal functionality. The only supported use case at the time is building a read-later list. Things that work:
 
-- Logging in to the Focalboard server from the extension settings
+- Logging in to the Karmaboard server from the extension settings
 - Selecting a board to capture cards into from the extension settings
 - Saving websites (title & URL) into cards from a page action (like e.g. Pocket does it)
 
@@ -19,8 +19,8 @@ Only Firefox was tested so far but polyfills have already been enabled so there'
 We're really at the very beginning here so there's a lot to be done. Notable tasks include:
 
 - Improve the React code by extracting components
-- Style the options and popup pages to mimic the look and feel of Focalboard
-- Replace the logo with something better (the current one was snatched from the Focalboard Windows app)
+- Style the options and popup pages to mimic the look and feel of Karmaboard
+- Replace the logo with something better (the current one was snatched from the Karmaboard Windows app)
 - Link to the extension's options page from page action error messages
 - Clip parts of a website into image attachments on cards
 - Extract website content in reader mode into card descriptions

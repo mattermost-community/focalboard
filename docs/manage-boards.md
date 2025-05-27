@@ -2,9 +2,9 @@
 
 ## Access your boards
 
-Open the Boards tab via the product menu in the top left corner of Mattermost to view all the boards for your team. You can select the **Focalboard** icon in the Apps Bar to open the right-hand panel, and display boards linked to the channel or message that you're in.
+Open the Boards tab via the product menu in the top left corner of Mattermost to view all the boards for your team. You can select the **Karmaboard** icon in the Apps Bar to open the right-hand panel, and display boards linked to the channel or message that you're in.
 
-If you don't see the Apps Bar and your boards layout looks different to what's described, you may be using an older version of Mattermost and/or the Focalboard plugin.
+If you don't see the Apps Bar and your boards layout looks different to what's described, you may be using an older version of Mattermost and/or the Karmaboard plugin.
 
 ## Find a board
 
@@ -12,7 +12,7 @@ From the top of the boards left hand sidebar, select the **Find Boards** field (
 
 ## Manage sidebar categories
 
-From Focalboard plugin v7.2, you can organize your boards in the left-hand sidebar using custom categories. By default, all boards will appear under the **Boards** category. To manage your categories, open the Options menu next to the category to create, delete, or rename a category. With the exception to the default **Boards** category, all other categories can be renamed or deleted.
+From Karmaboard plugin v7.2, you can organize your boards in the left-hand sidebar using custom categories. By default, all boards will appear under the **Boards** category. To manage your categories, open the Options menu next to the category to create, delete, or rename a category. With the exception to the default **Boards** category, all other categories can be renamed or deleted.
 
 After creating categories, you can move your boards to those categories by opening the Options menu next to the board and selecting **Move To…** to select the category where you want the board to be moved.
 

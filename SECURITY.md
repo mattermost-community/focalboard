@@ -22,4 +22,4 @@ For more details about the security content of past releases, see the [Security 
 Contributing to this policy
 ---------------------------
 
-If you have feedback or suggestions on improving this policy document, please [create an issue](https://github.com/mattermost/focalboard/issues/new/choose).
+If you have feedback or suggestions on improving this policy document, please [create an issue](https://github.com/mattermost/karmaboard/issues/new/choose).

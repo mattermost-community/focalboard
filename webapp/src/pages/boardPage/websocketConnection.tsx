@@ -48,7 +48,7 @@ const WebsocketConnection = () => {
         return (
             <div className='WSConnection error'>
                 <a
-                    href='https://www.focalboard.com/fwlink/websocket-connect-error.html'
+                    href='https://www.karmaboard.com/fwlink/websocket-connect-error.html'
                     target='_blank'
                     rel='noreferrer'
                 >

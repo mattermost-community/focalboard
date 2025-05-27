@@ -8,15 +8,15 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/auth"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
-const websocketMessagePrefix = "custom_focalboard_"
+const websocketMessagePrefix = "custom_karmaboard_"
 
 var errMissingTeamInCommand = fmt.Errorf("command doesn't contain teamId")
 

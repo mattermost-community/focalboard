@@ -17,13 +17,13 @@ VALUES
 ('user-one', 'john-doe', 'john-doe@sample.com'),
 ('user-two', 'jane-doe', 'jane-doe@sample.com');
 
-INSERT INTO focalboard_boards
+INSERT INTO karmaboard_boards
 (id, team_id, channel_id, created_by, modified_by, type, title, description, icon, show_description, is_template, create_at, update_at, delete_at)
 VALUES
 ('board-group-channel', 'team-one', 'group-channel', 'user-one', 'user-one', 'P', 'Group Channel Board', '', '', false, false, 123, 123, 0),
 ('board-direct-channel', 'team-one', 'direct-channel', 'user-one', 'user-one', 'P', 'Direct Channel Board', '', '', false, false, 123, 123, 0);
 
-INSERT INTO focalboard_board_members
+INSERT INTO karmaboard_board_members
 (board_id, user_id, scheme_admin)
 VALUES
 ('board-group-channel', 'user-one', true),

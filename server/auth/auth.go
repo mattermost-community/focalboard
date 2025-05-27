@@ -2,11 +2,11 @@
 package auth
 
 import (
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/permissions"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/config"
+	"github.com/mattermost/karmaboard/server/services/permissions"
+	"github.com/mattermost/karmaboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/utils"
 	"github.com/pkg/errors"
 )
 

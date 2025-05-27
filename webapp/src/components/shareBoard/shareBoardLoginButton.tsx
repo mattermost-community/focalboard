@@ -16,14 +16,14 @@ const ShareBoardLoginButton = () => {
     const history = useHistory()
 
     let redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
-    if (Utils.isFocalboardLegacy()) {
+    if (Utils.isKarmaboardLegacy()) {
         redirectQueryParam = 'redirect_to=' + encodeURIComponent(generatePath('/boards/team/:teamId/:boardId?/:viewId?/:cardId?', match.params))
     }
     const loginPath = '/login?' + redirectQueryParam
 
     const onLoginClick = useCallback(() => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardLogin)
-        if (Utils.isFocalboardLegacy()) {
+        if (Utils.isKarmaboardLegacy()) {
             location.assign(loginPath)
         } else {
             history.push(loginPath)

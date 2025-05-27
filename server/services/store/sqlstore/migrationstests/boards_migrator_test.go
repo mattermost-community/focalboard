@@ -20,11 +20,11 @@ import (
 	mmSqlStore "github.com/mattermost/mattermost/server/public/utils/sql"
 	"github.com/mattermost/mattermost/server/v8/channels/db"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/store/sqlstore"
 )
 
-var tablePrefix = "focalboard_"
+var tablePrefix = "karmaboard_"
 
 type BoardsMigrator struct {
 	withMattermostMigrations bool

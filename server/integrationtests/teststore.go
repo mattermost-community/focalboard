@@ -1,7 +1,7 @@
 package integrationtests
 
 import (
-	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/services/store"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )

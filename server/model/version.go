@@ -59,7 +59,7 @@ var (
 
 // LogServerInfo logs information about the server instance.
 func LogServerInfo(logger mlog.LoggerIFace) {
-	logger.Info("Focalboard server",
+	logger.Info("Karmaboard server",
 		mlog.String("version", CurrentVersion),
 		mlog.String("edition", Edition),
 		mlog.String("build_number", BuildNumber),

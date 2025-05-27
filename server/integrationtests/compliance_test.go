@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,7 +18,7 @@ var (
 )
 
 func setupTestHelperForCompliance(t *testing.T, complianceLicense bool) (*TestHelper, Clients) {
-	os.Setenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE", strconv.FormatBool(complianceLicense))
+	os.Setenv("KARMABOARD_UNIT_TESTING_COMPLIANCE", strconv.FormatBool(complianceLicense))
 
 	th := SetupTestHelperPluginMode(t)
 	clients := setupClients(th)

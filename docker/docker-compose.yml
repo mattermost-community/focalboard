@@ -4,13 +4,13 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
-    container_name: focalboard
+    container_name: karmaboard
     volumes:
-      - fbdata:/opt/focalboard/data
+      - fbdata:/opt/karmaboard/data
     ports:
       - 80:8000
     environment:
-      - VIRTUAL_HOST=focalboard.local
+      - VIRTUAL_HOST=karmaboard.local
       - VIRTUAL_PORT=8000
 
 volumes:

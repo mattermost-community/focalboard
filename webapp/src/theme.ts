@@ -122,7 +122,7 @@ export function setTheme(theme: Theme | null): Theme {
 
     setActiveThemeName(consolidatedTheme, theme)
 
-    // for personal server and desktop, Focalboard is responsible for managing the theme,
+    // for personal server and desktop, Karmaboard is responsible for managing the theme,
     // so we set all the color variables here.
     document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
     document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)

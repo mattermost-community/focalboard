@@ -11,9 +11,9 @@ import (
 	"runtime"
 
 	"github.com/google/uuid"
-	"github.com/mattermost/focalboard/server/server"
-	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
+	"github.com/mattermost/karmaboard/server/server"
+	"github.com/mattermost/karmaboard/server/services/config"
+	"github.com/mattermost/karmaboard/server/services/permissions/localpermissions"
 	"github.com/webview/webview"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
@@ -45,12 +45,12 @@ func runServer(port int) (*server.Server, error) {
 		ServerRoot:              fmt.Sprintf("http://localhost:%d", port),
 		Port:                    port,
 		DBType:                  "sqlite3",
-		DBConfigString:          path.Join(executableDir, "focalboard.db"),
+		DBConfigString:          path.Join(executableDir, "karmaboard.db"),
 		UseSSL:                  false,
 		SecureCookie:            true,
 		WebPath:                 path.Join(executableDir, "pack"),
 		FilesDriver:             "local",
-		FilesPath:               path.Join(executableDir, "focalboard_files"),
+		FilesPath:               path.Join(executableDir, "karmaboard_files"),
 		Telemetry:               true,
 		WebhookUpdate:           []string{},
 		SessionExpireTime:       259200000000,
@@ -127,10 +127,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	w.SetTitle("Focalboard")
+	w.SetTitle("Karmaboard")
 	w.SetSize(1024, 768, webview.HintNone)
 
-	script := fmt.Sprintf("localStorage.setItem('focalboardSessionId', '%s');", sessionToken)
+	script := fmt.Sprintf("localStorage.setItem('karmaboardSessionId', '%s');", sessionToken)
 	w.Init(script)
 
 	w.Navigate(fmt.Sprintf("http://localhost:%d", port))

@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/app"
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/app"
+	"github.com/mattermost/karmaboard/server/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 

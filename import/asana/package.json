@@ -1,5 +1,5 @@
 {
-  "name": "focalboard-asana-importer",
+  "name": "karmaboard-asana-importer",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "eslint --ext .tsx,.ts . --quiet --cache",
     "fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-    "test": "ts-node importAsana.ts -i test/asana.json -o test/asana-import.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importAsana.ts -i test/asana.json -o test/asana-import.focalboard"
+    "test": "ts-node importAsana.ts -i test/asana.json -o test/asana-import.karmaboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importAsana.ts -i test/asana.json -o test/asana-import.karmaboard"
   },
   "keywords": [],
   "author": "",

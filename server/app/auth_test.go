@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/auth"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/auth"
+	"github.com/mattermost/karmaboard/server/utils"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )

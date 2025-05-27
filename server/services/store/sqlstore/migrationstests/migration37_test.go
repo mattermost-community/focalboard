@@ -35,7 +35,7 @@ func Test37MigrateHiddenBoardIDTest(t *testing.T) {
 
 		var hiddenCategoryBoards []categoryBoard
 
-		query := "SELECT user_id, category_id, board_id, hidden FROM focalboard_category_boards WHERE hidden = true"
+		query := "SELECT user_id, category_id, board_id, hidden FROM karmaboard_category_boards WHERE hidden = true"
 		err := th.f.DB().Select(&hiddenCategoryBoards, query)
 		require.NoError(t, err)
 		require.Equal(t, 3, len(hiddenCategoryBoards))
@@ -58,7 +58,7 @@ func Test37MigrateHiddenBoardIDTest(t *testing.T) {
 		th.f.MigrateToStep(37)
 
 		var count int
-		query := "SELECT count(*) FROM focalboard_category_boards WHERE hidden = true"
+		query := "SELECT count(*) FROM karmaboard_category_boards WHERE hidden = true"
 		err := th.f.DB().Get(&count, query)
 		require.NoError(t, err)
 		require.Equal(t, 0, count)

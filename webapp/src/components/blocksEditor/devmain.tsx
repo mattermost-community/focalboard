@@ -107,4 +107,4 @@ function App() {
     )
 }
 
-ReactDOM.render(<App/>, document.getElementById('focalboard-app'))
+ReactDOM.render(<App/>, document.getElementById('karmaboard-app'))

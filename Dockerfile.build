@@ -1,8 +1,8 @@
-# This Dockerfile is used to build Focalboard for Linux. It builds all the parts inside the image
+# This Dockerfile is used to build Karmaboard for Linux. It builds all the parts inside the image
 # and the last stage just holds the package which is then copied back to the host.
 #
-# docker buildx build -f Dockerfile.build --no-cache --platform linux/amd64 -t focalboard-build:dirty --output out .
-# docker buildx build -f Dockerfile.build --no-cache --platform linux/arm64 -t focalboard-build:dirty --output out .
+# docker buildx build -f Dockerfile.build --no-cache --platform linux/amd64 -t karmaboard-build:dirty --output out .
+# docker buildx build -f Dockerfile.build --no-cache --platform linux/arm64 -t karmaboard-build:dirty --output out .
 #
 # Afterwards the packages can be found in the ./out folder.
 
@@ -32,4 +32,4 @@ RUN make server-linux-package-docker arch=${TARGETARCH}
 # Copy package back to host
 FROM scratch AS dist
 ARG TARGETARCH
-COPY --from=backend /go/dist/focalboard-server-linux-${TARGETARCH}.tar.gz .
+COPY --from=backend /go/dist/karmaboard-server-linux-${TARGETARCH}.tar.gz .

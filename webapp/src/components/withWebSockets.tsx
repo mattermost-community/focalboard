@@ -29,11 +29,11 @@ const WithWebSockets = (props: Props): React.ReactElement => {
         // this is a temporary solution to disable websocket
         // connections on legacy routes, as there is no such thing as
         // an anonymous websocket connection
-        if (Utils.isFocalboardLegacy()) {
+        if (Utils.isKarmaboardLegacy()) {
             return
         }
 
-        const token = localStorage.getItem('focalboardSessionId') || queryString.get('r') || ''
+        const token = localStorage.getItem('karmaboardSessionId') || queryString.get('r') || ''
         if (token) {
             wsClient.authenticate(token)
         }
@@ -45,7 +45,7 @@ const WithWebSockets = (props: Props): React.ReactElement => {
             return
         }
 
-        const token = localStorage.getItem('focalboardSessionId') || queryString.get('r') || ''
+        const token = localStorage.getItem('karmaboardSessionId') || queryString.get('r') || ''
         if (wsClient.token !== token) {
             wsClient.authenticate(token)
         }

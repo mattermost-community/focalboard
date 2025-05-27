@@ -5,7 +5,7 @@ subsection: Personal Edition
 weight: 2
 ---
 
-Focalboard Personal Server is a standalone server for development and personal use. For team use, check out [Mattermost Boards](../../mattermost/), which supports private boards, team communication, and more.
+Karmaboard Personal Server is a standalone server for development and personal use. For team use, check out [Mattermost Boards](../../mattermost/), which supports private boards, team communication, and more.
 
 Follow these steps it up on an Ubuntu server. To upgrade an existing installation, see [the upgrade guide](../ubuntu-upgrade).
 
@@ -16,19 +16,19 @@ Popular hosted options include:
 * [Amazon EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html)
 * [Linode](https://www.linode.com/docs/products/compute/)
 
-## Install Focalboard
+## Install Karmaboard
 
-Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). The example below uses the link for **v0.15.0**, but you're encouraged to use the latest version in the release list:
+Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/karmaboard/releases). The example below uses the link for **v0.15.0**, but you're encouraged to use the latest version in the release list:
 
 ```
-wget https://github.com/mattermost/focalboard/releases/download/v0.15.0/focalboard-server-linux-amd64.tar.gz
-tar -xvzf focalboard-server-linux-amd64.tar.gz
-sudo mv focalboard /opt
+wget https://github.com/mattermost/karmaboard/releases/download/v0.15.0/karmaboard-server-linux-amd64.tar.gz
+tar -xvzf karmaboard-server-linux-amd64.tar.gz
+sudo mv karmaboard /opt
 ```
 
 ## Install NGINX
 
-By default, the Focalboard server runs on port 8000 (specified in config.json). We recommend running NGINX as a web proxy to forward http and websocket requests from port 80 to it. To install NGINX, run:
+By default, the Karmaboard server runs on port 8000 (specified in config.json). We recommend running NGINX as a web proxy to forward http and websocket requests from port 80 to it. To install NGINX, run:
 
 ```
 sudo apt update
@@ -45,13 +45,13 @@ You may need to adjust your firewall settings depending on the host, e.g.
 Create a new site config:
 
 ```
-sudo nano /etc/nginx/sites-available/focalboard
+sudo nano /etc/nginx/sites-available/karmaboard
 ```
 
 Copy and paste this configuration:
 
 ```
-upstream focalboard {
+upstream karmaboard {
    server localhost:8000;
    keepalive 32;
 }
@@ -59,7 +59,7 @@ upstream focalboard {
 server {
    listen 80 default_server;
 
-   server_name focalboard.example.com;
+   server_name karmaboard.example.com;
 
    location ~ /ws/* {
        proxy_set_header Upgrade $http_upgrade;
@@ -78,7 +78,7 @@ server {
        proxy_connect_timeout 1d;
        proxy_send_timeout 1d;
        proxy_read_timeout 1d;
-       proxy_pass http://focalboard;
+       proxy_pass http://karmaboard;
    }
 
    location / {
@@ -97,7 +97,7 @@ server {
        proxy_cache_use_stale timeout;
        proxy_cache_lock on;
        proxy_http_version 1.1;
-       proxy_pass http://focalboard;
+       proxy_pass http://karmaboard;
    }
 }
 ```
@@ -108,10 +108,10 @@ If there is a default site, you may need to delete it
 sudo rm /etc/nginx/sites-enabled/default
 ```
 
-Enable the Focalboard site, test the config, and reload NGINX:
+Enable the Karmaboard site, test the config, and reload NGINX:
 
 ```
-sudo ln -s /etc/nginx/sites-available/focalboard /etc/nginx/sites-enabled/focalboard
+sudo ln -s /etc/nginx/sites-available/karmaboard /etc/nginx/sites-enabled/karmaboard
 sudo nginx -t
 sudo /etc/init.d/nginx reload
 ```
@@ -122,7 +122,7 @@ For a production server, it's important to set up TLS to encrypt web traffic. Wi
 
 ## Install Postgresql (Recommended)
 
-Focalboard stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
+Karmaboard stores data in a SQLite database by default, but we recommend running against Postgres in production (we've tested against Postgres 10.15). To install, run:
 
 ```
 sudo apt install postgresql postgresql-contrib
@@ -149,10 +149,10 @@ Exit the postgres user session:
 exit
 ```
 
-Edit the Focalboard config.json:
+Edit the Karmaboard config.json:
 
 ```
-nano /opt/focalboard/config.json
+nano /opt/karmaboard/config.json
 ```
 
 Change the dbconfig setting to use the postgres database you created:
@@ -189,10 +189,10 @@ Exit the mysql-prompt:
 exit
 ```
 
-Edit the Focalboard `config.json`:
+Edit the Karmaboard `config.json`:
 
 ```
-nano /opt/focalboard/config.json
+nano /opt/karmaboard/config.json
 ```
 
 Change the dbconfig setting to use the MySQL database you created:
@@ -202,8 +202,8 @@ When MySQL is being used, using collation is recommended over using charset.
 Using a variant of `utf8mb4` collation is required. For example, `utf8mb4_general_ci`
 is used by default when no collation is specified.
 
-If you're using Focalboard as a Mattermost Plugin prior to version 0.9 with MySQL,
-please ensure the collations of focalboard tables (tables with the prefix `focalboard_`)
+If you're using Karmaboard as a Mattermost Plugin prior to version 0.9 with MySQL,
+please ensure the collations of karmaboard tables (tables with the prefix `karmaboard_`)
 is the same as the collation of mattermost tables.
 
 ```
@@ -211,26 +211,26 @@ is the same as the collation of mattermost tables.
 "dbconfig": "boardsuser:boardsuser-password@tcp(127.0.0.1:3306)/boards",
 ```
 
-## Configure Focalboard to run as a service
+## Configure Karmaboard to run as a service
 
 This will keep the server running across reboots. First, create a new service config file:
 
 ```
-sudo nano /lib/systemd/system/focalboard.service
+sudo nano /lib/systemd/system/karmaboard.service
 ```
 
 Paste in the following:
 
 ```
 [Unit]
-Description=Focalboard server
+Description=Karmaboard server
 
 [Service]
 Type=simple
 Restart=always
 RestartSec=5s
-ExecStart=/opt/focalboard/bin/focalboard-server
-WorkingDirectory=/opt/focalboard
+ExecStart=/opt/karmaboard/bin/karmaboard-server
+WorkingDirectory=/opt/karmaboard
 
 [Install]
 WantedBy=multi-user.target
@@ -240,13 +240,13 @@ Make systemd reload the new unit, and start it on machine reboot:
 
 ```
 sudo systemctl daemon-reload
-sudo systemctl start focalboard.service
-sudo systemctl enable focalboard.service
+sudo systemctl start karmaboard.service
+sudo systemctl enable karmaboard.service
 ```
 
 ## Test the server
 
-At this point, the Focalboard server should be running.
+At this point, the Karmaboard server should be running.
 
 Test that it's running locally with:
 

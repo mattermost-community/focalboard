@@ -6,5 +6,5 @@ weight: 4
 ---
 
 If the websocket persistently fails to connect to the server, check that the web proxy is configured correctly:
-* [If running Focalboard with Mattermost](/download/mattermost/)
-* [If running Focalboard Personal Server](/download/personal-edition/ubuntu/#configure-nginx)
+* [If running Karmaboard with Mattermost](/download/mattermost/)
+* [If running Karmaboard Personal Server](/download/personal-edition/ubuntu/#configure-nginx)

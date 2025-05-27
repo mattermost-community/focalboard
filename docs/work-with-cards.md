@@ -29,7 +29,7 @@ To manage the description content blocks on a card, hover over any existing bloc
 
 ## Attach files to cards
 
-From Focalboard plugin version v7.7, you can attach files to your cards, which other board members can download. There are no limitations to the file types that you can upload.
+From Karmaboard plugin version v7.7, you can attach files to your cards, which other board members can download. There are no limitations to the file types that you can upload.
 
 To upload a file to a card, select **Attach** in the top-right corner of the card. Then select the file you'd like to upload. When your file has been uploaded, you can find it in the **Attachments** section of the card. Select the **+** sign to add additional files to your card.
 
@@ -49,7 +49,7 @@ Comments allow you to provide feedback and ask questions relevant to the specifi
 
 To add a comment, select a card to open the card view, then click on **Add a comment…** to type in your comment, and press **Send** to save the comment to the card. All team members who are `following the card </boards/work-with-cards.html#receive-updates>`_ will receive a notification with a preview of your comment in Mattermost Channels.
 
-From Focalboard plugin v7.4, only board members with the *Commenter* role or higher can comment on a card. Board members assigned the *Viewer* role can view, but not comment on, a card.
+From Karmaboard plugin v7.4, only board members with the *Commenter* role or higher can comment on a card. Board members assigned the *Viewer* role can view, but not comment on, a card.
 
 ## Mention people on cards
 
@@ -81,7 +81,7 @@ Properties are automatically added to the board filter list at the top of the pa
 
 ## Work with property types
 
-The Focalboard plugin supports a wide range of fully customizable property types:
+The Karmaboard plugin supports a wide range of fully customizable property types:
 
 - **Text** can be used to add short notes to a card. An advantage of the text property over card descriptions is that it can be `shown on the board <https://docs.mattermost.com/boards/work-with-cards.html#toggle-properties-shown-on-a-board>`_ without needing to open the card.
 - **Numbers** are useful to capture metrics such as task sizing or effort estimates. Use in conjunction with calculations to get the most out of the number property type.

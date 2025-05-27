@@ -25,30 +25,30 @@ func Test27MigrateUserPropsToPreferences(t *testing.T) {
 			Props    string
 		}{}
 
-		err := th.f.DB().Get(&user, "SELECT id, username, props FROM focalboard_users WHERE id = 'user-id'")
+		err := th.f.DB().Get(&user, "SELECT id, username, props FROM karmaboard_users WHERE id = 'user-id'")
 		require.NoError(t, err)
 		userProps := map[string]any{}
 		require.NoError(t, json.Unmarshal([]byte(user.Props), &userProps))
 
 		require.Equal(t, "johndoe", user.Username)
-		require.Contains(t, userProps, "focalboard_welcomePageViewed")
-		require.True(t, userProps["focalboard_welcomePageViewed"].(bool))
+		require.Contains(t, userProps, "karmaboard_welcomePageViewed")
+		require.True(t, userProps["karmaboard_welcomePageViewed"].(bool))
 		require.Contains(t, userProps, "hiddenBoardIDs")
 		require.ElementsMatch(t, []string{"board1", "board2"}, userProps["hiddenBoardIDs"])
-		require.Contains(t, userProps, "focalboard_tourCategory")
-		require.Equal(t, "onboarding", userProps["focalboard_tourCategory"])
-		require.Contains(t, userProps, "focalboard_onboardingTourStep")
-		require.Equal(t, float64(1), userProps["focalboard_onboardingTourStep"])
-		require.Contains(t, userProps, "focalboard_onboardingTourStarted")
+		require.Contains(t, userProps, "karmaboard_tourCategory")
+		require.Equal(t, "onboarding", userProps["karmaboard_tourCategory"])
+		require.Contains(t, userProps, "karmaboard_onboardingTourStep")
+		require.Equal(t, float64(1), userProps["karmaboard_onboardingTourStep"])
+		require.Contains(t, userProps, "karmaboard_onboardingTourStarted")
 		// initially, onboardingTourStarted will be false on the user,
 		// but already inserted in the preferences table as true. The
 		// migration should not overwrite the already existing value,
 		// so after migration #27, this value should be true
-		require.False(t, userProps["focalboard_onboardingTourStarted"].(bool))
-		require.Contains(t, userProps, "focalboard_version72MessageCanceled")
-		require.True(t, userProps["focalboard_version72MessageCanceled"].(bool))
-		require.Contains(t, userProps, "focalboard_lastWelcomeVersion")
-		require.Equal(t, float64(7), userProps["focalboard_lastWelcomeVersion"])
+		require.False(t, userProps["karmaboard_onboardingTourStarted"].(bool))
+		require.Contains(t, userProps, "karmaboard_version72MessageCanceled")
+		require.True(t, userProps["karmaboard_version72MessageCanceled"].(bool))
+		require.Contains(t, userProps, "karmaboard_lastWelcomeVersion")
+		require.Equal(t, float64(7), userProps["karmaboard_lastWelcomeVersion"])
 
 		// we apply the migration
 		th.f.MigrateToStep(27)
@@ -59,7 +59,7 @@ func Test27MigrateUserPropsToPreferences(t *testing.T) {
 			Value string
 		}{}
 
-		nErr := th.f.DB().Select(&userPreferences, "SELECT name, value FROM focalboard_preferences WHERE UserId = 'user-id'")
+		nErr := th.f.DB().Select(&userPreferences, "SELECT name, value FROM karmaboard_preferences WHERE UserId = 'user-id'")
 		require.NoError(t, nErr)
 
 		// helper function to quickly get a preference value from the

@@ -1,4 +1,4 @@
-INSERT INTO focalboard_boards
+INSERT INTO karmaboard_boards
 (id, title, type, is_template, channel_id, team_id)
 VALUES
 ('board-id', 'Board', 'O', false, 'linked-channel', 'team-id'),

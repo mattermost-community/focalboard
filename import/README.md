@@ -8,4 +8,4 @@ This subfolder contains scripts to import data from other systems. It is at an e
 * Todoist
 * Nextcloud Deck
 
-[Contribute code](https://mattermost.github.io/focalboard/) to expand this.
+[Contribute code](https://mattermost.github.io/karmaboard/) to expand this.

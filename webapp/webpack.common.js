@@ -92,7 +92,7 @@ function makeCommonConfig() {
             }),
             new HtmlWebpackPlugin({
                 inject: true,
-                title: 'Focalboard',
+                title: 'Karmaboard',
                 chunks: ['main'],
                 template: 'html-templates/page.ejs',
                 filename: 'index.html',
@@ -102,7 +102,7 @@ function makeCommonConfig() {
         ],
         entry: ['./src/main.tsx', './src/userSettings.ts'],
         output: {
-            library: 'Focalboard',
+            library: 'Karmaboard',
             filename: 'static/[name].js',
             path: outpath,
         },

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

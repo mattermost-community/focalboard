@@ -18,7 +18,7 @@ module.exports = [
     merge.merge(config, {
         devtool: 'source-map',
         output: {
-            devtoolNamespace: 'focalboard',
+            devtoolNamespace: 'karmaboard',
         },
     }),
 ];

@@ -39,7 +39,7 @@ type Server struct {
 func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool, logger mlog.LoggerIFace) *Server {
 	r := mux.NewRouter()
 
-	basePrefix := os.Getenv("FOCALBOARD_HTTP_SERVER_BASEPATH")
+	basePrefix := os.Getenv("KARMABOARD_HTTP_SERVER_BASEPATH")
 	if basePrefix != "" {
 		r = r.PathPrefix(basePrefix).Subrouter()
 	}
@@ -148,7 +148,7 @@ func fileExists(path string) bool {
 
 // errorOrWarn returns a `warn` level if this server instance is running unit tests, otherwise `error`.
 func errorOrWarn() mlog.Level {
-	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("FOCALBOARD_UNIT_TESTING")))
+	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("KARMABOARD_UNIT_TESTING")))
 	if unitTesting == "1" || unitTesting == "y" || unitTesting == "t" {
 		return mlog.LvlWarn
 	}

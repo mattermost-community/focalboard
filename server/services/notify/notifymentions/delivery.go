@@ -4,7 +4,7 @@
 package notifymentions
 
 import (
-	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/karmaboard/server/services/notify"
 
 	mm_model "github.com/mattermost/mattermost/server/public/model"
 )

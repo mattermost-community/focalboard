@@ -13,13 +13,13 @@ jest.mock('../utils')
 
 describe('src/components/topBar', () => {
     beforeEach(jest.resetAllMocks)
-    test('should match snapshot for focalboardPlugin', () => {
+    test('should match snapshot for karmaboardPlugin', () => {
         const {container} = render(wrapDNDIntl(
             <TopBar/>,
         ))
         expect(container).toMatchSnapshot()
     })
-    test('should match snapshot for none focalboardPlugin', () => {
+    test('should match snapshot for none karmaboardPlugin', () => {
         const {container} = render(wrapDNDIntl(
             <TopBar/>,
         ))

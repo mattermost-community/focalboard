@@ -12,7 +12,7 @@ const (
 	HeaderToken        = "token"
 	HeaderAuth         = "Authorization"
 	HeaderBearer       = "BEARER"
-	SessionCookieToken = "FOCALBOARDAUTHTOKEN"
+	SessionCookieToken = "KARMABOARDAUTHTOKEN"
 )
 
 type TokenLocation int

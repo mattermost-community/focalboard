@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 	mm_model "github.com/mattermost/mattermost/server/public/model"
 
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/utils"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore"
 )

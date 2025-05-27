@@ -5,10 +5,10 @@ subsection: Personal Edition
 weight: 4
 ---
 
-You can download and run the latest version of Focalboard Personal Server with a single-line <a href="https://www.docker.com/">Docker</a> command:
+You can download and run the latest version of Karmaboard Personal Server with a single-line <a href="https://www.docker.com/">Docker</a> command:
 
 ```
-docker run -it -p 80:8000 mattermost/focalboard
+docker run -it -p 80:8000 mattermost/karmaboard
 ```
 
 Then open a browser to <a href="http://localhost">http://localhost</a>.
@@ -16,9 +16,9 @@ Then open a browser to <a href="http://localhost">http://localhost</a>.
 or, to specify a port number:
 
 ```
-docker run -it -p <port>:8000 mattermost/focalboard
+docker run -it -p <port>:8000 mattermost/karmaboard
 ```
 
 ## To set up manually
 
-Follow the steps in the [setup guide](../ubuntu) to configure Focalboard manually.
+Follow the steps in the [setup guide](../ubuntu) to configure Karmaboard manually.

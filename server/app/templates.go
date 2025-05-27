@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mattermost/focalboard/server/assets"
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/assets"
+	"github.com/mattermost/karmaboard/server/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

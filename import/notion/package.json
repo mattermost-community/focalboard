@@ -1,5 +1,5 @@
 {
-  "name": "focalboard-notion-importer",
+  "name": "karmaboard-notion-importer",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "eslint --ext .tsx,.ts . --quiet --cache",
     "fix": "eslint --ext .tsx,.ts . --quiet --fix --cache",
-    "test": "ts-node importNotion.ts -i test/export -o test/notion-import.focalboard",
-    "debug:test": "node --inspect=5858 -r ts-node/register importNotion.ts -i test/export -o test/notion-import.focalboard"
+    "test": "ts-node importNotion.ts -i test/export -o test/notion-import.karmaboard",
+    "debug:test": "node --inspect=5858 -r ts-node/register importNotion.ts -i test/export -o test/notion-import.karmaboard"
   },
   "keywords": [],
   "author": "",

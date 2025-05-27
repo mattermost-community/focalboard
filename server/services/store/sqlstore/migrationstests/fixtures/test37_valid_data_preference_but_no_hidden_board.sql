@@ -1,4 +1,4 @@
-INSERT INTO focalboard_category_boards
+INSERT INTO karmaboard_category_boards
 (id, user_id, category_id, board_id, create_at, update_at, sort_order, hidden)
 VALUES
 ('id-1', 'user-id-1', 'category-id-1', 'board-id-1', 1672889246832, 1672889246832, 0, false),
@@ -8,5 +8,5 @@ VALUES
 ('id-5', 'user-id-3', 'category-id-4', 'board-id-5', 1672889246832, 1672889246832, 0, false);
 
 INSERT INTO Preferences VALUES
-('user-id-1', 'focalboard', 'hiddenBoardIDs', ''),
-('user-id-2', 'focalboard', 'hiddenBoardIDs', '');
+('user-id-1', 'karmaboard', 'hiddenBoardIDs', ''),
+('user-id-2', 'karmaboard', 'hiddenBoardIDs', '');

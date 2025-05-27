@@ -3,7 +3,7 @@
         UPDATE {{.prefix}}category_boards AS fcb 
             JOIN Preferences p 
             ON fcb.user_id = p.userid
-            AND p.category = 'focalboard'
+            AND p.category = 'karmaboard'
             AND p.name = 'hiddenBoardIDs'
             SET hidden = true
             WHERE p.value LIKE concat('%', fcb.board_id, '%');
@@ -14,7 +14,7 @@
             SET hidden = true
             FROM preferences p
             WHERE p.userid = fcb.user_id 
-            AND p.category = 'focalboard'
+            AND p.category = 'karmaboard'
             AND p.name = 'hiddenBoardIDs'
             AND p.value like ('%' || fcb.board_id || '%');
     {{end}}
@@ -23,7 +23,7 @@
         UPDATE {{.prefix}}category_boards AS fcb 
             JOIN {{.prefix}}preferences p 
             ON fcb.user_id = p.userid
-            AND p.category = 'focalboard'
+            AND p.category = 'karmaboard'
             AND p.name = 'hiddenBoardIDs'
             SET hidden = true
             WHERE p.value LIKE concat('%', fcb.board_id, '%');
@@ -34,7 +34,7 @@
             SET hidden = true
             FROM {{.prefix}}preferences p
             WHERE p.userid = fcb.user_id 
-            AND p.category = 'focalboard'
+            AND p.category = 'karmaboard'
             AND p.name = 'hiddenBoardIDs'
             AND p.value like ('%' || fcb.board_id || '%');
     {{end}}
@@ -50,7 +50,7 @@
             FROM {{.prefix}}category_boards AS fcb
             JOIN {{.prefix}}preferences p 
             ON p.userid = fcb.user_id 
-            AND p.category = 'focalboard'
+            AND p.category = 'karmaboard'
             AND p.name = 'hiddenBoardIDs' WHERE 
             p.value LIKE ('%' || fcb.board_id || '%')
         );

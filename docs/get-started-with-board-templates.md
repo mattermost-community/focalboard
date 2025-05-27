@@ -27,14 +27,14 @@ Standard board templates include:
 - **Sprint Planner**: Plan your sprints and releases more efficiently.
 - **Team Retrospective**: Identify what worked well and what can be improved for the future.
 - **User Research Sessions**: Manage and keep track of all your user research sessions.
-- **Welcome to Boards!**: Onboarding template with guided tour points to help you quickly ramp up on Focalboard.
+- **Welcome to Boards!**: Onboarding template with guided tour points to help you quickly ramp up on Karmaboard.
 
 ### Edit board templates
 
 To open the template editor for a specific template, go to the template picker then hover over the custom template and select the pencil icon. Any changes made on the template editor will be automatically saved and visible to team members who have access to the template. If you don't see the pencil icon when hovering over the template, then you don't have the appropriate permissions to edit the template.
 
 **Notes**:
-- From v7.2 of the Focalboard plugin, only admins and editors of a custom template can edit the template.
+- From v7.2 of the Karmaboard plugin, only admins and editors of a custom template can edit the template.
 - Prior to v7.2 of the plugin, any member of the channel workspace can edit a custom template in the channel. To limit access to the template, create or export the template to a private channel.
 - Custom templates are fully editable, but standard templates cannot be edited or deleted.
 

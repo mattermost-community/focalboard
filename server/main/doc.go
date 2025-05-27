@@ -1,13 +1,13 @@
-// Package classification Focalboard Server
+// Package classification Karmaboard Server
 //
-// Focalboard Server
+// Karmaboard Server
 //
 //	Schemes: http, https
 //	Host: localhost
 //	BasePath: /api/v2
 //	Version: 2.0.0
-//	License: Custom https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
-//	Contact: Focalboard<api@focalboard.com> https://www.focalboard.com
+//	License: Custom https://github.com/mattermost/karmaboard/blob/main/LICENSE.txt
+//	Contact: Karmaboard<api@karmaboard.com> https://www.karmaboard.com
 //
 //	Consumes:
 //	- application/json

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"unicode/utf8"
 
-	"github.com/mattermost/focalboard/server/services/audit"
+	"github.com/mattermost/karmaboard/server/services/audit"
 )
 
 const (

@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/karmaboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/karmaboard/server/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

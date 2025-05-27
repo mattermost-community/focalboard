@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	MetricsNamespace       = "focalboard"
+	MetricsNamespace       = "karmaboard"
 	MetricsSubsystemBlocks = "blocks"
 	MetricsSubsystemBoards = "boards"
 	MetricsSubsystemTeams  = "teams"
@@ -92,8 +92,8 @@ func NewMetrics(info InstanceInfo) *Metrics {
 	m.instance = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Namespace:   MetricsNamespace,
 		Subsystem:   MetricsSubsystemSystem,
-		Name:        "focalboard_instance_info",
-		Help:        "Instance information for Focalboard.",
+		Name:        "karmaboard_instance_info",
+		Help:        "Instance information for Karmaboard.",
 		ConstLabels: additionalLabels,
 	}, []string{"Version", "BuildNum", "Edition"})
 	m.registry.MustRegister(m.instance)

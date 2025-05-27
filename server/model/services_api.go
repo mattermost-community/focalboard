@@ -20,7 +20,7 @@ const (
 	botDescription = "Created by Boards plugin."
 )
 
-var FocalboardBot = &mm_model.Bot{
+var KarmaboardBot = &mm_model.Bot{
 	Username:    botUsername,
 	DisplayName: botDisplayname,
 	Description: botDescription,

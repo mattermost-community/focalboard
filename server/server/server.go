@@ -14,23 +14,23 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 
-	"github.com/mattermost/focalboard/server/api"
-	"github.com/mattermost/focalboard/server/app"
-	"github.com/mattermost/focalboard/server/auth"
-	appModel "github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/audit"
-	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/metrics"
-	"github.com/mattermost/focalboard/server/services/notify"
-	"github.com/mattermost/focalboard/server/services/notify/notifylogger"
-	"github.com/mattermost/focalboard/server/services/scheduler"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
-	"github.com/mattermost/focalboard/server/services/telemetry"
-	"github.com/mattermost/focalboard/server/services/webhook"
-	"github.com/mattermost/focalboard/server/utils"
-	"github.com/mattermost/focalboard/server/web"
-	"github.com/mattermost/focalboard/server/ws"
+	"github.com/mattermost/karmaboard/server/api"
+	"github.com/mattermost/karmaboard/server/app"
+	"github.com/mattermost/karmaboard/server/auth"
+	appModel "github.com/mattermost/karmaboard/server/model"
+	"github.com/mattermost/karmaboard/server/services/audit"
+	"github.com/mattermost/karmaboard/server/services/config"
+	"github.com/mattermost/karmaboard/server/services/metrics"
+	"github.com/mattermost/karmaboard/server/services/notify"
+	"github.com/mattermost/karmaboard/server/services/notify/notifylogger"
+	"github.com/mattermost/karmaboard/server/services/scheduler"
+	"github.com/mattermost/karmaboard/server/services/store"
+	"github.com/mattermost/karmaboard/server/services/store/sqlstore"
+	"github.com/mattermost/karmaboard/server/services/telemetry"
+	"github.com/mattermost/karmaboard/server/services/webhook"
+	"github.com/mattermost/karmaboard/server/utils"
+	"github.com/mattermost/karmaboard/server/web"
+	"github.com/mattermost/karmaboard/server/ws"
 	"github.com/oklog/run"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
@@ -143,11 +143,11 @@ func New(params Params) (*Server, error) {
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
-	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService)
+	karmaboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
-	focalboardAPI.RegisterAdminRoutes(localRouter)
+	karmaboardAPI.RegisterAdminRoutes(localRouter)
 
 	// Init team
 	if _, err := app.GetRootTeam(); err != nil {
@@ -161,7 +161,7 @@ func New(params Params) (*Server, error) {
 	if routedService, ok := wsAdapter.(web.RoutedService); ok {
 		webServer.AddRoutes(routedService)
 	}
-	webServer.AddRoutes(focalboardAPI)
+	webServer.AddRoutes(karmaboardAPI)
 
 	settings, err := params.DBStore.GetSystemSettings()
 	if err != nil {
@@ -199,7 +199,7 @@ func New(params Params) (*Server, error) {
 		notificationService: notificationService,
 		logger:              params.Logger,
 		localRouter:         localRouter,
-		api:                 focalboardAPI,
+		api:                 karmaboardAPI,
 		app:                 app,
 	}
 

@@ -1,1 +1,1 @@
-ALTER TABLE focalboard_category_boards ADD COLUMN hidden boolean;
+ALTER TABLE karmaboard_category_boards ADD COLUMN hidden boolean;
