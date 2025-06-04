@@ -973,7 +973,7 @@ paths:
             security:
                 - BearerAuth: []
             summary: Fetches the specified card.
-    /cards/{cardID}/cards:
+    /cards/{cardID}:
         patch:
             operationId: patchCard
             parameters:
