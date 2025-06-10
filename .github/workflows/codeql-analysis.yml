@@ -17,7 +17,7 @@ jobs:
     permissions:
       security-events: write  # for github/codeql-action/autobuild to send a status report
     name: Analyze
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -26,11 +26,11 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0
       with:
         languages: ${{ matrix.language }}
         debug: false
@@ -38,8 +38,8 @@ jobs:
     
     # Autobuild attempts to build any compiled languages
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v2    
+      uses: github/codeql-action/autobuild@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0    
 
     # Perform Analysis
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2    
+      uses: github/codeql-action/analyze@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0    
