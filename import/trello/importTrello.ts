@@ -6,6 +6,9 @@ import {exit} from 'process'
 import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
 import {Board} from '../../webapp/src/blocks/board'
+import {createAttachmentBlock} from '../../webapp/src/blocks/attachmentBlock'
+import {createImageBlock} from '../../webapp/src/blocks/imageBlock'
+import {createCommentBlock} from '../../webapp/src/blocks/commentBlock'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
@@ -112,6 +115,8 @@ function convert(input: Trello): [Board[], Block[]] {
         outCard.title = card.name
         outCard.boardId = board.id
         outCard.parentId = board.id
+        const updateDate = new Date(card.dateLastActivity)
+        outCard.updateAt = updateDate.getTime()
 
         // Map lists to Select property options
         if (card.idList) {
@@ -127,6 +132,11 @@ function convert(input: Trello): [Board[], Block[]] {
 
         blocks.push(outCard)
 
+        if (!outCard.fields.contentOrder) {
+            outCard.fields.contentOrder = []
+        }
+
+        //Description
         if (card.desc) {
             // console.log(`\t${card.desc}`)
             const text = createTextBlock()
@@ -134,16 +144,60 @@ function convert(input: Trello): [Board[], Block[]] {
             text.boardId = board.id
             text.parentId = outCard.id
             blocks.push(text)
-
-            outCard.fields.contentOrder = [text.id]
+            outCard.fields.contentOrder.push(text.id)
         }
+
+        // Attachments
+        if (card.attachments){
+            card.attachments.forEach(attach => {
+                const attachment = createAttachmentBlock()
+                const extension = getFileExtension(attach.name)
+                const name = `${attach.id}.${extension}`
+                attachment.fields.fileId = name
+                attachment.boardId = board.id
+                attachment.parentId = outCard.id
+                attachment.title = name
+
+                const date = new Date(attach.date)
+                attachment.createAt = date.getTime()
+                blocks.push(attachment)
+
+                if (isImageFile(name)){
+                    const image = createImageBlock()
+                    image.boardId = board.id
+                    image.parentId = outCard.id
+                    image.fields.fileId = name
+                    blocks.push(image)
+                    outCard.fields.contentOrder.push(image.id)
+                }
+            })
+        }
+
+        //Iteratin actions to find comments and card createdBy
+        input.actions.forEach(action => {
+            if (action.data.card && action.data.card.id === card.id) {
+                if (action.type === 'createCard') {
+                    const date = new Date(action.date)
+                    outCard.createAt = date.getTime()
+                } else if (action.type === 'commentCard') {
+                    const comment = createCommentBlock()
+                    comment.boardId = board.id
+                    comment.parentId = outCard.id
+                    const date = new Date(action.date)
+                    comment.createAt = date.getTime()
+                    comment.title = action.data.text!
+                    blocks.push(comment)
+                    outCard.fields.contentOrder.push(comment.id)
+                }
+            }
+        })
 
         // Add Checklists
         if (card.idChecklists && card.idChecklists.length > 0) {
             card.idChecklists.forEach(checklistID => {
-                const lookup = input.checklists.find(e => e.id === checklistID)
+                const lookup = card.checklists.find(e => e.id === checklistID)
                 if (lookup) {
-                    lookup.checkItems.forEach(trelloCheckBox=> {
+                    lookup.checkItems.forEach((trelloCheckBox) => {
                         const checkBlock = createCheckboxBlock()
                         checkBlock.title = trelloCheckBox.name
                         if (trelloCheckBox.state === 'complete') {
@@ -162,10 +216,24 @@ function convert(input: Trello): [Board[], Block[]] {
         }
     })
 
-    console.log('')
-    console.log(`Found ${input.cards.length} card(s).`)
+    console.log(`\nFound ${input.cards.length} card(s).`)
 
     return [boards, blocks]
+}
+
+function isImageFile(filename: string): boolean {
+    const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'svg']
+    const extension = filename.split('.').pop()?.toLowerCase()
+    return imageExtensions.includes(extension!)
+}
+
+function getFileExtension(filename: string): string | null {
+    const parts = filename.split('.')
+    if (parts.length > 1) {
+        return parts[parts.length - 1]
+    }
+
+    return null
 }
 
 function showHelp() {
