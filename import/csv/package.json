@@ -1,0 +1,29 @@
+{
+  "name": "csv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "importCsv.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/lodash": "^4.17.14",
+    "@types/minimist": "^1.2.4",
+    "@types/node": "^20.8.9",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "archiver": "^7.0.1",
+    "eslint": "^8.52.0",
+    "lodash": "^4.17.21",
+    "nanoid": "^5.0.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "minimist": "^1.2.8"
+  }
+}

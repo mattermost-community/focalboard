@@ -27,7 +27,7 @@ interface BoardArchiveLine extends ArchiveLine {
 class ArchiveUtils {
     static buildBlockArchive(boards: readonly Board[], blocks: readonly Block[]): string {
         const header: ArchiveHeader = {
-            version: 1,
+            version: 2,
             date: Date.now(),
         }
 
