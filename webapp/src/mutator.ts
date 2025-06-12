@@ -224,8 +224,8 @@ class Mutator {
                 await afterRedo?.(board)
             },
             async () => {
-                await beforeUndo?.(board)
                 await octoClient.undeleteBoard(board.id)
+                await beforeUndo?.(board)
             },
             description,
             this.undoGroupId,
