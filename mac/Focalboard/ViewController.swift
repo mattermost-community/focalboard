@@ -75,8 +75,14 @@ class ViewController:
 
 	private func updateSessionTokenAndUserSettings() {
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
+		let url = URL(string: "http://localhost:\(appDelegate.serverPort)/")!
+		let sessionScript = """
+		if (window.location.href.toLowerCase().startsWith('\(url)'.toLowerCase())) {
+			localStorage.setItem('focalboardSessionId', '\(appDelegate.sessionToken)');
+		}
+		"""
 		let sessionTokenScript = WKUserScript(
-			source: "localStorage.setItem('focalboardSessionId', '\(appDelegate.sessionToken)');",
+			source: sessionScript,
 			injectionTime: .atDocumentStart,
 			forMainFrameOnly: true
 		)
@@ -94,8 +100,7 @@ class ViewController:
 	private func loadHomepage() {
 		NSLog("loadHomepage")
 		let appDelegate = NSApplication.shared.delegate as! AppDelegate
-		let port = appDelegate.serverPort
-		let url = URL(string: "http://localhost:\(port)/")!
+		let url = URL(string: "http://localhost:\(appDelegate.serverPort)/")!
 		let request = URLRequest(url: url)
 		refreshWebViewOnLoad = true
 		webView.load(request)
