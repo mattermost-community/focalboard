@@ -8,7 +8,10 @@ import {generatePath, match as routerMatch} from 'react-router-dom'
 
 import {History} from 'history'
 
+import katex from 'katex'
+
 import {IUser} from './user'
+import 'katex/dist/katex.min.css'
 
 import {Block} from './blocks/block'
 import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
@@ -309,7 +312,19 @@ class Utils {
     }
 
     static htmlFromMarkdownWithRenderer(text: string, renderer: marked.Renderer): string {
-        const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
+        const newText = text.replace(/</g, '&lt;').replace(
+            /\$\$([^$]*?)\$\$([^\S\r\n]*\n)?/g, // Matches $$…$$ plus trailing whitespace & newline (if any)
+            (match: string, p1: string) => {
+                return katex.renderToString(p1, {displayMode: true, throwOnError: false})
+            },
+        ).replace(
+            /\$([^]*?)\$/g,
+            (match: string, p1: string) => {
+                return katex.renderToString(p1, {displayMode: false, throwOnError: false})
+            },
+        )
+
+        const html = marked(newText, {renderer, breaks: true})
         return html.trim()
     }
 
