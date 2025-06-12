@@ -10,7 +10,7 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
-
+import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 import {Utils} from '../../utils'
 
 import PropertyValueElement from '../propertyValueElement'
@@ -48,7 +48,7 @@ type Props = {
 const TableRow = (props: Props) => {
     const intl = useIntl()
     const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
-
+    const isCardEmpty = useIsCardEmpty(card)
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isGrouped = Boolean(groupById)
@@ -138,12 +138,12 @@ const TableRow = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [card.title, card.fields.contentOrder, handleDeleteCard])
+    }, [handleDeleteCard, isCardEmpty])
 
     return (
         <div

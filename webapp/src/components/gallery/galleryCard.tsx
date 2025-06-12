@@ -22,6 +22,7 @@ import CardBadges from '../cardBadges'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
+import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 
 type Props = {
     board: Board
@@ -39,6 +40,7 @@ type Props = {
 const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const {card, board} = props
+    const isCardEmpty = useIsCardEmpty(card)
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
@@ -46,6 +48,9 @@ const GalleryCard = (props: Props) => {
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
     const handleDeleteCard = useCallback(() => {
+        if (!card) {
+            return
+        }
         mutator.deleteBlock(card, 'delete card')
     }, [card, board.id])
 
@@ -59,6 +64,17 @@ const GalleryCard = (props: Props) => {
             },
         }
     }, [handleDeleteCard])
+
+    const handleDeleteButtonOnClick = useCallback(() => {
+        // user trying to delete a card with blank name
+        // but content present cannot be deleted without
+        // confirmation dialog
+        if (isCardEmpty) {
+            handleDeleteCard()
+            return
+        }
+        setShowConfirmationDialogBox(true)
+    }, [isCardEmpty])
 
     const image: ContentBlock|undefined = useMemo(() => {
         for (let i = 0; i < contents.length; ++i) {
@@ -93,7 +109,7 @@ const GalleryCard = (props: Props) => {
                         <CardActionsMenu
                             cardId={card!.id}
                             boardId={card!.boardId}
-                            onClickDelete={() => setShowConfirmationDialogBox(true)}
+                            onClickDelete={handleDeleteButtonOnClick}
                             onClickDuplicate={() => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
                                 mutator.duplicateCard(card.id, board.id)
