@@ -22,6 +22,7 @@ const linkBoardMessage = "@%s linked the board [%s](%s) with this channel"
 const unlinkBoardMessage = "@%s unlinked the board [%s](%s) with this channel"
 
 var errNoDefaultCategoryFound = errors.New("no default category found for user")
+var errMemberRoleCannotBeChanged = errors.New("cannot change the role of this member")
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
@@ -562,6 +563,10 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	}
 	if bErr != nil {
 		return nil, bErr
+	}
+
+	if a.permissions.HasPermissionToTeam(member.UserID, board.TeamID, model.PermissionManageTeam) {
+		return nil, errMemberRoleCannotBeChanged
 	}
 
 	oldMember, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)

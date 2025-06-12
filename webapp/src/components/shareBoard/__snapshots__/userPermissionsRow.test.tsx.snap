@@ -78,8 +78,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot 1`] 
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Commenter"
                   class="MenuOption TextOption menu-option"
@@ -109,8 +107,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot 1`] 
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Editor"
                   class="MenuOption TextOption menu-option"
@@ -140,8 +136,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot 1`] 
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Admin"
                   class="MenuOption TextOption menu-option"
@@ -177,8 +171,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot 1`] 
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   class="MenuOption MenuSeparator menu-separator"
                 />
@@ -329,8 +321,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in p
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Commenter"
                   class="MenuOption TextOption menu-option"
@@ -360,8 +350,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in p
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Editor"
                   class="MenuOption TextOption menu-option"
@@ -391,8 +379,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in p
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Admin"
                   class="MenuOption TextOption menu-option"
@@ -428,8 +414,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in p
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   class="MenuOption MenuSeparator menu-separator"
                 />
@@ -580,9 +564,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in t
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div />
-              <div>
                 <div
                   aria-label="Editor"
                   class="MenuOption TextOption menu-option"
@@ -612,8 +593,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in t
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Admin"
                   class="MenuOption TextOption menu-option"
@@ -649,8 +628,6 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in t
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   class="MenuOption MenuSeparator menu-separator"
                 />
@@ -780,141 +757,7 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot-admi
             <div
               class="menu-options"
             >
-              <div>
-                <div
-                  aria-label="Viewer"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex menu-option__check"
-                  >
-                    <div
-                      class="menu-option__icon"
-                    >
-                      <div
-                        class="empty-icon"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Viewer
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  aria-label="Commenter"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex menu-option__check"
-                  >
-                    <div
-                      class="menu-option__icon"
-                    >
-                      <div
-                        class="empty-icon"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Commenter
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  aria-label="Editor"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex menu-option__check"
-                  >
-                    <div
-                      class="menu-option__icon"
-                    >
-                      <div
-                        class="empty-icon"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Editor
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  aria-label="Admin"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex menu-option__check"
-                  >
-                    <div
-                      class="menu-option__icon"
-                    >
-                      <svg
-                        class="CheckIcon Icon"
-                        viewBox="0 0 100 100"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <polyline
-                          points="20,60 40,80 80,40"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Admin
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-              <div>
-                <div
-                  class="MenuOption MenuSeparator menu-separator"
-                />
-              </div>
+              <div />
               <div>
                 <div
                   aria-label="Remove member"

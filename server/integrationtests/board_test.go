@@ -1598,6 +1598,43 @@ func TestUpdateMember(t *testing.T) {
 		require.True(t, members[0].SchemeAdmin)
 	})
 
+	t.Run("should not update a member if they are a team admin or higher", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypePrivate,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		newUser2Member := &model.BoardMember{
+			UserID:      th.GetUser2().ID,
+			BoardID:     board.ID,
+			Schemeadmin: true,
+		}
+		user2Member, err := th.Server.App().AddMemberToBoard(newUser2Member)
+		require.NoError(t, err)
+		require.NotNil(t, user2Member)
+
+		memberUpdate := &model.BoardMember{
+			UserID:       th.GetUser1().ID,
+			BoardID:      board.ID,
+			SchemeEditor: true,
+		}
+
+		updatedUser1Member, resp := th.Client.UpdateBoardMember(memberUpdate)
+		th.CheckBadRequest(resp)
+		require.Nil(t, updatedUser1Member)
+
+		members, err := th.Server.App().GetMembersForBoard(board.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 1)
+		require.True(t, members[0].SchemeAdmin)
+	})
+
 	t.Run("should always disable the admin role on update member if the user is a guest", func(t *testing.T) {
 		th := SetupTestHelperPluginMode(t)
 		defer th.TearDown()
