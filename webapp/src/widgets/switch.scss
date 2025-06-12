@@ -3,7 +3,7 @@
     flex-shrink: 0;
     align-items: center;
     box-sizing: content-box;
-    height: 14px;
+    height: 18px;
     width: 26px;
     border-radius: 44px;
     padding: 2px;
@@ -18,7 +18,7 @@
         background-color: rgb(var(--button-bg-rgb));
 
         .octo-switch-inner {
-            transform: translateX(12px) translateY(0);
+            transform: translateX(8px) translateY(0);
         }
     }
 
