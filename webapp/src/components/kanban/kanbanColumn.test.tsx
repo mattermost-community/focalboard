@@ -12,7 +12,7 @@ describe('src/components/kanban/kanbanColumn', () => {
             <KanbanColumn
                 onDrop={jest.fn()}
             >
-                {}
+                <></>
             </KanbanColumn>,
         ))
         expect(container).toMatchSnapshot()
