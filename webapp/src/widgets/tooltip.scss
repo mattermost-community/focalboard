@@ -54,15 +54,14 @@ $tooltop-vertical-offset: 2px;
 
     // Top tooltip arrow style
     &.tooltip-top:hover::before {
-        left: 50%;
+        left: 0;
         bottom: calc(100% - 2px);
-        transform: translate(-50%, #{$tooltop-horizontal-offset});
     }
     // Top tooltip body style
     &.tooltip-top:hover::after {
         bottom: calc(100% + 10px);
-        left: 50%;
-        transform: translate(-50%, #{$tooltop-horizontal-offset});
+        left: -20%;
+        transform: translate(0, #{$tooltop-horizontal-offset});
     }
 
     // Right tooltip arrow style
