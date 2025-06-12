@@ -6,11 +6,10 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
-import {sendFlashMessage} from '../components/flashMessages'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
-import {getCard} from '../store/cards'
+import {getCard, getTouchedCardId, touchCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -26,6 +25,8 @@ import Button from '../widgets/buttons/button'
 import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
 import {Block, createBlock} from '../blocks/block'
 import {Permission} from '../constants'
+
+import {sendFlashMessage} from './flashMessages'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
@@ -44,6 +45,7 @@ type Props = {
     onClose: () => void
     showCard: (cardId?: string) => void
     readonly: boolean
+    newlyCreated?: boolean
 }
 
 const CardDialog = (props: Props): JSX.Element => {
@@ -52,6 +54,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const contents = useAppSelector(getCardContents(props.cardId))
     const comments = useAppSelector(getCardComments(props.cardId))
     const attachments = useAppSelector(getCardAttachments(props.cardId))
+    const touchedCardId = useAppSelector(getTouchedCardId)
     const intl = useIntl()
     const dispatch = useAppDispatch()
     const isTemplate = card && card.fields.isTemplate
@@ -224,12 +227,22 @@ const CardDialog = (props: Props): JSX.Element => {
         )
     }
 
+    const onClose = () => {
+        dispatch(touchCard(undefined))
+
+        if (props.newlyCreated && props.cardId !== touchedCardId) {
+            handleDeleteCard()
+        } else {
+            props.onClose()
+        }
+    }
+
     return (
         <>
             <Dialog
                 title={<div/>}
                 className='cardDialog'
-                onClose={props.onClose}
+                onClose={onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
                 toolbar={attachBtn()}
             >
@@ -252,7 +265,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         comments={comments}
                         attachments={attachments}
                         readonly={props.readonly}
-                        onClose={props.onClose}
+                        onClose={onClose}
                         onDelete={deleteBlock}
                         addAttachment={addElement}
                     />}

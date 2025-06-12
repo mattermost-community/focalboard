@@ -3,6 +3,8 @@
 import React, {useCallback} from 'react'
 import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 
+import {ThunkDispatch} from '@reduxjs/toolkit'
+
 import {BlockTypes} from '../../blocks/block'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
@@ -11,9 +13,13 @@ import MenuWrapper from '../../widgets/menuWrapper'
 
 import {contentRegistry} from '../content/contentRegistry'
 
+import {touchCard} from '../../store/cards'
+
+import {useAppDispatch} from '../../store/hooks'
+
 import {useCardDetailContext} from './cardDetailContext'
 
-function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
+function addContentMenu(intl: IntlShape, type: BlockTypes, dispatch: ThunkDispatch<any, any, any>): JSX.Element {
     const handler = contentRegistry.getHandler(type)
     if (!handler) {
         Utils.logError(`addContentMenu, unknown content type: ${type}`)
@@ -24,6 +30,7 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
         const {card} = cardDetail
         const index = card.fields.contentOrder.length
         cardDetail.addBlock(handler, index, false)
+        dispatch(touchCard(card.id))
     }, [cardDetail, handler])
 
     return (
@@ -39,6 +46,7 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
 
 const CardDetailContentsMenu = () => {
     const intl = useIntl()
+    const dispatch = useAppDispatch()
     return (
         <div className='CardDetailContentsMenu content add-content'>
             <MenuWrapper>
@@ -49,7 +57,7 @@ const CardDetailContentsMenu = () => {
                     />
                 </Button>
                 <Menu position='top'>
-                    {contentRegistry.contentTypes.map((type) => addContentMenu(intl, type))}
+                    {contentRegistry.contentTypes.map((type) => addContentMenu(intl, type, dispatch))}
                 </Menu>
             </MenuWrapper>
         </div>

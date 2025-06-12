@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {CommentBlock, createCommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 
@@ -17,6 +17,8 @@ import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import {Permission} from '../../constants'
 
 import AddCommentTourStep from '../onboardingTour/addComments/addComments'
+
+import {touchCard} from '../../store/cards'
 
 import Comment from './comment'
 
@@ -32,6 +34,8 @@ type Props = {
 const CommentsList = (props: Props) => {
     const [newComment, setNewComment] = useState('')
     const me = useAppSelector<IUser|null>(getMe)
+    const dispatch = useAppDispatch()
+
     const canDeleteOthersComments = useHasCurrentBoardPermissions([Permission.DeleteOthersComments])
 
     const onSendClicked = () => {
@@ -64,6 +68,8 @@ const CommentsList = (props: Props) => {
                 text={newComment}
                 placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
                 onChange={(value: string) => {
+                    dispatch(touchCard(props.cardId))
+
                     if (newComment !== value) {
                         setNewComment(value)
                     }

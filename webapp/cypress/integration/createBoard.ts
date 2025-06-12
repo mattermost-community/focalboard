@@ -161,9 +161,10 @@ describe('Create and delete board / card', () => {
         }
 
         // Create empty card in last group
-        cy.log('**Create new empty card in first group**')
+        cy.log('**Create new non empty card in first group**')
         cy.get('.octo-board-column').last().contains('+ New').scrollIntoView().click()
         cy.get('.Dialog').should('exist')
+        cy.get('.Dialog .EditableArea.Editable.title').should('exist').type('New card')
         cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
         cy.get('.KanbanCard').scrollIntoView().should('exist')
 
@@ -224,5 +225,24 @@ describe('Create and delete board / card', () => {
         cy.get('.CommentsList .MarkdownEditorInput').
             type(`{shift+${ctrlKey}+z}`).
             should('have.text', '')
+    })
+
+    it('Deletes newly created card after close if no interaction were made in the card', () => {
+        // Visit a page and create new empty board
+        cy.visit('/')
+        cy.wait(500)
+        cy.uiCreateEmptyBoard()
+
+        cy.log('**Create new empty group**')
+        cy.contains('+ Add a group').scrollIntoView().should('be.visible').click()
+        cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('have.length', 1)
+
+        cy.log('**Create new non empty card in first group**')
+        cy.get('.octo-board-column').last().contains('+ New').scrollIntoView().click()
+        cy.get('.Dialog').should('exist')
+
+        cy.log('**Close dialog without touching any field**')
+        cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
+        cy.get('.KanbanCard').should('not.exist')
     })
 })

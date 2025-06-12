@@ -80,6 +80,7 @@ const CenterPanel = (props: Props) => {
     const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
     const [cardIdToFocusOnRender, setCardIdToFocusOnRender] = useState('')
     const [showHiddenCardCountNotification, setShowHiddenCardCountNotification] = useState(false)
+    const [newlyCreatedCardId, setNewlyCreatedCardId] = useState<string|undefined>(undefined)
 
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
@@ -164,7 +165,8 @@ const CenterPanel = (props: Props) => {
         }
     }, [selectedCardIds, props.readonly, props.cards])
 
-    const showCard = useCallback((cardId?: string) => {
+    const showCard = useCallback((cardId?: string, isNew?: boolean) => {
+        setNewlyCreatedCardId(cardId && isNew ? cardId : undefined)
         if (selectedCardIds.length > 0) {
             setSelectedCardIds([])
         }
@@ -201,7 +203,7 @@ const CenterPanel = (props: Props) => {
                     if (show) {
                         dispatch(addCardAction(createCard(block)))
                         dispatch(updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, block.id]}}))
-                        showCard(block.id)
+                        showCard(block.id, true)
                     } else {
                         // Focus on this card's title inline on next render
                         setCardIdToFocusOnRender(block.id)
@@ -413,6 +415,7 @@ const CenterPanel = (props: Props) => {
                         onClose={() => showCard(undefined)}
                         showCard={(cardId) => showCard(cardId)}
                         readonly={props.readonly}
+                        newlyCreated={props.shownCardId === newlyCreatedCardId}
                     />
                 </RootPortal>}
 

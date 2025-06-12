@@ -26,7 +26,7 @@ import {UserConfigPatch, UserPreference} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
-import {updateCards} from './store/cards'
+import {touchCard, updateCards} from './store/cards'
 import {updateAttachments} from './store/attachments'
 import {updateComments} from './store/comments'
 import {updateContents} from './store/contents'
@@ -630,6 +630,8 @@ class Mutator {
     }
 
     async changePropertyValue(boardId: string, card: Card, propertyId: string, value?: string | string[], description = 'change property') {
+        store.dispatch(touchCard(card.id))
+
         const oldValue = card.fields.properties[propertyId]
 
         // dont save anything if property value was not changed.
