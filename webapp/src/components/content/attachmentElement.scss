@@ -62,11 +62,17 @@
 
     .fileElement-delete-download {
         position: absolute;
-        display: flex;
+        display: none;
         right: 0;
     }
 
     &:hover {
+        .fileElement-delete-download {
+            position: absolute;
+            display: flex;
+            right: 0;
+        }
+
         .fileElement-download-btn {
             display: block;
         }
