@@ -2,164 +2,108 @@ package sqlstore
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/focalboard/server/services/store"
 
-	"github.com/mattermost/mattermost/server/public/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) CloseRows(rows *sql.Rows) {
-	if err := rows.Close(); err != nil {
-		s.logger.Error("error closing MattermostAuthLayer row set", mlog.Err(err))
+// ErrEmptyBoardID is an error type that can be returned by store APIs
+// when a boardID is required, but empty.
+var ErrEmptyBoardID = &ErrEmptyBoardIDError{}
+
+type ErrEmptyBoardIDError struct{}
+
+func (re *ErrEmptyBoardIDError) Error() string {
+	return "boardID is empty"
+}
+
+func (s *SQLStore) getBoardID(db sq.BaseRunner, c store.Container) (string, error) {
+	if c.BoardID != "" {
+		return c.BoardID, nil
 	}
-}
 
-func (s *SQLStore) IsErrNotFound(err error) bool {
-	return model.IsErrNotFound(err)
-}
+	if c.WorkspaceID == "" {
+		return "", ErrEmptyBoardID
+	}
 
-func (s *SQLStore) MarshalJSONB(data interface{}) ([]byte, error) {
-	b, err := json.Marshal(data)
+	query := s.getQueryBuilder(db).
+		Select("id").
+		From(s.tablePrefix + "boards").
+		Where(sq.Eq{"workspace_id": c.WorkspaceID, "is_template": false})
+
+	row := query.QueryRow()
+
+	var boardID string
+	err := row.Scan(&boardID)
 	if err != nil {
-		return nil, err
-	}
-
-	if s.isBinaryParam {
-		b = append([]byte{0x01}, b...)
-	}
-
-	return b, nil
-}
-
-func PrepareNewTestDatabase() (dbType string, connectionString string, err error) {
-	dbType = strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DB_TYPE"))
-	if dbType == "" {
-		dbType = model.SqliteDBType
-	}
-	if dbType == "mariadb" {
-		dbType = model.MysqlDBType
-	}
-
-	var dbName string
-	var rootUser string
-
-	if dbType == model.SqliteDBType {
-		file, err := os.CreateTemp("", "fbtest_*.db")
-		if err != nil {
-			return "", "", err
+		if err == sql.ErrNoRows {
+			return "", ErrEmptyBoardID
 		}
-		connectionString = file.Name() + "?_busy_timeout=5000"
-		_ = file.Close()
-	} else if port := strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DOCKER_PORT")); port != "" {
-		// docker unit tests take priority over any DSN env vars
-		var template string
-		switch dbType {
-		case model.MysqlDBType:
-			template = "%s:mostest@tcp(localhost:%s)/%s?charset=utf8mb4,utf8&writeTimeout=30s"
-			rootUser = "root"
-		case model.PostgresDBType:
-			template = "postgres://%s:mostest@localhost:%s/%s?sslmode=disable\u0026connect_timeout=10"
-			rootUser = "mmuser"
-		default:
-			return "", "", newErrInvalidDBType(dbType)
-		}
-
-		connectionString = fmt.Sprintf(template, rootUser, port, "")
-
-		// create a new database each run
-		sqlDB, err := sql.Open(dbType, connectionString)
-		if err != nil {
-			return "", "", fmt.Errorf("cannot connect to %s database: %w", dbType, err)
-		}
-		defer sqlDB.Close()
-
-		err = sqlDB.Ping()
-		if err != nil {
-			return "", "", fmt.Errorf("cannot ping %s database: %w", dbType, err)
-		}
-
-		dbName = "testdb_" + utils.NewID(utils.IDTypeNone)[:8]
-		_, err = sqlDB.Exec(fmt.Sprintf("CREATE DATABASE %s;", dbName))
-		if err != nil {
-			return "", "", fmt.Errorf("cannot create %s database %s: %w", dbType, dbName, err)
-		}
-
-		if dbType != model.PostgresDBType {
-			_, err = sqlDB.Exec(fmt.Sprintf("GRANT ALL PRIVILEGES ON %s.* TO mmuser;", dbName))
-			if err != nil {
-				return "", "", fmt.Errorf("cannot grant permissions on %s database %s: %w", dbType, dbName, err)
-			}
-		}
-
-		connectionString = fmt.Sprintf(template, "mmuser", port, dbName)
-	} else {
-		// mysql or postgres need a DSN (connection string)
-		connectionString = strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_CONN_STRING"))
-	}
-
-	return dbType, connectionString, nil
-}
-
-type ErrInvalidDBType struct {
-	dbType string
-}
-
-func newErrInvalidDBType(dbType string) error {
-	return ErrInvalidDBType{
-		dbType: dbType,
-	}
-}
-
-func (e ErrInvalidDBType) Error() string {
-	return "unsupported database type: " + e.dbType
-}
-
-// deleteBoardRecord deletes a boards record without deleting any child records in the blocks table.
-// FOR UNIT TESTING ONLY.
-func (s *SQLStore) deleteBoardRecord(db sq.BaseRunner, boardID string, modifiedBy string) error {
-	return s.deleteBoardAndChildren(db, boardID, modifiedBy, true)
-}
-
-// deleteBlockRecord deletes a blocks record without deleting any child records in the blocks table.
-// FOR UNIT TESTING ONLY.
-func (s *SQLStore) deleteBlockRecord(db sq.BaseRunner, blockID, modifiedBy string) error {
-	return s.deleteBlockAndChildren(db, blockID, modifiedBy, true)
-}
-
-func (s *SQLStore) castInt(val int64, as string) string {
-	if s.dbType == model.MysqlDBType {
-		return fmt.Sprintf("cast(%d as unsigned) AS %s", val, as)
-	}
-	return fmt.Sprintf("cast(%d as bigint) AS %s", val, as)
-}
-
-func (s *SQLStore) GetSchemaName() (string, error) {
-	var query sq.SelectBuilder
-
-	switch s.dbType {
-	case model.MysqlDBType:
-		query = s.getQueryBuilder(s.db).Select("DATABASE()")
-	case model.PostgresDBType:
-		query = s.getQueryBuilder(s.db).Select("current_schema()")
-	case model.SqliteDBType:
-		return "", nil
-	default:
-		return "", ErrUnsupportedDatabaseType
-	}
-
-	scanner := query.QueryRow()
-
-	var result string
-	err := scanner.Scan(&result)
-	if err != nil && !model.IsErrNotFound(err) {
 		return "", err
 	}
 
-	return result, nil
+	return boardID, nil
+}
+
+func (s *SQLStore) containerFromRows(rows *sql.Rows) (*model.BoardsAndBlocks, error) {
+	// TODO: Consolidate this and `blocksFromRows` to use a shared type.
+
+	boards := []model.Board{}
+	blocks := []model.Block{}
+
+	for rows.Next() {
+		var blockType string
+		var data string
+		var boardData string
+
+		err := rows.Scan(&blockType, &data, &boardData)
+		if err != nil {
+			s.logger.Error("containerFromRows row scan error", mlog.Err(err))
+			return nil, err
+		}
+
+		if blockType == model.TypeBoard {
+			var board model.Board
+			err = json.Unmarshal([]byte(boardData), &board)
+			if err != nil {
+				s.logger.Error("board scan error", mlog.Err(err))
+				return nil, err
+			}
+			boards = append(boards, board)
+		} else {
+			var block model.Block
+			err = json.Unmarshal([]byte(data), &block)
+			if err != nil {
+				s.logger.Error("block scan error", mlog.Err(err))
+				return nil, err
+			}
+			blocks = append(blocks, block)
+		}
+	}
+
+	return &model.BoardsAndBlocks{Boards: boards, Blocks: blocks}, nil
+}
+
+// sq replaces SQL query placeholders with the appropriate syntax for the database driver
+// Instead of using string formatting which is vulnerable to SQL injection,
+// this function now properly handles placeholders based on the database type
+func (s *SQLStore) sq(query string, args ...interface{}) (string, []interface{}) {
+	if s.dbType == model.MysqlDBType {
+		// MySQL uses ? as placeholders
+		query = strings.ReplaceAll(query, "{prefix}", s.tablePrefix)
+		// Replace PostgreSQL-style placeholders ($1, $2, etc.) with ?
+		for i := len(args); i > 0; i-- {
+			query = strings.ReplaceAll(query, fmt.Sprintf("$%d", i), "?")
+		}
+		return query, args
+	}
+	
+	// PostgreSQL uses $1, $2, etc. as placeholders
+	query = strings.ReplaceAll(query, "{prefix}", s.tablePrefix)
+	return query, args
 }
