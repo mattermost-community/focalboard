@@ -16,7 +16,7 @@ jobs:
   ubuntu:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       with:
         path: "focalboard"
 
@@ -30,12 +30,12 @@ jobs:
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+      uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
       with:
         go-version: 1.21
 
     - name: Setup Node
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
       with:
         node-version: 20.11.0
 
@@ -71,7 +71,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       with:
         path: "focalboard"
     - name: Replace token 1 server
@@ -84,7 +84,7 @@ jobs:
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+      uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
       with:
         go-version: 1.21
 
@@ -108,20 +108,20 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       with:
         path: "focalboard"
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3
+      uses: microsoft/setup-msbuild@v2
 
     - name: npm ci
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+      uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
       with:
         go-version: 1.21
 
