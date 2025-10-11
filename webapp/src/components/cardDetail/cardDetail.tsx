@@ -142,6 +142,10 @@ const CardDetail = (props: Props): JSX.Element|null => {
     }, [])
 
     const setRandomIcon = useCallback(() => {
+        // Check if auto emoji is disabled for this board
+        if (props.board.properties?.disableAutoEmoji) {
+            return
+        }
         const newIcon = BlockIcons.shared.randomIcon()
         mutator.changeBlockIcon(props.board.id, card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
@@ -201,7 +205,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     size='l'
                     readonly={props.readonly || !canEditBoardCards || limited}
                 />
-                {!props.readonly && canEditBoardCards && !card.fields.icon &&
+                {!props.readonly && canEditBoardCards && !card.fields.icon && !props.board.properties?.disableAutoEmoji &&
                     <div className='add-buttons'>
                         <Button
                             emphasis='default'
@@ -399,3 +403,4 @@ const CardDetail = (props: Props): JSX.Element|null => {
 }
 
 export default CardDetail
+
