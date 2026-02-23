@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       with:
         path: "focalboard"
 
@@ -27,12 +27,12 @@ jobs:
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+      uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
       with:
         go-version: 1.21
 
     - name: Setup Node
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
       with:
         node-version: 20.11.0
 
@@ -51,13 +51,13 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload server package
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: Upload app package
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: focalboard-linux.tar.gz
         path: ${{ github.workspace }}/focalboard/linux/dist/focalboard-linux.tar.gz
@@ -68,7 +68,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       with:
         path: "focalboard"
 
@@ -82,7 +82,7 @@ jobs:
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+      uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
       with:
         go-version: 1.21
 
@@ -96,7 +96,7 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload macOS package
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: focalboard-mac.zip
         path: ${{ github.workspace }}/focalboard/mac/dist/focalboard-mac.zip
@@ -106,7 +106,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       with:
         path: "focalboard"
 
@@ -117,13 +117,13 @@ jobs:
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3
+      uses: microsoft/setup-msbuild@v2
 
     - name: npm ci
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+      uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
       with:
         go-version: 1.21
 
@@ -141,13 +141,13 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload app msix package
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: focalboard.msix
         path: ${{ github.workspace }}/focalboard/win-wpf/focalboard.msix
 
     - name: Upload app zip package
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: focalboard-win.zip
         path: ${{ github.workspace }}/focalboard/win-wpf/dist/focalboard-win.zip
