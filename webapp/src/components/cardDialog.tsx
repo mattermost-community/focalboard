@@ -57,6 +57,23 @@ const CardDialog = (props: Props): JSX.Element => {
     const isTemplate = card && card.fields.isTemplate
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+
+    const handleClose = useCallback(async () => {
+        // If the card is empty (no title, no content, no comments, no attachments),
+        // delete it automatically to prevent empty cards from being created
+        // when users close the dialog without making any changes.
+        if (card &&
+            !card.fields.isTemplate &&
+            card.title === '' &&
+            card.fields.contentOrder.length === 0 &&
+            comments.length === 0 &&
+            attachments.length === 0
+        ) {
+            await mutator.deleteBlock(card, 'delete empty card')
+        }
+        props.onClose()
+    }, [card, comments, attachments, props.onClose])
+
     const makeTemplateClicked = async () => {
         if (!card) {
             Utils.assertFailure('card')
@@ -229,7 +246,7 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 title={<div/>}
                 className='cardDialog'
-                onClose={props.onClose}
+                onClose={handleClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
                 toolbar={attachBtn()}
             >
