@@ -81,7 +81,7 @@ exports[`components/table/TableRow should match snapshot 1`] = `
 exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
 <div>
   <div
-    class="TableRow octo-table-row hidden"
+    class="TableRow octo-table-row"
     draggable="true"
     style="opacity: 1;"
   >
