@@ -3,11 +3,11 @@
 /* eslint-disable max-lines */
 import React from 'react'
 
-import {useDrop} from 'react-dnd'
+import { useDrop } from 'react-dnd'
 
-import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
-import {Card} from '../../blocks/card'
+import { Board, IPropertyOption, IPropertyTemplate, BoardGroup } from '../../blocks/board'
+import { BoardView } from '../../blocks/boardView'
+import { Card } from '../../blocks/card'
 
 import TableGroupHeaderRow from './tableGroupHeaderRow'
 import TableRows from './tableRows'
@@ -31,16 +31,17 @@ type Props = {
 }
 
 const TableGroup = (props: Props): JSX.Element => {
-    const {board, activeView, group, onDropToGroup, groupByProperty} = props
-    const groupId = group.option.id
+    const { board, activeView, group, onDropToGroup, groupByProperty } = props
+    const groupId = group.option.id || 'undefined'
+    const isCollapsed = activeView.fields.collapsedOptionIds.includes(groupId)
 
-    const [{isOver}, drop] = useDrop(() => ({
+    const [{ isOver }, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
             isOver: monitor.isOver(),
         }),
         drop: (item: Card, monitor) => {
-            if (monitor.isOver({shallow: true})) {
+            if (monitor.isOver({ shallow: true })) {
                 onDropToGroup(item, groupId, '')
             }
         },
@@ -69,19 +70,19 @@ const TableGroup = (props: Props): JSX.Element => {
                 onDrop={props.onDropToGroupHeader}
             />
 
-            {(group.cards.length > 0) &&
-            <TableRows
-                board={board}
-                activeView={activeView}
-                cards={group.cards}
-                selectedCardIds={props.selectedCardIds}
-                readonly={props.readonly}
-                cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                showCard={props.showCard}
-                addCard={props.addCard}
-                onCardClicked={props.onCardClicked}
-                onDrop={props.onDropToCard}
-            />}
+            {(!isCollapsed && group.cards.length > 0) &&
+                <TableRows
+                    board={board}
+                    activeView={activeView}
+                    cards={group.cards}
+                    selectedCardIds={props.selectedCardIds}
+                    readonly={props.readonly}
+                    cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                    showCard={props.showCard}
+                    addCard={props.addCard}
+                    onCardClicked={props.onCardClicked}
+                    onDrop={props.onDropToCard}
+                />}
         </div>
     )
 }

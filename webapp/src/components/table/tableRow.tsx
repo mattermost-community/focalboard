@@ -1,17 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
 
-import {Card} from '../../blocks/card'
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {Constants} from '../../constants'
+import { Card } from '../../blocks/card'
+import { Board, IPropertyTemplate } from '../../blocks/board'
+import { Constants } from '../../constants'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
-import {useSortable} from '../../hooks/sortable'
+import { useSortable } from '../../hooks/sortable'
 
-import {Utils} from '../../utils'
+import { Utils } from '../../utils'
 
 import PropertyValueElement from '../propertyValueElement'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -19,11 +19,11 @@ import IconButton from '../../widgets/buttons/iconButton'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
 import Tooltip from '../../widgets/tooltip'
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import ConfirmationDialogBox, { ConfirmationDialogBoxProps } from '../confirmationDialogBox'
+import TelemetryClient, { TelemetryActions, TelemetryCategory } from '../../telemetry/telemetryClient'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
-import {useColumnResize} from './tableColumnResizeContext'
+import { useColumnResize } from './tableColumnResizeContext'
 
 import './tableRow.scss'
 
@@ -47,7 +47,7 @@ type Props = {
 
 const TableRow = (props: Props) => {
     const intl = useIntl()
-    const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
+    const { board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds } = props
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
@@ -106,9 +106,6 @@ const TableRow = (props: Props) => {
         } else if (Array.isArray(groupValue)) {
             groupValue = groupValue[0]
         }
-        if (collapsedOptionIds.indexOf(groupValue) > -1) {
-            className += ' hidden'
-        }
     }
     if (props.readonly) {
         className += ' readonly'
@@ -119,14 +116,14 @@ const TableRow = (props: Props) => {
             Utils.assertFailure()
             return
         }
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, { board: board.id, card: card.id })
         await mutator.deleteBlock(card, 'delete card')
     }, [card, board.id])
 
     const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
         return {
-            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            heading: intl.formatMessage({ id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!' }),
+            confirmButtonText: intl.formatMessage({ id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete' }),
             onConfirm: handleDeleteCard,
             onClose: () => {
                 setShowConfirmationDialogBox(false)
@@ -150,12 +147,12 @@ const TableRow = (props: Props) => {
             className={className}
             onClick={onClick}
             ref={cardRef}
-            style={{opacity: isDragging ? 0.5 : 1}}
+            style={{ opacity: isDragging ? 0.5 : 1 }}
         >
 
             <div className='action-cell octo-table-cell-btn'>
                 {!props.readonly && (
-                    <IconButton icon={<CompassIcon icon='drag-vertical'/>}/>
+                    <IconButton icon={<CompassIcon icon='drag-vertical' />} />
                 )}
             </div>
 
@@ -163,7 +160,7 @@ const TableRow = (props: Props) => {
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
-                style={{width: columnResize.width(Constants.titleColumnId)}}
+                style={{ width: columnResize.width(Constants.titleColumnId) }}
                 ref={(ref) => columnResize.updateRef(card.id, Constants.titleColumnId, ref)}
             >
                 <div className='octo-icontitle'>
@@ -186,11 +183,11 @@ const TableRow = (props: Props) => {
                         stopPropagationOnToggle={true}
                     >
                         <Tooltip
-                            title={intl.formatMessage({id: 'TableRow.MoreOption', defaultMessage: 'More actions'})}
+                            title={intl.formatMessage({ id: 'TableRow.MoreOption', defaultMessage: 'More actions' })}
                         >
                             <IconButton
                                 title='MenuBtn'
-                                icon={<OptionsIcon/>}
+                                icon={<OptionsIcon />}
                             />
                         </Tooltip>
                         <CardActionsMenu
@@ -202,7 +199,7 @@ const TableRow = (props: Props) => {
                                     card.id,
                                     board.id,
                                     false,
-                                    intl.formatMessage({id: 'TableRow.DuplicateCard', defaultMessage: 'duplicate card'}),
+                                    intl.formatMessage({ id: 'TableRow.DuplicateCard', defaultMessage: 'duplicate card' }),
                                     false,
                                     {},
                                     async (newCardId) => {
@@ -233,7 +230,7 @@ const TableRow = (props: Props) => {
                     <div
                         className='octo-table-cell'
                         key={template.id}
-                        style={{width: columnResize.width(template.id)}}
+                        style={{ width: columnResize.width(template.id) }}
                         ref={(ref) => columnResize.updateRef(card.id, template.id, ref)}
                     >
                         <PropertyValueElement
@@ -247,7 +244,7 @@ const TableRow = (props: Props) => {
                 )
             })}
 
-            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps} />}
         </div>
     )
 }
