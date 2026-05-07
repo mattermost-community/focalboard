@@ -10,7 +10,21 @@ import {Utils} from '../../utils'
 const UndoRedoHotKeys = (): null => {
     const intl = useIntl()
 
-    useHotkeys('ctrl+z,cmd+z', () => {
+    useHotkeys('ctrl+z,cmd+z', (e: KeyboardEvent) => {
+        const target = e.target as HTMLElement | null
+        const isInputTag = target ? ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) : false
+        const isTableTitleInput = Boolean(
+            target &&
+            target.tagName === 'INPUT' &&
+            target.classList.contains('Editable') &&
+            target.closest('.octo-table-row'),
+        )
+
+        // Keep native undo in non-table inputs (comments, markdown editor, etc).
+        if (isInputTag && !isTableTitleInput) {
+            return true
+        }
+
         Utils.log('Undo')
         if (mutator.canUndo) {
             const description = mutator.undoDescription
@@ -32,9 +46,24 @@ const UndoRedoHotKeys = (): null => {
                 severity: 'low',
             })
         }
-    })
+        // Prevent browser/input-level undo when board-level undo is triggered.
+        return false
+    }, {enableOnTags: ['INPUT', 'TEXTAREA', 'SELECT']})
 
-    useHotkeys('shift+ctrl+z,shift+cmd+z', () => {
+    useHotkeys('shift+ctrl+z,shift+cmd+z', (e: KeyboardEvent) => {
+        const target = e.target as HTMLElement | null
+        const isInputTag = target ? ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) : false
+        const isTableTitleInput = Boolean(
+            target &&
+            target.tagName === 'INPUT' &&
+            target.classList.contains('Editable') &&
+            target.closest('.octo-table-row'),
+        )
+
+        if (isInputTag && !isTableTitleInput) {
+            return true
+        }
+
         Utils.log('Redo')
         if (mutator.canRedo) {
             const description = mutator.redoDescription
@@ -57,7 +86,8 @@ const UndoRedoHotKeys = (): null => {
                 severity: 'low',
             })
         }
-    })
+        return false
+    }, {enableOnTags: ['INPUT', 'TEXTAREA', 'SELECT']})
     return null
 }
 
