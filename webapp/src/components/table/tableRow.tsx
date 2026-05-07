@@ -50,6 +50,7 @@ const TableRow = (props: Props) => {
     const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
+    const isAutoAddedCardRef = useRef(props.focusOnMount)
     const [title, setTitle] = useState(props.card.title || '')
     const [hasEditedTitle, setHasEditedTitle] = useState(false)
     const isGrouped = Boolean(groupById)
@@ -83,11 +84,11 @@ const TableRow = (props: Props) => {
     }, [card, board.id])
 
     const shouldDeleteEmptyAutoAddedCard = useCallback(() => {
-        return props.focusOnMount &&
+        return isAutoAddedCardRef.current &&
             !hasEditedTitle &&
             (card.title || '') === '' &&
             title.trim() === ''
-    }, [props.focusOnMount, hasEditedTitle, card.title, title])
+    }, [hasEditedTitle, card.title, title])
 
     const onSave = useCallback((saveType) => {
         if (saveType === 'onEnter' && shouldDeleteEmptyAutoAddedCard()) {
