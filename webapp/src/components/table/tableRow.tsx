@@ -50,7 +50,9 @@ const TableRow = (props: Props) => {
     const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
+    const isAutoAddedCardRef = useRef(props.focusOnMount)
     const [title, setTitle] = useState(props.card.title || '')
+    const [hasEditedTitle, setHasEditedTitle] = useState(false)
     const isGrouped = Boolean(groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
@@ -72,18 +74,42 @@ const TableRow = (props: Props) => {
         }
     }, [groupById && card.fields.properties[groupById!], props.isLastCard, props.addCard])
 
+    const handleDeleteCard = useCallback(async () => {
+        if (!card) {
+            Utils.assertFailure()
+            return
+        }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
+        await mutator.deleteBlock(card, 'delete card')
+    }, [card, board.id])
+
+    const shouldDeleteEmptyAutoAddedCard = useCallback(() => {
+        return isAutoAddedCardRef.current &&
+            !hasEditedTitle &&
+            (card.title || '') === '' &&
+            title.trim() === ''
+    }, [hasEditedTitle, card.title, title])
+
     const onSave = useCallback((saveType) => {
+        if (saveType === 'onEnter' && shouldDeleteEmptyAutoAddedCard()) {
+            handleDeleteCard()
+            return
+        }
+
         if (card.title !== title) {
             mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
             if (saveType === 'onEnter') {
                 onSaveWithEnter()
             }
         }
-    }, [card.title, title, onSaveWithEnter, board.id, card.id])
+    }, [card.title, title, onSaveWithEnter, board.id, card.id, shouldDeleteEmptyAutoAddedCard, handleDeleteCard])
 
     const onTitleChange = useCallback((newTitle: string) => {
+        if (!hasEditedTitle && newTitle !== (card.title || '')) {
+            setHasEditedTitle(true)
+        }
         setTitle(newTitle)
-    }, [title, setTitle])
+    }, [hasEditedTitle, card.title, setTitle])
 
     const visiblePropertyTemplates = useMemo(() => (
         visiblePropertyIds.map((id) => board.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
@@ -113,15 +139,6 @@ const TableRow = (props: Props) => {
     if (props.readonly) {
         className += ' readonly'
     }
-
-    const handleDeleteCard = useCallback(async () => {
-        if (!card) {
-            Utils.assertFailure()
-            return
-        }
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
-        await mutator.deleteBlock(card, 'delete card')
-    }, [card, board.id])
 
     const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
         return {
@@ -174,7 +191,13 @@ const TableRow = (props: Props) => {
                         placeholderText='Untitled'
                         onChange={onTitleChange}
                         onSave={onSave}
-                        onCancel={() => setTitle(card.title || '')}
+                        onCancel={() => {
+                            if (shouldDeleteEmptyAutoAddedCard()) {
+                                handleDeleteCard()
+                                return
+                            }
+                            setTitle(card.title || '')
+                        }}
                         readonly={props.readonly}
                         spellCheck={true}
                     />
