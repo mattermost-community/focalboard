@@ -93,6 +93,9 @@
 		]
 	},
 	"devDependencies": {
+		"@4tw/cypress-drag-drop": "^2.3.1",
+		"@badeball/cypress-cucumber-preprocessor": "^24.0.1",
+		"@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
 		"@formatjs/cli": "^4.8.2",
 		"@formatjs/ts-transformer": "^3.9.2",
 		"@swc/jest": "^0.2.20",
@@ -120,7 +123,7 @@
 		"copy-webpack-plugin": "^10.2.4",
 		"cross-env": "^7.0.3",
 		"css-loader": "^6.7.1",
-		"cypress": "^9.5.2",
+		"cypress": "^9.7.0",
 		"cypress-failed-log": "^2.9.5",
 		"cypress-real-events": "^1.7.0",
 		"eslint": "^8.11.0",
