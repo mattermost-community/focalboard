@@ -13,6 +13,7 @@ export interface IAppWindow extends Window {
     openInNewBrowser?: ((href: string) => void) | null
     webkit?: {messageHandlers: {nativeApp?: {postMessage: <T>(message: T) => void}}}
     openPricingModal?: () => (telemetry: TelemetryProps) => void
+    chrome?: {webview?: {postMessage: <T>(message: T) => void}}
 }
 
 // SuiteWindow documents all custom properties
